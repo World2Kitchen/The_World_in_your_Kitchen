@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <title>GHG Emission Swipe between maps</title>
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+    <link href="https://api.mapbox.com/mapbox-gl-js/v2.8.2/mapbox-gl.css" rel="stylesheet">
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.8.2/mapbox-gl.js"></script>
+    <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-compare/v0.4.0/mapbox-gl-compare.js"></script>
+    <link rel="stylesheet"
+        href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-compare/v0.4.0/mapbox-gl-compare.css"
+        type="text/css">
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        #map {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 100%;
+        }
+
+        .map-overlay {
+            font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+            position: absolute;
+            width: 17%;
+            top: 0;
+            left: 0;
+            padding: 10px;
+        }
+    
+        .map-overlay .map-overlay-inner {
+            background-color: #fff;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.20);
+            border-radius: 3px;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+    
+        .map-overlay table {
+            border: none;
+            width: 100%;
+        }
+    
+        .map-overlay label {
+            font: 16px/18px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+            vertical-align: bottom;
+            margin: 0;
+            padding: 0;
+        }
+
+        .map-overlay input {
+            display: inline;
+            vertical-align: middle;
+            margin: 5px;
+            padding: 0;
+        }
+    
+        .map-overlay p.credit {
+            margin: 5px 0 0 0;
+            padding: 0;
+        }
+
+        .legend-box {
+            position: absolute;
+            bottom: 20px;
+            left: 200px;
+            z-index: 1;
+            display: flex;
+            color:black;
+        }
+
+        .legend-item {
+            width: 100px;
+            height: 10px;
+            border: 1px solid #a5a5a5;
+        }
+
+        .mapboxgl-popup {
+            max-width: 400px;
+            min-width: 180px;
+            font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+            padding: 0;
+            margin: 0,0,0,20px;
+        }
+
+        .mapboxgl-popup-tip-container {
+            width:0px;
+            height:0px;
+            margin:0 auto;
+            position:relative;
+        }
+
+        .mapboxgl-popup-tip {
+            width:0;
+            height:0;
+            margin:0;
+            border-left:0 solid transparent;
+            border-right:0 solid transparent;
+            border-top:0 solid transparent;
+            box-shadow:none;
+        }
+
+        /* body {
+            overflow: hidden;
+        }
+
+        /* body * {
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        } */
+
+        .map {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 100%; 
+        }
+    </style>
+
+
+<body>
+    <div id="comparison-container">
+        <div id="before" class="map">2000</div>
+
+        <div id="after" class="map">2019</div>
+    </div>
+    <div id="map"></div>
+    <div class='map-overlay'>
+        <div class='map-overlay-inner'>
+            <h2>Gobal GHG Emission per capital in kg </h2>
+            <h4>Year of 2000 on the Left</h4>      <h4>Year of 2019 on the Right</h4>
+            <table><tr>Does GHG emission per capita for each country increase or decrease? Here is a map to give an insight of how each country response to the GHG issue over time.</tr>
+             <!-- <p>The Europe, the UK and the US had a decreasing GHG emission per capita in general. However, the countries with large population like China and India had increasing figures over the 20 years.</p> -->
+                <tr><td>
+                 <p class="cityfly">Zoom To: <a href="#" class="citylink" id="UnitedKingdom">United Kingdom</a> &nbsp;<a href="#" class="citylink" id="UnitedStates">United States</a> &nbsp;<a href="#" class="citylink" id="China">China</a> &nbsp;<a href="#" class="citylink" id="India">India</a> &nbsp;<a href="#" class="citylink" id="Ukraine">Ukraine</a> &nbsp;<a href="#" class="citylink" id="Russia">Russia</a></p>
+            </td> </tr>
+             <td>Zoom in to Countries by click on the name above to see the GHG comparison clearly.</td>
+             </table>
+             <p class="credit">Emission data: <a href="https://stats.oecd.org/Index.aspx?DataSetCode=IO_GHG_2021">OECD</a>.</p>
+            </div>
+    </div>
+
+    <div class="legend-box" id="legend">
+        <div>
+            <div class="lable">0</div>
+            <div class="legend-item" style="background-color: #fff5f0;"></div>
+        </div>
+        <div>
+            <div class="lable">5000</div>
+            <div class="legend-item" style="background-color: #f9bfbd;"></div>
+        </div>
+        <div>
+            <div class="lable">10000</div>
+            <div class="legend-item" style="background-color: #fb6762;"></div>
+        </div>
+        <div>
+            <div class="lable">15000</div>
+            <div class="legend-item" style="background-color: #fc3a33;"></div>
+        </div>
+        <div>
+            <div class="lable">20000</div>
+            <div class="legend-item" style="background-color: #fa0c02;"></div>
+        </div>
+        <div>
+            <div class="lable">25000</div>
+            <div class="legend-item" style="background-color: #cb181d;"></div>
+        </div>
+        <div> above </div>
+    </div>
+</body>
+
+    <!-- <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-compare/v0.4.0/mapbox-gl-compare.js"></script>
+    <link rel="stylesheet"
+        href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-compare/v0.4.0/mapbox-gl-compare.css"
+        type="text/css"> -->
+
+
+     
+
+    <script>
+        mapboxgl.accessToken = 'pk.eyJ1IjoiY2NjaGoiLCJhIjoiY2t5bGVweXh3MDV1dzJvbzQzZzh4YThoaSJ9.Evk2J6w0jnyWtVqSOflTAg';
+        const beforeMap = new mapboxgl.Map({
+            container: 'before',
+            style: 'mapbox://styles/mapbox/light-v10',
+            center: [0, 35],
+            zoom: 1
+        });  
+
+        
+
+        beforeMap.on('load', () => {
+            beforeMap.addSource('states', {
+                'type': 'geojson',
+                'data': 'https://raw.githubusercontent.com/HangjinCai/Digital_Viz_group7/main/merged_years_emission.geojson',
+            })
+        beforeMap.addControl(new mapboxgl.NavigationControl());
+
+        beforeMap.addLayer({
+                'id': 'Emission_2000',
+                'type': 'fill',
+                'source': 'states',
+                'layout': {'visibility': 'visible'},
+                'paint': {
+                'fill-color': {
+                    property: 'CO2_CAP_kg_2000',
+                     stops: [
+                    [0, '#fff5f0'],
+                    [5000, '#f9bfbd'], 
+                    [10000, '#fb6762'],
+                    [15000, '#fc3a33'],
+                    [20000, '#fa0c02'],
+                    [25000, '#cb181d'],
+                ]},
+                    'fill-opacity': [
+                        'case',
+                        ['boolean', ['feature-state', 'hover'], false],
+                        1,
+                        0.95
+                    ]
+                }
+            },
+            'waterway-label'
+            );
+
+
+
+            var x = document.getElementsByClassName('citylink');
+            var i;
+            for (i = 0; i < x.length; i++) {
+                x[i].addEventListener('click', function (e) {
+                    //this for when you click different city names in the web page
+                    var lat, long;
+
+				switch(e.target.id) {
+					case "UnitedKingdom": long=-2; lat=54; break;
+					case "UnitedStates": long=-97; lat=38; break;
+					case "China": long=105; lat=35; break;
+					case "India": long=77; lat=20; break;
+					case "Ukraine": long=32; lat=49; break;
+					case "Russia": long=100; lat=60; break;
+                    // case "World": long=0; lat=0; zoom=0; break;
+				}
+
+				beforeMap.flyTo({
+					center: [long,lat],
+					zoom: 4,
+					speed: 0.7,
+					pitch: 0
+					});
+                });
+            };
+
+    //         var popup_2000 = new mapboxgl.Popup({
+    //   closeButton: false,
+    //   closeOnClick: false,
+    // });
+
+    // beforeMap.on("mousemove", "Emission_2000", function (e) {
+    //     beforeMap.getCanvas().style.cursor = "pointer";
+    //   var district = beforeMap.queryRenderedFeatures(e.point, {
+    //     layers: ["Emission_2000"],
+    //   });
+    //   var props = district[0].properties;
+    //   console.log(district)
+    //   // it is strange only one popup work here
+    //   var content = "<b>" + "ADMIN" + "</b>" + "<br>";
+    //   content += "Country: " + props.ADMIN + "<br>";
+    //   content += "GHG_2000: " + props.CO2_CAP_kg_2000 + "<br>";
+    //   content += "GHG_2019: " + props.CO2_CAP_kg_2019 + "<br>";
+
+    //   //content2 += "proportion: " + proportion_test2 + "% <br>";
+    //   //content2 += "quantity: " + state2.quantity + "<br>";
+    //   console.log(content)
+    //   popup_2000.setLngLat(e.lngLat).setHTML(content).addTo(beforeMap);
+    // });
+
+    // beforeMap.on("mouseleave", "Emission_2000", function () {
+    //     beforeMap.getCanvas().style.cursor = "";
+    //   popup_2000.remove();
+    // });
+
+
+
+
+            var popup_2000 = new mapboxgl.Popup();
+            // Another event listener that adds the popup when the user puts their cursor over the tube circles
+            beforeMap.on('click', 'Emission_2000', function (e) {
+                popup_2000
+                    .setLngLat(e.lngLat)
+                    .setHTML("<h3> Country: " + e.features[0].properties.ADMIN + "</h3> " +
+                        "<h3> GHG_2000: " + e.features[0].properties.CO2_CAP_kg_2000 + "</h3>" +
+                        "<h3> GHG_2019: " + e.features[0].properties.CO2_CAP_kg_2019 + "</h3>")
+                    .addTo(beforeMap);
+            });
+
+            // Change the cursor to a pointer when the mouse is over the stations layer.
+            beforeMap.on('mouseenter', 'Emission_2000', function () {
+                beforeMap.getCanvas().style.cursor = 'pointer';
+            });
+
+            // Change it back to a pointer when it leaves and remove the popup window.
+            beforeMap.on('mouseleave', 'Emission_2000', function () {
+                beforeMap.getCanvas().style.cursor = '';
+                popup_2000.remove();
+            });
+
+
+
+
+        
+            beforeMap.addLayer({
+                'id': 'outline',
+                'type': 'line',
+                'source': 'states',
+                'layout': {},
+                'paint': {
+                    'line-color': '#f7f7f2',
+                    'line-width': 0.4
+                }
+            });
+
+
+    });    
+   
+
+
+
+
+    
+
+        const afterMap = new mapboxgl.Map({
+            container: 'after',
+            style: 'mapbox://styles/mapbox/light-v10',
+            center: [0, 35],
+            zoom: 1
+        });
+
+        afterMap.on('load', () => {
+            afterMap.addSource('states', {
+                'type': 'geojson',
+                'data': 'https://raw.githubusercontent.com/HangjinCai/Digital_Viz_group7/main/merged_years_emission.geojson'
+            })
+       
+        afterMap.addControl(new mapboxgl.NavigationControl());
+
+        afterMap.addLayer({
+                'id': 'Emission_2019',
+                'type': 'fill',
+                'source': 'states',
+                'layout': { 'visibility': 'visible' },
+                'paint': {
+                    'fill-color': {
+                        property: 'CO2_CAP_kg_2019',
+                        stops: [
+                            [0, '#fff5f0'],
+                            [5000, '#f9bfbd'],
+                            [10000, '#fb6762'],
+                            [15000, '#fc3a33'],
+                            [20000, '#fa0c02'],
+                            [25000, '#cb181d'],
+                        ]
+                    },
+                    'fill-opacity': [
+                        'case',
+                        ['boolean', ['feature-state', 'hover'], false],
+                        1,
+                        0.95
+                    ]
+                }
+            },
+            'waterway-label'
+            );
+  
+
+
+            var x = document.getElementsByClassName('citylink');
+            var i;
+            for (i = 0; i < x.length; i++) {
+                x[i].addEventListener('click', function (e) {
+                    //this for when you click different city names in the web page
+                    var lat, long;
+
+				switch(e.target.id) {
+					case "UnitedKingdom": long=-2; lat=54; break;
+					case "UnitedStates": long=-97; lat=38; break;
+					case "China": long=105; lat=35; break;
+					case "India": long=77; lat=20; break;
+					case "Ukraine": long=32; lat=49; break;
+					case "Russia": long=100; lat=60; break;
+                    // case "center": long=35; lat=0; zoom=1; break;
+				}
+
+				afterMap.flyTo({
+					center: [long,lat],
+					zoom: 4,
+					speed: 0.7,
+					pitch: 0
+					});
+                });
+                };
+
+            
+                // var popup = new mapboxgl.Popup();
+
+            // // Another event listener that adds the popup when the user puts their cursor over the tube circles
+            // afterMap.on('click', 'Emission_2019', function (e) {
+            //     popup
+            //         .setLngLat(e.lngLat)
+            //         .setHTML("<h3> Country: " + e.features[0].properties.ADMIN + "</h3> " +
+            //             "<h3> CO2_2000: " + e.features[0].properties.CO2_CAP_kg_2000 + "</h3>" +
+            //             "<h3> CO2_2019: " + e.features[0].properties.CO2_CAP_kg_2019 + "</h3>")
+            //         .addTo(afterMap);
+            // });
+
+            // // Change the cursor to a pointer when the mouse is over the stations layer.
+            // afterMap.on('mouseenter', 'Emission_2019', function () {
+            //     afterMap.getCanvas().style.cursor = 'pointer';
+            // });
+
+            // // Change it back to a pointer when it leaves and remove the popup window.
+            // afterMap.on('mouseleave', 'Emission_2019', function () {
+            //     afterMap.getCanvas().style.cursor = '';
+            //     popup.remove();
+            // });
+
+
+
+
+            afterMap.addLayer({
+                'id': 'outline',
+                'type': 'line',
+                'source': 'states',
+                'layout': {},
+                'paint': {
+                    'line-color': '#f7f7f2',
+                    'line-width': 0.4
+                }
+            });
+
+            
+
+     });
+
+
+
+        // });
+
+    // A selector or reference to HTML element
+        const container = '#comparison-container';
+
+
+
+
+        const map = new mapboxgl.Compare(beforeMap, afterMap, container, {
+            // Set this to enable comparing two maps by mouse movement:
+            mousemove: false
+        });
+
+            //         var popup = new mapboxgl.Popup();
+
+            // // Another event listener that adds the popup when the user puts their cursor over the tube circles
+            // container.on('click', 'Emission_2019', function (e) {
+            //     popup
+            //         .setLngLat(e.lngLat)
+            //         .setHTML("<h3> Country: " + e.features[0].properties.ADMIN + "</h3> " +
+            //             "<h3> CO2_2000: " + e.features[0].properties.CO2_CAP_kg_2000 + "</h3>" +
+            //             "<h3> CO2_2019: " + e.features[0].properties.CO2_CAP_kg_2019 + "</h3>")
+            //         .addTo(container);
+            // });
+
+            // // Change the cursor to a pointer when the mouse is over the stations layer.
+            // container.on('mouseenter', 'Emission_2019', function () {
+            //     container.getCanvas().style.cursor = 'pointer';
+            // });
+
+            // // Change it back to a pointer when it leaves and remove the popup window.
+            // container.on('mouseleave', 'Emission_2019', function () {
+            //     container.getCanvas().style.cursor = '';
+            //     popup.remove();
+            // });
+
+
+</script>
+    
+    </body>
+    
+    </html>
