@@ -121,7 +121,7 @@
 
     <div id="map"></div>
     <div class="left-box">
-       
+
         <div class="btn-box">
             <div class="btnbox" onclick="changeMap(1)">McDonald's price by Country</div>
             <div class="btnbox" onclick="changeMap(3)">Food Price Inflation Index in European Union</div>
@@ -130,7 +130,11 @@
 
         <div class="introduce-box">
             <h1 id="introduceTitle">Global McDonald's Price in Each Country</h1>
-            <p id="introduce" style="world-break: break-all;">Use McDonald's Big Mac meals prices from countries around the world to explore the purchasing power parity of currencies and the food price in each country. Meanwhile, to eliminate exchange rate differences, we will uniformly use the United States dollar (USD) as the currency unit. Obviously, we can find that McDonald's prices in Europe are generally higher than in other regions and continents.</p>
+            <p id="introduce" style="world-break: break-all;">Use McDonald's Big Mac meals prices from countries around
+                the world to explore the purchasing power parity of currencies and the food price in each country.
+                Meanwhile, to eliminate exchange rate differences, we will uniformly use the United States dollar (USD)
+                as the currency unit. Obviously, we can find that McDonald's prices in Europe are generally higher than
+                in other regions and continents.</p>
         </div>
 
 
@@ -229,7 +233,12 @@
 
     <div class="text-right-box" id="right-box">
         <h1 id="right-introduceTitle">Food Products</h1>
-        <p id="right-introduce" >The Food Products inflation index was relatively stable with only minor volatility before September 2021 but breaks the stable pattern after the time point. The inflation index increased sharply from 102.7 to 109.9 with a peak of 110.5. In addition, until September 2021, the inflation rate is elastic and can be adjusted immediately, and once it rises, it will immediately pull back and decrease for a period indicating it exists the phenomenon of long-term periodic fluctuations. However, after September 2021, inflation remains at a high level.</p>
+        <p id="right-introduce">The Food Products inflation index was relatively stable with only minor volatility
+            before September 2021 but breaks the stable pattern after the time point. The inflation index increased
+            sharply from 102.7 to 109.9 with a peak of 110.5. In addition, until September 2021, the inflation rate is
+            elastic and can be adjusted immediately, and once it rises, it will immediately pull back and decrease for a
+            period indicating it exists the phenomenon of long-term periodic fluctuations. However, after September
+            2021, inflation remains at a high level.</p>
     </div>
 
     <script>
@@ -238,15 +247,15 @@
         let popup1 = null
         let currentType = 1
         let introduce = {
-            "Food Products":`The Food Products inflation index was relatively stable with only minor volatility before September 2021 but breaks the stable pattern after the time point. The inflation index increased sharply from 102.7 to 109.9 with a peak of 110.5. In addition, until September 2021, the inflation rate is elastic and can be adjusted immediately, and once it rises, it will immediately pull back and decrease for a period indicating it exists the phenomenon of long-term periodic fluctuations. However, after September 2021, inflation remains at a high level.`,
-            "Bread & Cereals":'The Bread & Cereals inflation index has a slowly rising trend, gradually increasing from 98 in January 2017 to 110 in March 2022 with minor fluctuations. In terms of inflation, the rate for bread and cereals is controlled within a range of -4 to 4. Similarly, it has long-term periodic fluctuations before September 2021 and the inflation index also increases rapidly after September 2021.',
-            "Fish":'The Fish inflation index fluctuates upwards from 100 in January 2017 and reaches a peak of 117 in April 2020. After that, the inflation index then begins a slow decline to 109 in June 2021 before bouncing back up again. The inflation rate has well adjusted in its range of -2.9 to 4.7, with higher inflation falling immediately each time it occurs. But overall, the value of the number of increases is more frequently leading to an overall upward trend in the inflation index.',
-            "Fruit":'The inflation index for Fruit shows an obvious seasonal pattern. It reaches its lowest value around August each year and reaches its highest value around January each year. And The process repeats a new circle again. This may be related to the seasonal output of fruit. In addition, by looking at the fruit inflation rate, it is possible to find that there are seasonal variations in volatilities. However, there is a general upward trend on the index side. The statistical line chart shows a downward trend in March 2021, so we can predict that it will probably continue to decrease in the following time.',
-            "Meat":'Compared to other food categories, the inflation index for Meat remains low, even below 100 until September 2021. However, same as other food categories, it started to rise after September 2021 and reached a peak of 104.2 but is still low. At the same time, inflation can be found at rates ranging from -0.9 to 2, which indicates that food prices for meat have remained extremely stable.',
-            "Milk, Cheese & Eggs":'The inflation index for Milk, Cheese & Eggs is also at a relatively low level. It started at 96 in January 2017 and gradually rose to 98.4 in September 2017, after which it began to fluctuate around 100 for a long time. Inflation has been in the range of -2.5 to 2.6. However, after September 2021, this long period of stable fluctuation begins to break down and the inflation index also rises. Inflation has also been at a high level for several months.',
-            "Oils & Fats":'The Oils & Fats inflation index shows an extreme upward trend, rising from 102.7 at the beginning to 118.8 by September 2021, while at the same time it can be observed that this upward trend is accompanied by dramatic increases and dramatic decreases. The inflation rate line chart shows a range of -9 to 9, which also indicates a significantly high level of volatility and risk. Furthermore, the index has risen to 132.1, which is the highest of all the food categories and indicates that Oils & Fats is in a great crisis.',
-            "Sugar, Jam, Honey, Syrups, Chocolate & Confectionery":'The Sugar, Jam, Honey, Syrups, Chocolate & Confectionery inflation index and rate are the most distinctive of all food categories. It has been relatively stable in this period and has not shown any significant increase. However, all other food categories will increase after September 2021, but Sugar, Jam, Honey, Syrups, Chocolate & Confectionery will even decrease. Furthermore, the inflation index is basically between 100 and 105 and the inflation rate is basically contained within a range of -3 to 4 indicating it is consistently steady.',
-            "Vegetables Including Potatoes & Tubers":'The Vegetables Including Potatoes & Tubers inflation index is at a relatively low level overall. It remained between 100 and 105 until October 2021 and will not continue to increase or decrease for more than two months in a row. Similarly, as with most food categories, it started to increase after October 2021 and reached 110, but we can detect a turning point in March 2020 when it started to decrease. The inflation rate is ideal, with values between -4.2 and 3.5, implying a relatively stable pattern.',
+            "Food Products": `The Food Products inflation index was relatively stable with only minor volatility before September 2021 but breaks the stable pattern after the time point. The inflation index increased sharply from 102.7 to 109.9 with a peak of 110.5. In addition, until September 2021, the inflation rate is elastic and can be adjusted immediately, and once it rises, it will immediately pull back and decrease for a period indicating it exists the phenomenon of long-term periodic fluctuations. However, after September 2021, inflation remains at a high level.`,
+            "Bread & Cereals": 'The Bread & Cereals inflation index has a slowly rising trend, gradually increasing from 98 in January 2017 to 110 in March 2022 with minor fluctuations. In terms of inflation, the rate for bread and cereals is controlled within a range of -4 to 4. Similarly, it has long-term periodic fluctuations before September 2021 and the inflation index also increases rapidly after September 2021.',
+            "Fish": 'The Fish inflation index fluctuates upwards from 100 in January 2017 and reaches a peak of 117 in April 2020. After that, the inflation index then begins a slow decline to 109 in June 2021 before bouncing back up again. The inflation rate has well adjusted in its range of -2.9 to 4.7, with higher inflation falling immediately each time it occurs. But overall, the value of the number of increases is more frequently leading to an overall upward trend in the inflation index.',
+            "Fruit": 'The inflation index for Fruit shows an obvious seasonal pattern. It reaches its lowest value around August each year and reaches its highest value around January each year. And The process repeats a new circle again. This may be related to the seasonal output of fruit. In addition, by looking at the fruit inflation rate, it is possible to find that there are seasonal variations in volatilities. However, there is a general upward trend on the index side. The statistical line chart shows a downward trend in March 2021, so we can predict that it will probably continue to decrease in the following time.',
+            "Meat": 'Compared to other food categories, the inflation index for Meat remains low, even below 100 until September 2021. However, same as other food categories, it started to rise after September 2021 and reached a peak of 104.2 but is still low. At the same time, inflation can be found at rates ranging from -0.9 to 2, which indicates that food prices for meat have remained extremely stable.',
+            "Milk, Cheese & Eggs": 'The inflation index for Milk, Cheese & Eggs is also at a relatively low level. It started at 96 in January 2017 and gradually rose to 98.4 in September 2017, after which it began to fluctuate around 100 for a long time. Inflation has been in the range of -2.5 to 2.6. However, after September 2021, this long period of stable fluctuation begins to break down and the inflation index also rises. Inflation has also been at a high level for several months.',
+            "Oils & Fats": 'The Oils & Fats inflation index shows an extreme upward trend, rising from 102.7 at the beginning to 118.8 by September 2021, while at the same time it can be observed that this upward trend is accompanied by dramatic increases and dramatic decreases. The inflation rate line chart shows a range of -9 to 9, which also indicates a significantly high level of volatility and risk. Furthermore, the index has risen to 132.1, which is the highest of all the food categories and indicates that Oils & Fats is in a great crisis.',
+            "Sugar, Jam, Honey, Syrups, Chocolate & Confectionery": 'The Sugar, Jam, Honey, Syrups, Chocolate & Confectionery inflation index and rate are the most distinctive of all food categories. It has been relatively stable in this period and has not shown any significant increase. However, all other food categories will increase after September 2021, but Sugar, Jam, Honey, Syrups, Chocolate & Confectionery will even decrease. Furthermore, the inflation index is basically between 100 and 105 and the inflation rate is basically contained within a range of -3 to 4 indicating it is consistently steady.',
+            "Vegetables Including Potatoes & Tubers": 'The Vegetables Including Potatoes & Tubers inflation index is at a relatively low level overall. It remained between 100 and 105 until October 2021 and will not continue to increase or decrease for more than two months in a row. Similarly, as with most food categories, it started to increase after October 2021 and reached 110, but we can detect a turning point in March 2020 when it started to decrease. The inflation rate is ideal, with values between -4.2 and 3.5, implying a relatively stable pattern.',
         }
 
         initMap()
@@ -283,7 +292,7 @@
                         [e.point.x + 1, e.point.y + 1]
                     ];
                     if (currentType == 3) {
-                        
+
                         var features = map.queryRenderedFeatures(bbox, {
                             layers: ['europe2-witheu-noeumean-1qn2qs']
                         });
@@ -291,7 +300,7 @@
                         if (features.length > 0) {
                             let properties = features[0].properties
 
-                            
+
                             document.getElementById("COUNTRY").innerHTML = properties.NAME_EN
                             if (!properties["Europe2_withEU_noEUmean_2019M01"]) {
                                 document.getElementById("COUNTRY").innerHTML = properties.NAME_EN +
@@ -328,7 +337,7 @@
                             for (let i in data) {
                                 xchartData.push(i)
                                 ychartData.push(data[i])
-                                
+
                             }
 
                             const ychartData1 = [104.614285, 105.6857143, 106.9285714, 108.4,
@@ -366,13 +375,13 @@
                                     type: 'value',
                                     max: 160,
                                     min: 60,
-                                    name:"Food Inflation Index"
+                                    name: "Food Inflation Index"
                                 },
-                                grid:{
-                                    left:"15%"
+                                grid: {
+                                    left: "15%"
                                 },
                                 legend: {
-                                    data: [properties.NAME_EN, "Europe", ],
+                                    data: [properties.NAME_EN, "Europe",],
                                     top: "4%",
                                     textStyle: {
                                         color: "#1FC3CE",
@@ -408,10 +417,10 @@
                             console.log(properties)
                             if (popup1) popup1.remove()
                             popup1 = new mapboxgl.Popup({
-                                    closeOnClick: false
-                                })
+                                closeOnClick: false
+                            })
                                 .setLngLat([e.lngLat.lng, e.lngLat.lat])
-                                .setHTML('<div>' + properties.NAME_EN + '</div><div>Average:'+properties.Europe2_withEU_noEUmean_Average+'</div>')
+                                .setHTML('<div>' + properties.NAME_EN + '</div><div>Average:' + properties.Europe2_withEU_noEUmean_Average + '</div>')
                                 .addTo(map);
 
                         } else {
@@ -427,7 +436,7 @@
                         [e.point.x + 1, e.point.y + 1]
                     ];
                     if (currentType == 1) {
-                        
+
                         var features = map.queryRenderedFeatures(bbox, {
                             layers: ['mc-price-88m7ya']
                         });
@@ -435,8 +444,8 @@
                             let properties = features[0].properties
                             if (popup) popup.remove()
                             popup = new mapboxgl.Popup({
-                                    closeOnClick: false
-                                })
+                                closeOnClick: false
+                            })
                                 .setLngLat([e.lngLat.lng, e.lngLat.lat])
                                 .setHTML('<p>' + properties.COUNTRY + ':' + properties.World1_PRICE +
                                     '</p>')
@@ -449,6 +458,26 @@
                     //
                 });
             })
+
+            map.on('mouseenter', 'europe2-witheu-noeumean-1qn2qs', function () {
+                map.getCanvas().style.cursor = 'pointer';
+            });
+            //change back when not on the layer
+            map.on('mouseleave', 'europe2-witheu-noeumean-1qn2qs', function () {
+                map.getCanvas().style.cursor = '';
+            });
+
+            map.on('mouseenter', 'mc-price-88m7ya', function () {
+                map.getCanvas().style.cursor = 'pointer';
+            });
+            //change back when not on the layer
+            map.on('mouseleave', 'mc-price-88m7ya', function () {
+                map.getCanvas().style.cursor = '';
+            });
+
+            map.dragRotate.disable();
+            map.touchZoomRotate.disableRotation();
+
         }
 
 
@@ -497,7 +526,7 @@
                         "The trend in the inflation index is stable for most countries. The average of the EU is also stable, and the value fluctuates between 104 and 110, with an average value of 106.46. However, the three countries with an inflation index higher than 120, are Poland, Romania, and Latvia. Meanwhile, the inflations in these three countries have higher volatility patterns."
                     document.getElementById("legend1").style.display = "flex"
                     document.getElementById("introduceTitle").innerHTML = "Food Price Inflation Index in European Union"
-                    
+
                     break
             }
 
@@ -508,8 +537,8 @@
         function changeSelect(id) {
             var aa = document.getElementById(id);
             document.getElementById("right-introduceTitle").innerHTML = aa.value
-            
-            document.getElementById("right-introduce").innerHTML =introduce[aa.value]
+
+            document.getElementById("right-introduce").innerHTML = introduce[aa.value]
             loadcsv(aa.value)
         }
 
@@ -538,7 +567,7 @@
                     xAxis: {
                         type: 'category',
                         data: time,
-                      
+
                     },
                     tooltip: {
                         trigger: 'axis',
@@ -560,7 +589,7 @@
                         min: 80,
                         name: "Inflation Index",
                         nameTextStyle: {
-                            padding: [0, 0, 0, 50], 
+                            padding: [0, 0, 0, 50],
                         }
                     },
                     series: [{
@@ -592,9 +621,9 @@
                     },
                     yAxis: {
                         type: 'value',
-                        name:  "Inflation Rate",
+                        name: "Inflation Rate",
                         nameTextStyle: {
-                            padding: [0, 0, 0, 50], 
+                            padding: [0, 0, 0, 50],
                         }
                     },
                     series: [{
@@ -604,7 +633,7 @@
                         smooth: true,
                     }]
                 });
-                
+
             });
         }
     </script>
