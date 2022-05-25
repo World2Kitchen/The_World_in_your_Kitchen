@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>restaurant</title>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://api.mapbox.com/mapbox-gl-js/v2.8.2/mapbox-gl.css" rel="stylesheet">
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.8.2/mapbox-gl.js"></script>
+    <script charset="utf-8" src="https://d3js.org/d3.v4.min.js"></script>
+    <link rel="stylesheet" href="cuisine_style.css">
+
+</head>
+
+
+
+<body>
+    <div id="map"></div>
+
+
+    <div class="sidenav">
+
+
+
+        <button class="dropdown-btn"><b>Introduction</b>
+            <i class="fa fa-caret-down"></i>
+        </button>
+
+        <div class="dropdown-container">
+            <a href="#">
+                <div>
+                    <p style="font-size:15px; text-align: left;">This interactive map shows global ethnic cuisine in two
+                        different scale. From local ethnic restaurants in London to popular ethnic dishes orgins around
+                        the world.
+                    </p>
+                </div>
+            </a>
+        </div>
+        <br>
+        <hr style="height:2px;border-width:0;color:rgb(50, 50, 50);background-color:rgb(50, 50, 50)">
+
+
+
+        <button class="dropdown-btn"><b>Filter by Cuisine Type</b>
+            <i class="fa fa-caret-down" style="font-size:24px"></i>
+        </button>
+
+        <div id="myDropdown" class="dropdown-container">
+            <a href="#"></a>
+            <form>
+                <select name="restaurants" id="restaurants2" type="text" class="dropdown-content">
+                    <option value="All">All</option>
+                    <optgroup label="European Style">
+                        <option value="Italian">Italian</option>
+                        <option value="French">French</option>
+                        <option value="Spanish">Spanish</option>
+                        <option value="Central_European">Central European</option>
+                        <option value="East_European">East European</option>
+                        <option value="Mediterranean">Mediterranean</option>
+                    </optgroup>
+                    <optgroup label="Asian Style">
+                        <option value="East_Asian">East Asian</option>
+                        <option value="South_Asian">South Asian</option>
+                        <option value="Southeast_Asian">Southeast Asian</option>
+                        <option value="Middle_Eastern">Middle Eastern</option>
+                    </optgroup>
+                    <optgroup label="Other">
+                        <option value="African">African</option>
+                        <option value="North_American">North American</option>
+                        <option value="Latin_American">Latin American</option>
+                    </optgroup>
+                </select>
+                <noscript><input type=”submit” value=”Submit”></noscript>
+
+            </form>
+
+        </div>
+
+
+        <button id="fit" class="the_zoom_dudes">Select a cuisine from the Dropdown!</button> <br>
+        <button id="fit_london" class="the_zoom_dudes">Zoom back to London</button>
+
+
+
+
+        <hr style="height:2px;border-width:0;color:rgb(50, 50, 50);background-color:rgb(50, 50, 50)">
+        <a href="#"><b>Toggle Layers</b></a>
+
+
+        <button class="dropdown-btn" id="Heatmap">
+        </button>
+        <div class="dropdown-container">
+            <a href="#">Link 1</a>
+        </div>
+
+
+
+        <hr style="height:2px;border-width:0;color:rgb(26, 26, 26);background-color:rgb(26, 26, 26)">
+
+
+
+
+
+
+
+
+        <!---     <img src="legend.png" width="200" height="280" alt="Legend" id="'legend">  --->
+
+
+
+
+
+        <div class='map-overlay' id='legend'>
+            <h3>Global Dishes Popularity</h3>
+            <p style="text-align: left;"><i>Based on user ratings on TasteAtlas.com</i></p>
+
+            &nbsp;&nbsp;
+            <div class="circle1"></div>
+
+            <span>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0 - 10
+            </span>
+
+            <br> <br>
+
+            &nbsp;
+            <div class="circle2"></div>
+            <span>
+                &nbsp;&nbsp;&nbsp;10 - 20
+            </span>
+
+            <br> <br>
+
+            <div class="circle3"></div>
+            <span>
+                &nbsp;&nbsp;20 - 25
+            </span>
+
+            <br> <br>
+
+            <img class="b" src="yummy_fish_n_chips.png" width="60" height="60">
+            <span>
+                &nbsp;&nbsp;Popular Dishes (>=26)
+            </span>
+
+
+        </div>
+
+
+
+        <a class="view" href="#">
+            <p>Data Source: Yelp Fusion & TastAtlas </p>
+        </a>
+
+
+
+
+
+
+
+    </div>
+
+    <div class='map-overlay' id='pd'>
+
+    </div>
+
+    <script>
+
+
+        mapboxgl.accessToken = 'pk.eyJ1IjoidGltbWVuZyIsImEiOiJja2xmN3F5NDMzcjFyMm9ucnBjZDYxd2o3In0.SqHvra71P3s8BS3MUyNFaw';
+
+        // Load a new map in the 'map' HTML div
+        var map = new mapboxgl.Map({
+            container: 'map', // container id
+            style: 'mapbox://styles/timmeng/cl2rt193d000a15o3gacwyjzv', // Using the standard Mapbox Light style
+            center: [-0.15, 51.5], // starting position [lng, lat]
+            zoom: 10 // starting zoom
+        });
+
+
+        map.addControl(new mapboxgl.NavigationControl()); //Adds zoom control
+
+        // disable map rotation using right click + drag
+        map.dragRotate.disable();
+        // disable map rotation using touch rotation gesture
+        map.touchZoomRotate.disableRotation();
+
+
+        map.on('mouseenter', 'london_rest', function () {
+            map.getCanvas().style.cursor = 'pointer';
+        });
+        //change back when not on the layer
+        map.on('mouseleave', 'london_rest', function () {
+            map.getCanvas().style.cursor = '';
+        });
+
+
+
+
+        document.getElementById('restaurants2').addEventListener('change', (event) => {
+            const chosen = event.target.value
+
+            if (chosen === 'Italian') {
+                var x = 'Italian'
+                filter_cuisine = ['==', ['get', 'general_category'], x]
+                filter_cuisine1 = ['==', 'general_category', x]
+            } else if (chosen === 'French') {
+                var x = 'French'
+                filter_cuisine = ['==', ['get', 'general_category'], x]
+                filter_cuisine1 = ['==', 'general_category', x]
+            } else if (chosen === 'Spanish') {
+                var x = 'Spanish'
+                filter_cuisine = ['==', ['get', 'general_category'], x]
+                filter_cuisine1 = ['==', 'general_category', x]
+            } else if (chosen === 'Central_European') {
+                var x = 'Central_European'
+                filter_cuisine = ['==', ['get', 'general_category'], x]
+                filter_cuisine1 = ['==', 'general_category', x]
+            } else if (chosen === 'East_European') {
+                var x = 'East_European'
+                filter_cuisine = ['==', ['get', 'general_category'], x]
+                filter_cuisine1 = ['==', 'general_category', x]
+            } else if (chosen === 'Mediterranean') {
+                var x = 'Mediterranean'
+                filter_cuisine = ['==', ['get', 'general_category'], x]
+                filter_cuisine1 = ['==', 'general_category', x]
+            } else if (chosen === 'East_Asian') {
+                var x = 'East_Asian'
+                filter_cuisine = ['==', ['get', 'general_category'], x]
+                filter_cuisine1 = ['==', 'general_category', x]
+            } else if (chosen === 'South_Asian') {
+                var x = 'South_Asian'
+                filter_cuisine = ['==', ['get', 'general_category'], x]
+                filter_cuisine1 = ['==', 'general_category', x]
+            } else if (chosen === 'Southeast_Asian') {
+                var x = 'Southeast_Asian'
+                filter_cuisine = ['==', ['get', 'general_category'], x]
+                filter_cuisine1 = ['==', 'general_category', x]
+            } else if (chosen === 'Middle_Eastern') {
+                var x = 'Middle_Eastern'
+                filter_cuisine = ['==', ['get', 'general_category'], x]
+                filter_cuisine1 = ['==', 'general_category', x]
+            } else if (chosen === 'African') {
+                var x = 'African'
+                filter_cuisine = ['==', ['get', 'general_category'], x]
+                filter_cuisine1 = ['==', 'general_category', x]
+            } else if (chosen === 'North_American') {
+                var x = 'North_American'
+                filter_cuisine = ['==', ['get', 'general_category'], x]
+                filter_cuisine1 = ['==', 'general_category', x]
+            } else if (chosen === 'Latin_American') {
+                var x = 'Latin_American'
+                filter_cuisine = ['==', ['get', 'general_category'], x]
+                filter_cuisine1 = ['==', 'general_category', x]
+            } else {
+                var x = 'London'
+                filter_cuisine = ['==', ['get', 'City'], x]
+                filter_cuisine1 = ['==', 'general_category', 'no_one']
+
+            }
+            map.setFilter('london_rest', filter_cuisine);
+            map.setFilter('Heatmap', filter_cuisine);
+            map.setFilter('all_regions', filter_cuisine1);
+        })
+
+
+        var filter_bound_long_l = [-0.4437282418607733]; //long for the left boundary of the extent
+        var filter_bound_lat_l = [51.34586811933576]; //lat for the bottom boundary of the extent
+
+        var filter_bound_long_r = [0.13268770774797098]; //long for the right boundary of the extent
+        var filter_bound_lat_r = [51.64960824411873]; //lat for the top boundary of the extent
+
+        document.getElementById('restaurants2').addEventListener('change', (event) => {
+            const rest_chosen = event.target.value
+
+            if (rest_chosen === 'Italian') {
+                filter_bound_long_l = [6.040867];
+                filter_bound_lat_l = [36.204611];
+
+                filter_bound_long_r = [12.994443625986456];
+                filter_bound_lat_r = [47.78600020646049];
+
+                document.getElementById('fit').innerText = 'View local cuisine in Italy';
+
+            } else if (rest_chosen === 'French') {
+                filter_bound_long_l = [-3.585836122565897];
+                filter_bound_lat_l = [41.723238028859116];
+
+                filter_bound_long_r = [3.615918844298056];
+                filter_bound_lat_r = [51.67067827461874];
+
+                document.getElementById('fit').innerText = 'View local cuisine in France';
+
+
+            } else if (rest_chosen === 'Spanish') {
+                filter_bound_long_l = [-15.142553897013041];
+                filter_bound_lat_l = [34.80953736853954];
+
+                filter_bound_long_r = [6.1840981286013825];
+                filter_bound_lat_r = [44.65350078725607];
+
+                document.getElementById('fit').innerText = 'View local cuisine in Spain';
+
+
+            } else if (rest_chosen === 'Central_European') {
+                filter_bound_long_l = [0.70158596712191];
+                filter_bound_lat_l = [44.74914976502212];
+
+                filter_bound_long_r = [22.240639052671238];
+                filter_bound_lat_r = [55.51323699537485];
+
+                document.getElementById('fit').innerText = 'View local cuisine in Central Europe';
+
+
+            } else if (rest_chosen === 'East_European') {
+                filter_bound_long_l = [16.188346759923984];
+                filter_bound_lat_l = [38.701207746905375];
+
+                filter_bound_long_r = [43.26873134548571];
+                filter_bound_lat_r = [61.29037943006017];
+
+                document.getElementById('fit').innerText = 'View local cuisine in East Europe';
+
+            } else if (rest_chosen === 'Mediterranean') {
+                filter_bound_long_l = [11.103884892397435];
+                filter_bound_lat_l = [35.048354061672455];
+
+                filter_bound_long_r = [36.811986961295396];
+                filter_bound_lat_r = [41.34814386349435];
+
+                document.getElementById('fit').innerText = 'View local cuisine in the Mediterranean';
+
+            } else if (rest_chosen === 'East_Asian') {
+                filter_bound_long_l = [70.09779808618293];
+                filter_bound_lat_l = [12.037930218523247];
+
+                filter_bound_long_r = [155.163019950641];
+                filter_bound_lat_r = [55.01854873518295];
+
+                document.getElementById('fit').innerText = 'View local cuisine in East Asia';
+
+            } else if (rest_chosen === 'South_Asian') {
+                filter_bound_long_l = [45.89649571500258];
+                filter_bound_lat_l = [5.082330697258771];
+
+                filter_bound_long_r = [97.00082622831107];
+                filter_bound_lat_r = [40.511447605367174];
+
+                document.getElementById('fit').innerText = 'View local cuisine in South Asia';
+
+            } else if (rest_chosen === 'Southeast_Asian') {
+                filter_bound_long_l = [83.13474920969277];
+                filter_bound_lat_l = [-12.291957945845127];
+
+                filter_bound_long_r = [140.00063319956126];
+                filter_bound_lat_r = [21.525503170219114];
+
+                document.getElementById('fit').innerText = 'View local cuisine in Southeast Asia';
+
+            } else if (rest_chosen === 'Middle_Eastern') {
+                filter_bound_long_l = [15.388017789606472];
+                filter_bound_lat_l = [10.11501320344424];
+
+                filter_bound_long_r = [65.204452551741724];
+                filter_bound_lat_r = [45.845888908652654];
+
+                document.getElementById('fit').innerText = 'View local cuisine in the Middle East';
+
+            } else if (rest_chosen === 'African') {
+                filter_bound_long_l = [-25.03579915682665];
+                filter_bound_lat_l = [-38.154128511603524];
+
+                filter_bound_long_r = [45.92271555892056];
+                filter_bound_lat_r = [30.08216322745542];
+
+                document.getElementById('fit').innerText = 'View local cuisine in Africa';
+
+            } else if (rest_chosen === 'North_American') {
+                filter_bound_long_l = [-162.65395363921235];
+                filter_bound_lat_l = [35.00918120512607];
+
+                filter_bound_long_r = [-57.4734480593502];
+                filter_bound_lat_r = [49.672861157832955];
+
+                document.getElementById('fit').innerText = 'View local cuisine in North America';
+
+            } else if (rest_chosen === 'Latin_American') {
+                filter_bound_long_l = [-143.01977495208891];
+                filter_bound_lat_l = [-55.25412539113786];
+
+                filter_bound_long_r = [-46.63299229320727];
+                filter_bound_lat_r = [35.170867553449376];
+
+                document.getElementById('fit').innerText = 'View local cuisine in Latin America';
+
+            } else {
+
+
+                document.getElementById('fit').innerText = 'Select a cuisine from the Dropdown!';
+
+            }
+        });
+
+
+        document.getElementById('fit').addEventListener('click', function () {
+            map.fitBounds([[filter_bound_long_l, filter_bound_lat_l], [filter_bound_long_r, filter_bound_lat_r]])
+        });
+
+        document.getElementById('fit_london').addEventListener('click', function () {
+            map.fitBounds([[-0.4437282418607733, 51.34586811933576], [0.13268770774797098, 51.64960824411873]])
+        });
+
+
+
+
+        var dropdown = document.getElementsByClassName("dropdown-btn");
+        var i;
+
+        for (i = 0; i < dropdown.length; i++) {
+            dropdown[i].addEventListener("click", function () {
+                this.classList.toggle("active");
+                var dropdownContent = this.nextElementSibling;
+                if (dropdownContent.style.display === "block") {
+                    dropdownContent.style.display = "none";
+                } else {
+                    dropdownContent.style.display = "block";
+                }
+            });
+        }
+
+
+
+
+
+
+        map.on('load', function () {
+            map.addSource("world_dish", {
+                "type": "geojson",
+                "data": 'https://raw.githubusercontent.com/TimMeng19/casa0003_group/main/cuisine_good_nouk_1.geojson'
+            })
+            map.addLayer(
+                {
+                    id: 'world_dish_all',
+                    type: 'circle',
+                    source: 'world_dish',
+                    'layout': {
+                        'visibility': 'visible'
+                    },
+                    paint: {
+                        'circle-color': 'red',
+                        'circle-opacity': 0.3,
+                        'circle-stroke-width': 1,
+                        'circle-stroke-color': 'white',
+                        'circle-stroke-opacity': 0.1,
+                        'circle-radius': {
+                            property: 'Refactored_CalculatedPopularityScore',
+                            stops: [
+                                [{ zoom: 2, value: 0 }, 1],
+                                [{ zoom: 2, value: 10 }, 2],
+                                [{ zoom: 2, value: 20 }, 3],
+                                [{ zoom: 2, value: 30 }, 4],
+                                [{ zoom: 6, value: 0 }, 3],
+                                [{ zoom: 6, value: 10 }, 5],
+                                [{ zoom: 6, value: 20 }, 7],
+                                [{ zoom: 6, value: 30 }, 9],
+                            ]
+                        }
+                    }
+                },
+                'waterway-label'
+            );
+        });
+
+        var popup = new mapboxgl.Popup({
+            closeButton: false,
+            closeOnClick: false
+        });
+
+        map.on('click', 'world_dish_all', function (e) {
+
+            var coordinates = e.features[0].geometry.coordinates.slice();
+            var description = `<h3> ${e.features[0].properties.Label} </h3>` +
+                `<p> Worldwide Popularity: ${e.features[0].properties.Refactored_CalculatedPopularityScore}` +
+                `<p> Description: ${e.features[0].properties.Refactored_Description}`;
+
+            new mapboxgl.Popup()
+                .setLngLat(coordinates)
+                .setHTML(description)
+                .addTo(map);
+        });
+
+        map.on('mouseenter', "world_dish_all", function () {
+            map.getCanvas().style.cursor = 'pointer';
+
+        });
+
+
+
+
+
+
+
+        map.on('load', function () {
+            map.addSource("points", {
+                "type": "geojson",
+                "data": 'https://raw.githubusercontent.com/TimMeng19/casa0003_group/main/london_rest.geojson'
+            })
+
+            map.addLayer(
+                {
+                    id: 'Heatmap',
+                    type: 'heatmap',
+                    source: 'points',
+                    'layout': {
+                        'visibility': 'none'
+                    },
+                    paint: {
+                        'heatmap-color': [
+                            'interpolate',
+                            ['linear'],
+                            ['heatmap-density'],
+                            0,
+                            'rgba(33,102,172,0)',
+                            0.2,
+                            'rgb(255,255,212)',
+                            0.4,
+                            'rgb(254,217,142)',
+                            0.6,
+                            'rgb(254,153,41)',
+                            0.8,
+                            'rgb(217,95,14)',
+                            1,
+                            'rgb(153,52,4)'
+                        ],
+                        // Adjust the heatmap radius by zoom level
+                        'heatmap-radius': [
+                            'interpolate',
+                            ['linear'],
+                            ['zoom'],
+                            10,
+                            17,
+                            20,
+                            25
+                        ],
+                        // Transition from heatmap to circle layer by zoom level
+                        'heatmap-opacity': [
+                            'interpolate',
+                            ['linear'],
+                            ['zoom'],
+                            10,
+                            0.1,
+                            20,
+                            0.05
+                        ]
+                    }
+                },
+                'waterway-label'
+            );
+        });
+
+
+
+
+        var img_id_list = [];
+
+
+
+        d3.json("https://raw.githubusercontent.com/TimMeng19/casa0003_group/main/results_popu.geojson", function (world_food) {
+
+            console.log(world_food)
+
+
+
+            var i
+            for (i = 0; i < world_food.features.length; i++) {
+                var img_link_list = world_food.features[i].properties.Image
+                var descrips = world_food.features[i].properties.Description
+                var pop = world_food.features[i].properties.CalculatedPopularityScore
+                var label_name = world_food.features[i].properties.Name
+                var url_link = world_food.features[i].properties.UrlLink
+                var long = world_food.features[i].geometry.coordinates[0]
+                var lat = world_food.features[i].geometry.coordinates[1]
+
+                //console.log(label_name)
+
+                loadimage(img_link_list, label_name, url_link, long, lat, descrips, pop)
+
+            }
+        });
+
+
+
+        function loadimage(imagePath, labelName, imageSourceName, long, lat, descrips, pop) {
+            map.loadImage(
+                imagePath,
+                (error, image) => {
+                    if (error) throw error;
+
+                    // Add the image to the map style.
+                    map.addImage(imageSourceName, image);
+
+                    // Add a data source containing one point feature.
+                    map.addSource(labelName, {
+                        'type': 'geojson',
+                        'data': {
+                            'type': 'FeatureCollection',
+                            'features': [
+                                {
+                                    'type': 'Feature',
+                                    'geometry': {
+                                        'type': 'Point',
+                                        'coordinates': [long, lat]
+                                    }
+                                }
+                            ]
+                        }
+                    });
+
+                    // Add a layer to use the image to represent the data.
+                    map.addLayer({
+                        'id': `${labelName}_id`,
+                        'type': 'symbol',
+                        'source': labelName, // reference the data source
+                        'layout': {
+                            'icon-image': imageSourceName, // reference the image
+                            'icon-size': 0.3
+                        }
+
+                    });
+
+                    var popup = new mapboxgl.Popup({
+                        closeButton: false,
+                        closeOnClick: false
+                    });
+
+                    map.on('click', `${labelName}_id`, function (e) {
+
+                        var coordinates = [long, lat];
+                        var description = `<h3> ${imageSourceName[0].toUpperCase() + imageSourceName.substring(1)} </h3>` +
+                            `<p> Worldwide Popularity: ${pop}` +
+                            `<p> Description: ${descrips}`;
+
+
+
+
+
+                        new mapboxgl.Popup({ className: 'popups' })
+                            .setLngLat(coordinates)
+                            .setHTML(description)
+                            .addTo(map);
+                    });
+
+                    map.on('mouseenter', `${labelName}_id`, function () {
+                        map.getCanvas().style.cursor = 'pointer';
+
+                    });
+
+                    map.on('mouseleave', `${labelName}_id`, function () {
+                        map.getCanvas().style.cursor = '';
+                    });
+                }
+            );
+
+            img_id_list
+
+            img_id_list.push(`${labelName}_id`);
+
+        }
+
+
+
+        map.on('load', function () {
+            map.addSource('regions', {
+                "type": "geojson",
+                "data": 'https://raw.githubusercontent.com/TimMeng19/casa0003_group/main/gis_bound/regions.geojson'
+            })
+
+            map.addLayer({
+                id: 'all_regions',
+                type: 'line',
+                source: 'regions',
+                'layout': {},
+                'paint': {
+                    'line-color': '#7ea1cf',
+                    'line-width': 1.5,
+                    'line-opacity': [
+                            'interpolate',
+                            ['linear'],
+                            ['zoom'],
+                            5,
+                            0.9,
+                            9,
+                            0.2,
+                            12,
+                            0
+                        ]
+                },
+                'filter': ['==', 'general_category', 'no_one']
+
+
+            },
+                'world_dish_all'
+            );
+        });
+
+
+
+
+
+
+
+        // toggle layers button
+        var toggleableLayerIds = ['Heatmap'];
+
+        for (var i = 0; i < toggleableLayerIds.length; i++) {
+            var id = toggleableLayerIds[i];
+
+            var link = document.createElement('a');
+            link.href = '#';
+            link.className = 'inactive';
+            link.textContent = id;
+
+            link.onclick = function (e) {
+                var clickedLayer = this.textContent;
+                e.preventDefault();
+                e.stopPropagation();
+
+                var visibility = map.getLayoutProperty(clickedLayer, 'visibility');
+
+                if (visibility === 'visible') {
+                    map.setLayoutProperty(clickedLayer, 'visibility', 'none');
+                    this.className = '';
+                } else {
+                    this.className = 'active';
+                    map.setLayoutProperty(clickedLayer, 'visibility', 'visible');
+                }
+            };
+
+            var layers = document.getElementById('Heatmap');
+            layers.appendChild(link);
+        };
+
+
+
+    </script>
+
+</body>
+
+</html>

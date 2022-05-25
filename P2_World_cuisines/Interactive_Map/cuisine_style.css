@@ -1,0 +1,291 @@
+<style>body {
+    margin: 0;
+    padding: 0;
+}
+
+h2,
+h3 {
+    margin: 10px;
+    font-size: 1.2em;
+}
+
+h3 {
+    font-size: 1em;
+}
+
+p {
+    font-size: 10px;
+    margin: 10px;
+    text-align: left;
+}
+
+
+
+/* Fixed sidenav, full height */
+.sidenav {
+    height: 100%;
+    width: 300px;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: #ffff;
+    overflow-x: hidden;
+    padding-top: 20px;
+}
+
+/* Style the sidenav links and the dropdown button */
+.sidenav a,
+.dropdown-btn {
+    padding: 6px 8px 6px 16px;
+    text-decoration: none;
+    font-size: 20px;
+    color: #818181;
+    display: block;
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+    outline: none;
+}
+
+/* On mouse-over */
+.sidenav a:hover,
+.dropdown-btn:hover {
+    color: rgb(56, 56, 56);
+}
+
+/* Main content */
+.main {
+    margin-left: 200px;
+    /* Same as the width of the sidenav */
+    font-size: 20px;
+    /* Increased text to enable scrolling */
+    padding: 0px 10px;
+}
+
+/* Add an active class to the active dropdown button */
+.active {
+    background-color: #ee8a65;
+    color: white;
+}
+
+/* Dropdown container (hidden by default). Optional: add a lighter background color and some left padding to change the design of the dropdown content */
+.dropdown-container {
+    display: none;
+    background-color: #fff;
+    padding-left: 8px;
+    padding-right: 10px;
+    padding-bottom: 20px;
+}
+
+.dropdown-content {
+    padding-left: 15px;
+    padding-right: 10px;
+}
+
+/* Optional: Style the caret down icon */
+.fa-caret-down {
+    float: right;
+    padding-right: 8px;
+}
+
+
+/* Some media queries for responsiveness */
+@media screen and (max-height: 450px) {
+    .sidenav {
+        padding-top: 15px;
+    }
+
+    .sidenav a {
+        font-size: 18px;
+    }
+}
+
+select.dropdown-content {
+    background-color: #ee8a65;
+}
+
+
+.the_zoom_dudes {
+    background-color: #565656;
+    /* Green */
+    border: none;
+    color: white;
+    padding: 10px 15px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    margin: 4px 8px;
+    cursor: pointer;
+    border-radius: 2px;
+    transition-duration: 0.4s;
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+
+}
+
+
+
+
+.the_zoom_dudes:hover {
+    background-color: #ee8a65;
+    /* Green */
+    color: white;
+    box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.24), 0 17px 50px 0 rgba(0, 0, 0, 0.19);
+}
+
+
+
+
+.mapboxgl-popup-content {
+    overflow-y: scroll;
+    max-width: 500px;
+    max-height: 200px;
+    font: 12px/20px 'Open Sans', sans-serif;
+    border-radius: 2px;
+}
+
+
+
+.map-overlay {
+    position: relative;
+    bottom: 0;
+    right: 0;
+    background: rgba(255, 255, 255, 0.8);
+    margin-right: 20px;
+    font-family: Arial, sans-serif;
+    overflow: auto;
+    border-radius: 3px;
+}
+
+#legend {
+    padding: 7px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    line-height: 20px;
+    height: 320px;
+    margin-bottom: 10px;
+    width: 300px;
+    text-align: left;
+}
+
+.circle1 {
+    display: inline-block;
+    border-radius: 50%;
+    min-width: 10px;
+    min-height: 10px;
+    padding: 1px;
+    background: red;
+    opacity: 0.5;
+    text-align: left;
+    line-height: 1;
+    vertical-align: middle;
+
+}
+
+.circle2 {
+    display: inline-block;
+    border-radius: 50%;
+    min-width: 20px;
+    min-height: 20px;
+    padding: 1px;
+    background: red;
+    opacity: 0.5;
+    text-align: left;
+    line-height: 1;
+    vertical-align: middle;
+
+}
+
+.circle3 {
+    display: inline-block;
+    border-radius: 50%;
+    min-width: 40px;
+    min-height: 40px;
+    padding: 1px;
+    background: red;
+    opacity: 0.5;
+    text-align: left;
+    line-height: 1;
+    vertical-align: middle;
+}
+
+img.b {
+
+    vertical-align: middle;
+
+}
+
+
+
+#restaurants2 {
+    padding-left: 15px;
+    width: 200px;
+    height: 25px;
+    background-color: #ffffff;
+}
+
+#Heatmap {
+    padding: 6px 8px 6px 16px;
+    text-decoration: none;
+    font-size: 20px;
+    color: #818181;
+    display: block;
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+    outline: none;
+}
+
+#Heatmap a {
+    color: #818181;
+    display: block;
+    margin: 0;
+    padding: 0;
+    padding: 10px;
+    text-decoration: none;
+}
+
+#Heatmap a:last-child {
+    border: none;
+}
+
+#Heatmap a:hover {
+    color: #565656;
+}
+
+#Heatmap a.active {
+    background-color: #ee8a65;
+    color: #ffffff;
+}
+
+
+#Heatmap a.active:hover {
+    color: #565656;
+}
+
+
+
+
+.mapboxgl-ctrl-logo {
+    display: none !important;
+}
+
+
+
+
+
+#map {
+    display: block;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 100%;
+}
+
+;
+
+</style>
