@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Filter symbols by toggling a list</title>
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+    <link href="https://api.mapbox.com/mapbox-gl-js/v2.5.0/mapbox-gl.css" rel="stylesheet">
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.5.0/mapbox-gl.js"></script>
+    <script charset="utf-8" src="https://d3js.org/d3.v4.min.js"></script>
+    <script charset="utf-8" src="https://cdnjs.cloudflare.com/ajax/libs/dimple/2.3.0/dimple.latest.min.js"></script>
+    <script src="./echarts.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        #map {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 100%;
+        }
+
+        .btnbox {
+            /* position: absolute;
+            top: 10px;
+            left: 20px; */
+
+            background: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 90px;
+            margin-top: 10px;
+            margin-left: 10px;
+            /* flex: 1; */
+            text-align: center;
+            width: 85%;
+        }
+
+        .left-box {
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            z-index: 5;
+            background: rgba(255, 255, 255, 0.7);
+            padding: 10px 20px;
+            width: 480px;
+            border-radius: 5px;
+            max-height: calc(100% - 20px);
+            overflow: auto;
+        }
+
+        .echart-box {
+
+            padding: 5px;
+            border-radius: 2px;
+            cursor: pointer;
+            display: none;
+        }
+
+        #select {
+            width: 100%;
+            height: 30px;
+            border-color: #e9e9e9;
+            background: rgba(255, 255, 255, 0);
+            margin-top: 10px;
+        }
+
+        .btn-box {
+            /* display: flex; */
+        }
+
+        .threeBox {
+            height: 600px;
+        }
+
+        .legend-box {
+            position: absolute;
+            bottom: 20px;
+            right: 50px;
+            z-index: 1;
+            display: flex;
+        }
+
+        .legend-item {
+            width: 100px;
+            height: 10px;
+            border: 1px solid #a5a5a5;
+        }
+
+        .lable {
+            color: white;
+            width: 100px;
+            text-align: right;
+        }
+
+        .text-right-box {
+            position: absolute;
+            top: 0px;
+            right: 0px;
+            z-index: 5;
+            background: rgba(255, 255, 255, 0.7);
+            padding: 10px 20px;
+            width: 450px;
+            border-radius: 5px;
+            max-height: calc(100% - 20px);
+            overflow: auto;
+            display: none;
+        }
+
+        #legend1 {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="map"></div>
+    <div class="left-box">
+       
+        <div class="btn-box">
+            <div class="btnbox" onclick="changeMap(1)">McDonald's price by Country</div>
+            <div class="btnbox" onclick="changeMap(3)">Food Price Inflation Index in European Union</div>
+            <div class="btnbox" onclick="changeMap(2)">CPI Index and Rate by Food Category in the UK</div>
+        </div>
+
+        <div class="introduce-box">
+            <h1 id="introduceTitle">Global McDonald's Price in Each Country</h1>
+            <p id="introduce" style="world-break: break-all;">Use McDonald's Big Mac meals prices from countries around the world to explore the purchasing power parity of currencies and the food price in each country. Meanwhile, to eliminate exchange rate differences, we will uniformly use the United States dollar (USD) as the currency unit. Obviously, we can find that McDonald's prices in Europe are generally higher than in other regions and continents.</p>
+        </div>
+
+
+
+        <div class="echart-box" id="echart-box">
+            <select id="select" onchange="changeSelect(this.id)">
+                <option value="Food Products">Food Products</option>
+                <option value="Bread & Cereals">Bread & Cereals</option>
+                <option value="Fish">Fish</option>
+                <option value="Fruit">Fruit</option>
+                <option value="Meat">Meat</option>
+                <option value="Milk, Cheese & Eggs">Milk, Cheese & Eggs</option>
+                <option value="Oils & Fats">Oils & Fats</option>
+                <option value="Sugar, Jam, Honey, Syrups, Chocolate & Confectionery">Sugar, Jam, Honey, Syrups,
+                    Chocolate &
+                    Confectionery</option>
+                <option value="Vegetables Including Potatoes & Tubers">Vegetables Including Potatoes & Tubers</option>
+            </select>
+            <div id="chartContainer"></div>
+            <div id="chartContainer2"></div>
+        </div>
+        <di id="threeBox">
+            <div id="COUNTRY"></div>
+            <div id="chartContainer3"></div>
+    </div>
+
+    <div class="legend-box" id="legend">
+        <div>
+            <div class="lable" style="text-align: center;">no data</div>
+            <div class="legend-item" style="background-color: #e9e9e9;"></div>
+        </div>
+
+        <div>
+            <div class="lable">$4</div>
+            <div class="legend-item" style="background-color: #70ae47;"></div>
+        </div>
+        <div>
+            <div class="lable">$6</div>
+            <div class="legend-item" style="background-color: #a6c45e;"></div>
+        </div>
+        <div>
+            <div class="lable">$8</div>
+            <div class="legend-item" style="background-color: #cdd56e;"></div>
+        </div>
+        <div>
+            <div class="lable">$10</div>
+            <div class="legend-item" style="background-color: #ece27b;"></div>
+        </div>
+        <div>
+            <div class="lable">$12</div>
+            <div class="legend-item" style="background-color: #fee982;"></div>
+        </div>
+        <div>
+            <div class="lable">$16</div>
+            <div class="legend-item" style="background-color: #ea9f59;"></div>
+        </div>
+        <div>
+            <div class="lable">$20</div>
+            <div class="legend-item" style="background-color: #c6180d;"></div>
+        </div>
+    </div>
+
+
+    <div class="legend-box" id="legend1">
+        <div>
+            <div class="lable" style="text-align: center;">no data</div>
+            <div class="legend-item" style="background-color: #e9e9e9;"></div>
+        </div>
+
+        <div>
+            <div class="lable">100</div>
+            <div class="legend-item" style="background-color: #ffcdb2;"></div>
+        </div>
+        <div>
+            <div class="lable">105</div>
+            <div class="legend-item" style="background-color: #ffb4a2;"></div>
+        </div>
+        <div>
+            <div class="lable">110</div>
+            <div class="legend-item" style="background-color: #e5989b;"></div>
+        </div>
+        <div>
+            <div class="lable">115</div>
+            <div class="legend-item" style="background-color: #b5838d;"></div>
+        </div>
+        <div>
+            <div class="lable">120</div>
+            <div class="legend-item" style="background-color: #b5838d;"></div>
+        </div>
+        <div>
+            <div class="lable">125</div>
+            <div class="legend-item" style="background-color: #6d6875;"></div>
+        </div>
+    </div>
+
+
+    <div class="text-right-box" id="right-box">
+        <h1 id="right-introduceTitle">Food Products</h1>
+        <p id="right-introduce" >The Food Products inflation index was relatively stable with only minor volatility before September 2021 but breaks the stable pattern after the time point. The inflation index increased sharply from 102.7 to 109.9 with a peak of 110.5. In addition, until September 2021, the inflation rate is elastic and can be adjusted immediately, and once it rises, it will immediately pull back and decrease for a period indicating it exists the phenomenon of long-term periodic fluctuations. However, after September 2021, inflation remains at a high level.</p>
+    </div>
+
+    <script>
+        let map = null
+        let popup = null
+        let popup1 = null
+        let currentType = 1
+        let introduce = {
+            "Food Products":`The Food Products inflation index was relatively stable with only minor volatility before September 2021 but breaks the stable pattern after the time point. The inflation index increased sharply from 102.7 to 109.9 with a peak of 110.5. In addition, until September 2021, the inflation rate is elastic and can be adjusted immediately, and once it rises, it will immediately pull back and decrease for a period indicating it exists the phenomenon of long-term periodic fluctuations. However, after September 2021, inflation remains at a high level.`,
+            "Bread & Cereals":'The Bread & Cereals inflation index has a slowly rising trend, gradually increasing from 98 in January 2017 to 110 in March 2022 with minor fluctuations. In terms of inflation, the rate for bread and cereals is controlled within a range of -4 to 4. Similarly, it has long-term periodic fluctuations before September 2021 and the inflation index also increases rapidly after September 2021.',
+            "Fish":'The Fish inflation index fluctuates upwards from 100 in January 2017 and reaches a peak of 117 in April 2020. After that, the inflation index then begins a slow decline to 109 in June 2021 before bouncing back up again. The inflation rate has well adjusted in its range of -2.9 to 4.7, with higher inflation falling immediately each time it occurs. But overall, the value of the number of increases is more frequently leading to an overall upward trend in the inflation index.',
+            "Fruit":'The inflation index for Fruit shows an obvious seasonal pattern. It reaches its lowest value around August each year and reaches its highest value around January each year. And The process repeats a new circle again. This may be related to the seasonal output of fruit. In addition, by looking at the fruit inflation rate, it is possible to find that there are seasonal variations in volatilities. However, there is a general upward trend on the index side. The statistical line chart shows a downward trend in March 2021, so we can predict that it will probably continue to decrease in the following time.',
+            "Meat":'Compared to other food categories, the inflation index for Meat remains low, even below 100 until September 2021. However, same as other food categories, it started to rise after September 2021 and reached a peak of 104.2 but is still low. At the same time, inflation can be found at rates ranging from -0.9 to 2, which indicates that food prices for meat have remained extremely stable.',
+            "Milk, Cheese & Eggs":'The inflation index for Milk, Cheese & Eggs is also at a relatively low level. It started at 96 in January 2017 and gradually rose to 98.4 in September 2017, after which it began to fluctuate around 100 for a long time. Inflation has been in the range of -2.5 to 2.6. However, after September 2021, this long period of stable fluctuation begins to break down and the inflation index also rises. Inflation has also been at a high level for several months.',
+            "Oils & Fats":'The Oils & Fats inflation index shows an extreme upward trend, rising from 102.7 at the beginning to 118.8 by September 2021, while at the same time it can be observed that this upward trend is accompanied by dramatic increases and dramatic decreases. The inflation rate line chart shows a range of -9 to 9, which also indicates a significantly high level of volatility and risk. Furthermore, the index has risen to 132.1, which is the highest of all the food categories and indicates that Oils & Fats is in a great crisis.',
+            "Sugar, Jam, Honey, Syrups, Chocolate & Confectionery":'The Sugar, Jam, Honey, Syrups, Chocolate & Confectionery inflation index and rate are the most distinctive of all food categories. It has been relatively stable in this period and has not shown any significant increase. However, all other food categories will increase after September 2021, but Sugar, Jam, Honey, Syrups, Chocolate & Confectionery will even decrease. Furthermore, the inflation index is basically between 100 and 105 and the inflation rate is basically contained within a range of -3 to 4 indicating it is consistently steady.',
+            "Vegetables Including Potatoes & Tubers":'The Vegetables Including Potatoes & Tubers inflation index is at a relatively low level overall. It remained between 100 and 105 until October 2021 and will not continue to increase or decrease for more than two months in a row. Similarly, as with most food categories, it started to increase after October 2021 and reached 110, but we can detect a turning point in March 2020 when it started to decrease. The inflation rate is ideal, with values between -4.2 and 3.5, implying a relatively stable pattern.',
+        }
+
+        initMap()
+
+        function initMap() {
+            mapboxgl.accessToken =
+                'pk.eyJ1IjoibGl5dWFuZG9uZyIsImEiOiJja3p5b3FiNXYwMmN2M2JwZ2x3ZWU0Zno1In0.G3jt3n4LOkU7y2-uUpxiRQ';
+
+            map = new mapboxgl.Map({
+                container: 'map',
+                style: 'mapbox://styles/liyuandong/cl3ad6abu001514qr6f9sp0o3',
+                center: [-20, 53.37],
+                zoom: 2,
+                minZoom: 2
+            });
+
+
+            map.on('load', () => {
+                var scale = new mapboxgl.ScaleControl({
+                    maxWidth: 100,
+                    unit: 'metric'
+                });
+                map.addControl(scale, "bottom-left");
+
+
+                map.on('click', 'europe2-witheu-noeumean-1qn2qs', (e) => {
+                    if (map.getLayer("pointlayerhighlight")) {
+                        map.removeLayer("pointlayerhighlight");
+                        map.removeSource("pointlayerhighlight");
+                    }
+
+                    var bbox = [
+                        [e.point.x - 1, e.point.y - 1],
+                        [e.point.x + 1, e.point.y + 1]
+                    ];
+                    if (currentType == 3) {
+                        
+                        var features = map.queryRenderedFeatures(bbox, {
+                            layers: ['europe2-witheu-noeumean-1qn2qs']
+                        });
+
+                        if (features.length > 0) {
+                            let properties = features[0].properties
+
+                            
+                            document.getElementById("COUNTRY").innerHTML = properties.NAME_EN
+                            if (!properties["Europe2_withEU_noEUmean_2019M01"]) {
+                                document.getElementById("COUNTRY").innerHTML = properties.NAME_EN +
+                                    " No data"
+                                return
+                            }
+
+                            let data = {
+                                "2019M01": properties["Europe2_withEU_noEUmean_" + "2019M01"] || 0,
+                                "2019M02": properties["Europe2_withEU_noEUmean_" + "2019M02"] || 0,
+                                "2019M03": properties["Europe2_withEU_noEUmean_" + "2019M03"] || 0,
+                                "2019M04": properties["Europe2_withEU_noEUmean_" + "2019M04"] || 0,
+                                "2019M05": properties["Europe2_withEU_noEUmean_" + "2019M05"] || 0,
+                                "2019M06": properties["Europe2_withEU_noEUmean_" + "2019M06"] || 0,
+                                "2019M07": properties["Europe2_withEU_noEUmean_" + "2019M07"] || 0,
+                                "2019M08": properties["Europe2_withEU_noEUmean_" + "2019M08"] || 0,
+                                "2019M09": properties["Europe2_withEU_noEUmean_" + "2019M09"] || 0,
+                                "2019M10": properties["Europe2_withEU_noEUmean_" + "2019M10"] || 0,
+                                "2019M11": properties["Europe2_withEU_noEUmean_" + "2019M11"] || 0,
+                                "2019M12": properties["Europe2_withEU_noEUmean_" + "2019M12"] || 0,
+                                "2020M01": properties["Europe2_withEU_noEUmean_" + "2020M01"] || 0,
+                                "2020M02": properties["Europe2_withEU_noEUmean_" + "2020M02"] || 0,
+                                "2020M03": properties["Europe2_withEU_noEUmean_" + "2020M03"] || 0,
+                                "2020M04": properties["Europe2_withEU_noEUmean_" + "2020M04"] || 0,
+                                "2020M05": properties["Europe2_withEU_noEUmean_" + "2020M05"] || 0,
+                                "2020M06": properties["Europe2_withEU_noEUmean_" + "2020M06"] || 0,
+                                "2020M07": properties["Europe2_withEU_noEUmean_" + "2020M07"] || 0,
+                                "2020M08": properties["Europe2_withEU_noEUmean_" + "2020M08"] || 0,
+                                "2020M09": properties["Europe2_withEU_noEUmean_" + "2020M09"] || 0
+                            }
+
+                            let xchartData = []
+                            let ychartData = []
+                            for (let i in data) {
+                                xchartData.push(i)
+                                ychartData.push(data[i])
+                                
+                            }
+
+                            const ychartData1 = [104.614285, 105.6857143, 106.9285714, 108.4,
+                                108.6714286, 107.6, 105.0714286, 103.8428571, 103.8571429, 105.3,
+                                106.6142857, 108.1, 109.8714286, 110.8428571, 110.9571429,
+                                110.1428571, 108.6142857, 106.0857143, 102.6142857, 100.9714286,
+                                100.9, 106.4612245
+                            ]
+                            console.log(xchartData, ychartData, ychartData1)
+                            document.getElementById("chartContainer3").style.height = "400px";
+                            let myEcharts = echarts.init(document.getElementById("chartContainer3"));
+
+                            myEcharts.setOption({
+                                xAxis: {
+                                    type: 'category',
+                                    data: xchartData
+                                },
+                                tooltip: {
+                                    trigger: 'axis',
+                                    formatter: function (params) {
+                                        params = params[0];
+                                        console.log(params)
+                                        var date = new Date(params.name);
+                                        return (
+                                            params.name +
+                                            ' : ' +
+                                            params.value
+                                        );
+                                    },
+                                    axisPointer: {
+                                        animation: false
+                                    }
+                                },
+                                yAxis: {
+                                    type: 'value',
+                                    max: 160,
+                                    min: 60,
+                                    name:"Food Inflation Index"
+                                },
+                                grid:{
+                                    left:"15%"
+                                },
+                                legend: {
+                                    data: [properties.NAME_EN, "Europe", ],
+                                    top: "4%",
+                                    textStyle: {
+                                        color: "#1FC3CE",
+                                        fontSize: 14
+                                    },
+                                },
+                                series: [{
+                                    data: ychartData,
+                                    type: 'line',
+                                    name: properties.NAME_EN,
+                                    smooth: true,
+                                    markLine: {
+                                        data: [{
+                                            type: "average",
+                                            name: "average"
+                                        }]
+                                    }
+
+                                }, {
+                                    data: ychartData1,
+                                    type: 'line',
+                                    name: "Europe",
+                                    smooth: true,
+                                    markLine: {
+                                        data: [{
+                                            type: "average",
+                                            name: "average"
+                                        }]
+                                    }
+                                }]
+                            });
+
+                            console.log(properties)
+                            if (popup1) popup1.remove()
+                            popup1 = new mapboxgl.Popup({
+                                    closeOnClick: false
+                                })
+                                .setLngLat([e.lngLat.lng, e.lngLat.lat])
+                                .setHTML('<div>' + properties.NAME_EN + '</div><div>Average:'+properties.Europe2_withEU_noEUmean_Average+'</div>')
+                                .addTo(map);
+
+                        } else {
+                            document.getElementById("COUNTRY").innerHTML = ""
+                            document.getElementById("chartContainer3").innerHTML = "";
+                        }
+                    }
+                })
+                map.on('mousemove', (e) => {
+                    if (currentType == 2) return
+                    var bbox = [
+                        [e.point.x - 1, e.point.y - 1],
+                        [e.point.x + 1, e.point.y + 1]
+                    ];
+                    if (currentType == 1) {
+                        
+                        var features = map.queryRenderedFeatures(bbox, {
+                            layers: ['mc-price-88m7ya']
+                        });
+                        if (features.length > 0) {
+                            let properties = features[0].properties
+                            if (popup) popup.remove()
+                            popup = new mapboxgl.Popup({
+                                    closeOnClick: false
+                                })
+                                .setLngLat([e.lngLat.lng, e.lngLat.lat])
+                                .setHTML('<p>' + properties.COUNTRY + ':' + properties.World1_PRICE +
+                                    '</p>')
+                                .addTo(map);
+                        }
+                    }
+
+
+
+                    //
+                });
+            })
+        }
+
+
+        function changeMap(type) {
+            currentType = type
+            document.getElementById("threeBox").style.display = "none"
+            document.getElementById("echart-box").style.display = "none"
+            document.getElementById("legend").style.display = "none"
+            document.getElementById("legend1").style.display = "none"
+            map.setCenter([-2, 53.37]);
+            if (popup1) popup1.remove()
+            if (popup) popup.remove()
+            switch (type) {
+                case 1:
+                    map.setStyle("mapbox://styles/liyuandong/cl3ad6abu001514qr6f9sp0o3")
+                    map.zoomTo(2, {
+                        duration: 3000,
+                    })
+                    document.getElementById("legend").style.display = "flex"
+                    document.getElementById("introduce").innerHTML =
+                        "Use McDonald's Big Mac meals prices from countries around the world to explore the purchasing power parity of currencies and the food price in each country. Meanwhile, to eliminate exchange rate differences, we will uniformly use the United States dollar (USD) as the currency unit. Obviously, we can find that McDonald's prices in Europe are generally higher than in other regions and continents."
+                    document.getElementById("introduceTitle").innerHTML = "Global McDonald's Price in Each Country"
+                    document.getElementById("right-box").style.display = "none"
+                    break
+                case 2:
+                    map.setStyle("mapbox://styles/liyuandong/cl2kf27zx003l14mjmt2ctv32")
+                    document.getElementById("echart-box").style.display = "block"
+                    document.getElementById("introduceTitle").innerHTML =
+                        "The CPI Index and Rate by food category in the UK"
+                    document.getElementById("right-box").style.display = "block"
+                    loadcsv("Food Products")
+                    map.zoomTo(5, {
+                        duration: 3000,
+                    })
+                    document.getElementById("introduce").innerHTML =
+                        "Inflation Index and Rate by each food category in the UK"
+                    break
+                case 3:
+                    map.setStyle("mapbox://styles/liyuandong/cl3ga9bed000414qf1zpgun74")
+                    map.zoomTo(3, {
+                        duration: 3000,
+                    })
+                    document.getElementById("threeBox").style.display = "block"
+                    document.getElementById("right-box").style.display = "none"
+                    document.getElementById("introduce").innerHTML =
+                        "The trend in the inflation index is stable for most countries. The average of the EU is also stable, and the value fluctuates between 104 and 110, with an average value of 106.46. However, the three countries with an inflation index higher than 120, are Poland, Romania, and Latvia. Meanwhile, the inflations in these three countries have higher volatility patterns."
+                    document.getElementById("legend1").style.display = "flex"
+                    document.getElementById("introduceTitle").innerHTML = "Food Price Inflation Index in European Union"
+                    
+                    break
+            }
+
+
+        }
+
+
+        function changeSelect(id) {
+            var aa = document.getElementById(id);
+            document.getElementById("right-introduceTitle").innerHTML = aa.value
+            
+            document.getElementById("right-introduce").innerHTML =introduce[aa.value]
+            loadcsv(aa.value)
+        }
+
+        let svg = null
+        let svg2 = null
+        let myChart = null
+        let myChart2 = null
+
+        function loadcsv(text) {
+            d3.csv("./data.csv", function (data) {
+                console.log(data)
+                document.getElementById("chartContainer").style.height = "300px";
+                document.getElementById("chartContainer2").style.height = "300px";
+                let myEcharts = echarts.init(document.getElementById("chartContainer"));
+                let myEcharts1 = echarts.init(document.getElementById("chartContainer2"));
+                let time = []
+                let oneY = []
+                let twoY = []
+                data.map(item => {
+                    time.push(item.Time)
+                    oneY.push(item[text + " Index"])
+                    twoY.push(item[text + " Rate"])
+                })
+
+                myEcharts.setOption({
+                    xAxis: {
+                        type: 'category',
+                        data: time,
+                      
+                    },
+                    tooltip: {
+                        trigger: 'axis',
+                        formatter: function (params) {
+                            params = params[0];
+                            var date = new Date(params.name);
+                            return (
+                                params.name +
+                                ' : ' +
+                                params.value
+                            );
+                        },
+                        axisPointer: {
+                            animation: false
+                        }
+                    },
+                    yAxis: {
+                        type: 'value',
+                        min: 80,
+                        name: "Inflation Index",
+                        nameTextStyle: {
+                            padding: [0, 0, 0, 50], 
+                        }
+                    },
+                    series: [{
+                        data: oneY,
+                        type: 'line',
+                        // smooth: true,
+                    }]
+                });
+
+                myEcharts1.setOption({
+                    xAxis: {
+                        type: 'category',
+                        data: time
+                    },
+                    tooltip: {
+                        trigger: 'axis',
+                        formatter: function (params) {
+                            params = params[0];
+                            var date = new Date(params.name);
+                            return (
+                                params.name +
+                                ' : ' +
+                                params.value
+                            );
+                        },
+                        axisPointer: {
+                            animation: false
+                        }
+                    },
+                    yAxis: {
+                        type: 'value',
+                        name:  "Inflation Rate",
+                        nameTextStyle: {
+                            padding: [0, 0, 0, 50], 
+                        }
+                    },
+                    series: [{
+                        data: twoY,
+                        color: ['#3F85FF'],
+                        type: 'line',
+                        smooth: true,
+                    }]
+                });
+                
+            });
+        }
+    </script>
+
+</body>
+
+</html>
