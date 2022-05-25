@@ -1,0 +1,3620 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>crop origins</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://api.tiles.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.js"></script>
+    <script charset="utf-8" src="https://d3js.org/d3.v4.min.js"></script>
+    <script charset="utf-8" src="https://cdnjs.cloudflare.com/ajax/libs/dimple/2.3.0/dimple.latest.min.js"></script>
+    <link href="https://api.tiles.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.css" rel="stylesheet" />
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <style>
+        .avatar {
+            vertical-align: middle;
+            width: 60px;
+            height: 50px;
+            border-radius: 40%;
+        }
+
+        .filterDiv {
+            float: left;
+            background-color: #f1f1f1;
+            color: #666;
+            width: 70px;
+            line-height: 40px;
+            text-align: center;
+            font: 15px/18px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+            margin: 5px;
+            margin-left: 4px;
+            border-radius: 30%;
+            display: none;
+        }
+
+        .show {
+            display: block;
+        }
+
+        .container {
+            margin-top: 10px;
+            overflow: hidden;
+        }
+
+        /* Style the buttons */
+        .btn {
+            border: none;
+            border-radius: 5%;
+            outline: none;
+            padding: 8px 16px;
+            margin: 3px 0px;
+            background-color: #f1f1f1;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background-color: #ddd;
+        }
+
+        .btn.active {
+            background-color: #666;
+            color: white
+        }
+
+        .block {
+            font: 12px/0px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+            position: absolute;
+            top: px;
+            left: 0px;
+            width: 425px;
+            padding: 5px;
+        }
+
+        .block .block-inner {
+            background-color: rgba(255, 255, 255, 0.978);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.883);
+            border-radius: 10px;
+            padding: 5px;
+            margin-bottom: 10px;
+        }
+
+        .block table {
+            border: none;
+            margin: 1px;
+            width: 100%;
+        }
+
+
+        .block h2 {
+            line-height: 24px;
+            display: block;
+            margin: 1 0 1;
+        }
+
+        .block h4 {
+            line-height: 24px;
+            display: block;
+            margin: 0 0 10px;
+        }
+
+        .block label {
+            font: 16px/18px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+            vertical-align: bottom;
+            margin: 2;
+            padding: 0;
+        }
+
+        .block input {
+            display: inline;
+            vertical-align: middle;
+            margin: 2px;
+            padding: 0;
+        }
+
+        .block p.credit {
+            margin: 0 0 0;
+            padding: 0;
+        }
+
+        .block1 {
+            font: 18px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+            position: absolute;
+            top: 263px;
+            left: 0px;
+            width: 450px;
+            height: 300px;
+            padding: 1px;
+        }
+
+        .block1 .block1-inner {
+            background-color: rgba(255, 255, 255, 0);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0);
+            border-radius: 10px;
+            padding: 5px;
+            margin-bottom: 10px;
+        }
+
+        .block1 table {
+            border: none;
+            margin: 1px;
+            width: 100%;
+        }
+
+        .block1 h2 {
+            line-height: 24px;
+            display: block;
+            margin: 1 0 1;
+        }
+
+        .block1 h4 {
+            line-height: 24px;
+            display: block;
+            margin: 0 0 10px;
+        }
+
+        .block1 label {
+            font: 16px/18px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+            vertical-align: bottom;
+            margin: 2;
+            padding: 0;
+        }
+
+        .block1 input {
+            display: inline;
+            vertical-align: middle;
+            margin: 2px;
+            padding: 0;
+        }
+
+        .block1 p.credit {
+            margin: 0 0 0;
+            padding: 0;
+        }
+
+        .scroll {
+            background-color: rgb(255, 255, 255);
+            width: 425px;
+            height: 350px;
+            border-radius: 3px;
+            overflow: scroll;
+        }
+
+        .scroll::-webkit-scrollbar-track {
+            box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.152);
+            background-color: #fafafafd;
+        }
+
+        .scroll::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        .scroll::-webkit-scrollbar-thumb:vertical {
+            border-radius: 10px;
+            background-color: #7a70a8;
+            border: 2px solid #2d2c2c;
+        }
+
+        #map {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+        }
+
+        .legend1 {
+            background-color: #fff;
+            border-radius: 3px;
+            box-shadow: 0 0px 0px rgba(0, 0, 0, 0.1);
+            font: 13px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+            padding: 10px;
+            position: absolute;
+            left: 5px;
+            top: 621px;
+            z-index: 1;
+        }
+
+        .legend1 h4 {
+            margin: 0 0 10px;
+        }
+
+        .legend1 div span {
+            border-radius: 50%;
+            display: inline-block;
+            height: 10px;
+            margin-right: 5px;
+            width: 13px;
+        }
+
+        .legend2 {
+            background-color: rgb(255, 255, 255);
+            border-radius: 3px;
+            box-shadow: 0 0px 0px rgba(0, 0, 0, 0.1);
+            font: 13px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+            padding: 10px;
+            position: absolute;
+            left: 207px;
+            top: 621px;
+            z-index: 1;
+        }
+
+        .legend2 h4 {
+            margin: 0 0 10px;
+            color: #fff;
+        }
+
+        .legend2 div span {
+            border-radius: 50%;
+            display: inline-block;
+            height: 10px;
+            margin-right: 5px;
+            width: 13px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="map"></div>
+
+    <div id="legend_1" class="legend1">
+        <h4>Subregion</h4>
+        <div><span style="background-color: #562c2c"></span>Andean South America</div>
+        <div><span style="background-color: #14213d"></span>Australia and New Zealand</div>
+        <div><span style="background-color: #f2542d"></span>Caribbean</div>
+        <div><span style="background-color: #f5dfbb"></span>Central Africa</div>
+        <div><span style="background-color: #0e9594"></span>Central America and Mexico</div>
+        <div><span style="background-color: #127475"></span>Central Asia</div>
+        <div><span style="background-color: #fcca46"></span>East Africa</div>
+        <div><span style="background-color: #a1c181"></span>East Asia</div>
+        <div><span style="background-color: #d0b8ac"></span>Indian Ocean Islands</div>
+        <div><span style="background-color: #c89f08"></span>North America</div>
+        <div><span style="background-color: #ef6351"></span>North Eastern Europe</div>
+        <div><span style="background-color: #be95c4"></span>North Western Europe</div>
+    </div>
+
+    <div id="legend_2" class="legend2">
+        <h4>Subregion</h4>
+        <div><span style="background-color: #edddd4"></span>Not Specified</div>
+        <div><span style="background-color: #f4acb7"></span>Pacific Region</div>
+        <div><span style="background-color: #abc4ff"></span>South and East Mediterranean</div>
+        <div><span style="background-color: #718355"></span>South Asia</div>
+        <div><span style="background-color: #e8ac65"></span>South Eastern Europe</div>
+        <div><span style="background-color: #e8a598"></span>South Western Europe</div>
+        <div><span style="background-color: #cd050f"></span>Southeast Asia</div>
+        <div><span style="background-color: #ff7096"></span>Southern Africa</div>
+        <div><span style="background-color: #1a659e"></span>Temperate South America</div>
+        <div><span style="background-color: #9b2226"></span>Tropical South America</div>
+        <div><span style="background-color: #81b29a"></span>West Africa</div>
+        <div><span style="background-color: #81b29a"></span>West Asia</div>
+    </div>
+
+
+    <div class='block'>
+        <div class='block-inner'>
+            <h1>Food Origins</h1>
+            <div id="myBtnContainer">
+                <button class="btn active" onclick="filterSelection('all')"> Show all</button>
+                <button class="btn" onclick="filterSelection('BAC')"> Berries and Citrus</button>
+                <button class="btn" onclick="filterSelection('BC')"> Beverage crops</button>
+                <button class="btn" onclick="filterSelection('CC')"> Cereal crops</button>
+                <button class="btn" onclick="filterSelection('Fruit')"> Fruit</button>
+                <button class="btn" onclick="filterSelection('Nut')"> Nut</button>
+                <button class="btn" onclick="filterSelection('OCASC')"> Oil crops and sugar crops</button>
+                <button class="btn" onclick="filterSelection('RVLC')"> Root vegetable & legume crops</button>
+                <button class="btn" onclick="filterSelection('Spice')"> Spice</button>
+                <button class="btn" onclick="filterSelection('Vegetable')"> Vegetable</button>
+            </div>
+            <h5>1. By clicking the button above, you can select the crop category to explore.</h5>
+            <h5>2. Multiple crops can be selected and their origins can be displayed on the</h5>
+            <h5> map at the same time.</h5>
+            <h5>3. By clicking the “Clear All” icon, all existing layers will be removed.</h5>
+            <h5>4. "Subregion" can be removed after clicking.</h5>
+        </div>
+    </div>
+
+    <div class='block1'>
+        <div class='block1-inner'>
+            <div class="scroll">
+                <div class="container">
+
+                    <div class="filterDiv BAC CC BC Fruit Nut OCASC RVLC Spice Vegetable">
+                        <input type="image" class="avatar"
+                            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3xJeJnuwA-aSsReb8bCNhGJ8cCZyRb0qx5g&usqp=CAU"
+                            onclick=removeall() />
+                        Clean All
+                    </div>
+
+                    <div class="filterDiv BAC CC BC Fruit Nut OCASC RVLC Spice Vegetable">
+                        <input type="image" class="avatar"
+                            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSlAS8xGUyL8qVwncDEYF7cumMrZIWssxucJQ&usqp=CAU"
+                            onclick=function_subregion() />
+                        Subregion
+                    </div>
+
+                    <div class="filterDiv CC BC">
+                        <input type="image" class="avatar"
+                            src="https://images.pexels.com/photos/236473/pexels-photo-236473.jpeg?cs=srgb&dl=pexels-iconcom-236473.jpg&fm=jpg"
+                            onclick=function_Barley() />
+                        Barley
+                    </div>
+
+                    <div class="filterDiv CC">
+                        <input type="image" class="avatar"
+                            src="https://images.pexels.com/photos/7877994/pexels-photo-7877994.jpeg?cs=srgb&dl=pexels-marjhan-ramboyong-7877994.jpg&fm=jpg"
+                            onclick=function_Maize() />
+                        Maize
+                    </div>
+
+                    <div class="filterDiv CC">
+                        <input type="image" class="avatar"
+                            src="https://th.bing.com/th/id/OIP.K7Pmm_d2aj7VMiNxS0tgPAHaE8?w=289&h=193&c=7&r=0&o=5&dpr=2&pid=1.7"
+                            onclick=function_Millets() />
+                        Millet
+                    </div>
+
+                    <div class="filterDiv CC">
+                        <input type="image" class="avatar"
+                            src="https://images.pexels.com/photos/3872412/pexels-photo-3872412.jpeg?cs=srgb&dl=pexels-polina-tankilevitch-3872412.jpg&fm=jpg"
+                            onclick=function_Oats() />
+                        Oat
+                    </div>
+
+                    <div class="filterDiv CC BC">
+                        <input type="image" class="avatar"
+                            src="https://th.bing.com/th/id/OIP._oxgfNt-ezeR-FFnbZsvzgHaE8?w=283&h=189&c=7&r=0&o=5&dpr=2&pid=1.7"
+                            onclick=function_Rice() />
+                        Rice
+                    </div>
+
+                    <div class="filterDiv CC">
+                        <input type="image" class="avatar"
+                            src="https://th.bing.com/th/id/OIP.qI-KgP6DCGSRBBbwllvYQQHaF4?w=238&h=189&c=7&r=0&o=5&dpr=2&pid=1.7"
+                            onclick=function_Rye() />
+                        Rye
+                    </div>
+
+                    <div class="filterDiv CC BC">
+                        <input type="image" class="avatar"
+                            src="https://th.bing.com/th/id/OIP.LUHnk1-HKs3jJO_8h38fvQHaFZ?w=243&h=180&c=7&r=0&o=5&dpr=2&pid=1.7"
+                            onclick=function_Sorghum() />
+                        Sorghum
+                    </div>
+
+                    <div class="filterDiv CC BC">
+                        <input type="image" class="avatar"
+                            src="https://images.pexels.com/photos/6412636/pexels-photo-6412636.jpeg?cs=srgb&dl=pexels-tymur-khakimov-6412636.jpg&fm=jpg"
+                            onclick=function_Wheat() />
+                        Wheat
+                    </div>
+
+
+
+
+
+
+
+                    <div class="filterDiv RVLC">
+                        <input type="image" class="avatar"
+                            src="https://images.pexels.com/photos/1297248/pexels-photo-1297248.jpeg?cs=srgb&dl=pexels-nick-collins-1297248.jpg&fm=jpg"
+                            onclick=function_Carrot() />
+                        Carrot
+                    </div>
+
+                    <div class="filterDiv RVLC">
+                        <input type="image" class="avatar"
+                            src="https://images.pexels.com/photos/7543155/pexels-photo-7543155.jpeg?cs=srgb&dl=pexels-daniel-dan-7543155.jpg&fm=jpg"
+                            onclick=function_Cassava() />
+                        Cassava
+                    </div>
+
+                    <div class="filterDiv RVLC">
+                        <input type="image" class="avatar"
+                            src="https://th.bing.com/th/id/OIP.OsAVyYp3ztdQd1WDoTuUcQHaE8?w=272&h=181&c=7&r=0&o=5&dpr=2&pid=1.7"
+                            onclick=function_Chickpeas() />
+                        Chickpeas
+                    </div>
+
+                    <div class="filterDiv RVLC">
+                        <input type="image" class="avatar"
+                            src="https://th.bing.com/th/id/OIP.9OOPGTL4G_9ev8iOJyTKEgHaFj?w=257&h=193&c=7&r=0&o=5&dpr=2&pid=1.7"
+                            onclick=function_Cowpeas() />
+                        Cowpeas
+                    </div>
+
+                    <div class="filterDiv RVLC">
+                        <input type="image" class="avatar"
+                            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRR39vVxjjmkMh3s_4wDHHt8GSkrQC6ORu_uQ&usqp=CAU"
+                            onclick=function_Lentils() />
+                        Lentils
+                    </div>
+
+                    <div class="filterDiv RVLC">
+                        <input type="image" class="avatar"
+                            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRysrnPcBzQPwHtC0PVCxtW5k6tIpaVMg4x3w&usqp=CAU"
+                            onclick=function_Peas() />
+                        Peas
+                    </div>
+
+                    <div class="filterDiv RVLC">
+                        <input type="image" class="avatar"
+                            src="https://images.pexels.com/photos/7774212/pexels-photo-7774212.jpeg?cs=srgb&dl=pexels-antara-verma-7774212.jpg&fm=jpg"
+                            onclick=function_Potatoes() />
+                        Potato
+                    </div>
+
+                    <div class="filterDiv RVLC">
+                        <input type="image" class="avatar"
+                            src="https://th.bing.com/th/id/OIP.zthYV-JhZCpDFZDOhqb6iQHaFj?w=241&h=181&c=7&r=0&o=5&dpr=2&pid=1.7"
+                            onclick=function_Soybean() />
+                        Soybeans
+                    </div>
+
+                    <div class="filterDiv RVLC">
+                        <input type="image" class="avatar"
+                            src="https://th.bing.com/th/id/OIP.owxVI9X6_1YQUSH39HoXcAHaFb?w=252&h=184&c=7&r=0&o=5&dpr=2&pid=1.7"
+                            onclick=function_Taro() />
+                        Taro
+                    </div>
+
+                    <div class="filterDiv RVLC">
+                        <input type="image" class="avatar"
+                            src="https://images.pexels.com/photos/4617475/pexels-photo-4617475.jpeg?cs=srgb&dl=pexels-damir-mijailovic-4617475.jpg&fm=jpg"
+                            onclick=function_Sweet_potatoes() />
+                        Sweet potato
+                    </div>
+
+                    <div class="filterDiv RVLC">
+                        <input type="image" class="avatar"
+                            src="https://images.pexels.com/photos/5959859/pexels-photo-5959859.jpeg?cs=srgb&dl=pexels-loren-biser-5959859.jpg&fm=jpg"
+                            onclick=function_Yams() />
+                        Yam
+                    </div>
+
+
+
+
+
+
+
+                    <div class="filterDiv Vegetable">
+                        <input type="image" class="avatar"
+                            src="https://images.pexels.com/photos/5959859/pexels-photo-5959859.jpeg?cs=srgb&dl=pexels-loren-biser-5959859.jpg&fm=jpg"
+                            onclick=function_Artichokes() />
+                        Artichok
+                    </div>
+
+                    <div class="filterDiv Vegetable">
+                        <input type="image" class="avatar"
+                            src="https://images.pexels.com/photos/351679/pexels-photo-351679.jpeg?cs=srgb&dl=pexels-aphiwat-chuangchoem-351679.jpg&fm=jpg"
+                            onclick=function_Asparagus() />
+                        Asparagus
+                    </div>
+
+                    <div class="filterDiv Vegetable">
+                        <input type="image" class="avatar"
+                            src="https://images.pexels.com/photos/6157053/pexels-photo-6157053.jpeg?cs=srgb&dl=pexels-laker-6157053.jpg&fm=jpg"
+                            onclick=function_Cabbages() />
+                        Cabbage
+                    </div>
+
+                    <div class="filterDiv Vegetable">
+                        <input type="image" class="avatar"
+                            src="https://images.pexels.com/photos/1086719/pexels-photo-1086719.jpeg?cs=srgb&dl=pexels-artem-beliaikin-1086719.jpg&fm=jpg"
+                            onclick=function_Chillies() />
+                        Chilli
+                    </div>
+
+                    <div class="filterDiv Vegetable">
+                        <input type="image" class="avatar"
+                            src="https://images.pexels.com/photos/128420/pexels-photo-128420.jpeg?cs=srgb&dl=pexels-angele-j-128420.jpg&fm=jpg"
+                            onclick=function_Cucumbers() />
+                        Cucumber
+                    </div>
+
+                    <div class="filterDiv Vegetable">
+                        <input type="image" class="avatar"
+                            src="https://images.pexels.com/photos/2694393/pexels-photo-2694393.jpeg?cs=srgb&dl=pexels-mark-stebnicki-2694393.jpg&fm=jpg"
+                            onclick=function_Eggplants() />
+                        Eggplant
+                    </div>
+
+                    <div class="filterDiv Vegetable">
+                        <input type="image" class="avatar"
+                            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ8KVVZ_WOEKr9dIMNWl-tIKAxyfd3CToasWQ&usqp=CAU"
+                            onclick=function_Leeks() />
+                        Leek
+                    </div>
+
+                    <div class="filterDiv Vegetable">
+                        <input type="image" class="avatar"
+                            src="https://images.pexels.com/photos/1352199/pexels-photo-1352199.jpeg?cs=srgb&dl=pexels-kai-pilger-1352199.jpg&fm=jpg"
+                            onclick=function_Lettuce() />
+                        Lettuce
+                    </div>
+                    <div class="filterDiv Vegetable">
+                        <input type="image" class="avatar"
+                            src="https://images.pexels.com/photos/144206/pexels-photo-144206.jpeg?cs=srgb&dl=pexels-miguel-%C3%A1-padri%C3%B1%C3%A1n-144206.jpg&fm=jpg"
+                            onclick=function_Onions() />
+                        Onion
+                    </div>
+
+
+                    <div class="filterDiv Vegetable">
+                        <input type="image" class="avatar"
+                            src="https://images.pexels.com/photos/531260/pexels-photo-531260.jpeg?cs=srgb&dl=pexels-pixabay-531260.jpg&fm=jpg"
+                            onclick=function_Peppermint() />
+                        Peppermint
+                    </div>
+
+                    <div class="filterDiv Vegetable">
+                        <input type="image" class="avatar"
+                            src="https://images.pexels.com/photos/5422857/pexels-photo-5422857.jpeg?cs=srgb&dl=pexels-karolina-grabowska-5422857.jpg&fm=jpg"
+                            onclick=function_Pumpkins() />
+                        Pumpkin
+                    </div>
+                    <div class="filterDiv Vegetable">
+                        <input type="image" class="avatar"
+                            src="https://images.pexels.com/photos/159094/top-view-closeup-vegetarianism-healthy-eating-159094.jpeg?cs=srgb&dl=pexels-pixabay-159094.jpg&fm=jpg"
+                            onclick=function_Spinach() />
+                        Spinach
+                    </div>
+
+
+                    <div class="filterDiv Vegetable">
+                        <input type="image" class="avatar"
+                            src="https://images.pexels.com/photos/53588/tomatoes-vegetables-food-frisch-53588.jpeg?cs=srgb&dl=pexels-pixabay-53588.jpg&fm=jpg"
+                            onclick=function_Tomatoes() />
+                        Tomato
+                    </div>
+
+
+
+
+
+
+                    <div class="filterDiv Spice">
+                        <input type="image" class="avatar"
+                            src="https://images.pexels.com/photos/1516424/pexels-photo-1516424.jpeg?cs=srgb&dl=pexels-valeria-boltneva-1516424.jpg&fm=jpg"
+                            onclick=function_Anise_badian() />
+                        Anise
+                    </div>
+
+                    <div class="filterDiv Spice">
+                        <input type="image" class="avatar"
+                            src="https://images.pexels.com/photos/71128/cinnamon-cinnamon-stick-rod-kitchen-71128.jpeg?cs=srgb&dl=pexels-pixabay-71128.jpg&fm=jpg"
+                            onclick=function_Cinnamon() />
+                        Cinnamon
+                    </div>
+
+                    <div class="filterDiv Spice">
+                        <input type="image" class="avatar"
+                            src="https://images.pexels.com/photos/1392585/pexels-photo-1392585.jpeg?cs=srgb&dl=pexels-nick-collins-1392585.jpg&fm=jpg"
+                            onclick=function_Garlic() />
+                        Garlic
+                    </div>
+
+
+                    <div class="filterDiv Spice">
+                        <input type="image" class="avatar"
+                            src="https://images.pexels.com/photos/1337585/pexels-photo-1337585.jpeg?cs=srgb&dl=pexels-joris-neyt-1337585.jpg&fm=jpg"
+                            onclick=function_Ginger() />
+                        Ginger
+                    </div>
+
+                    <div class="filterDiv Spice">
+                        <input type="image" class="avatar"
+                            src="https://images.pexels.com/photos/1071015/pexels-photo-1071015.jpeg?cs=srgb&dl=pexels-daria-shevtsova-1071015.jpg&fm=jpg"
+                            onclick=function_Vanilla() />
+                        Vanilla
+                    </div>
+
+
+
+
+
+
+
+                    <div class="filterDiv Fruit">
+                        <input type="image" class="avatar"
+                            src="https://images.pexels.com/photos/6368799/pexels-photo-6368799.jpeg?cs=srgb&dl=pexels-skylar-kang-6368799.jpg&fm=jpg"
+                            onclick=function_Apple() />
+                        Apple
+                    </div>
+
+                    <div class="filterDiv Fruit">
+                        <input type="image" class="avatar"
+                            src="https://images.pexels.com/photos/209416/pexels-photo-209416.jpeg?cs=srgb&dl=pexels-pixabay-209416.jpg&fm=jpg"
+                            onclick=function_Apricot() />
+                        Apricot
+                    </div>
+
+                    <div class="filterDiv Fruit">
+                        <input type="image" class="avatar"
+                            src="https://th.bing.com/th/id/OIP.GcFNB4yQ0li4qf66oWvVGgHaE9?w=264&h=180&c=7&r=0&o=5&dpr=2&pid=1.7"
+                            onclick=function_Avocado() />
+                        Avocado
+                    </div>
+
+                    <div class="filterDiv Fruit">
+                        <input type="image" class="avatar"
+                            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTeEVB8NphUkqiokxmm6a2sPXcW74dEFWK8KQ&usqp=CAU"
+                            onclick=function_Banana() />
+                        Banana
+                    </div>
+
+                    <div class="filterDiv Fruit">
+                        <input type="image" class="avatar"
+                            src="https://images.pexels.com/photos/1394423/pexels-photo-1394423.jpeg?cs=srgb&dl=pexels-susanne-jutzeler-1394423.jpg&fm=jpg"
+                            onclick=function_Cherry() />
+                        Cherry
+                    </div>
+
+                    <div class="filterDiv Fruit">
+                        <input type="image" class="avatar"
+                            src="https://images.pexels.com/photos/3993529/pexels-photo-3993529.jpeg?cs=srgb&dl=pexels-riki-risnandar-3993529.jpg&fm=jpg"
+                            onclick=function_Dates() />
+                        Dates
+                    </div>
+
+                    <div class="filterDiv Fruit">
+                        <input type="image" class="avatar"
+                            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQr3ph3FRi_iMx-zF9WE882G2Ug0hIFm2JpJg&usqp=CAU"
+                            onclick=function_Fig() />
+                        Fig
+                    </div>
+
+                    <div class="filterDiv Fruit">
+                        <input type="image" class="avatar"
+                            src="https://images.pexels.com/photos/5945713/pexels-photo-5945713.jpeg?cs=srgb&dl=pexels-any-lane-5945713.jpg&fm=jpg"
+                            onclick=function_Kiwi() />
+                        Kiwi
+                    </div>
+
+                    <div class="filterDiv Fruit">
+                        <input type="image" class="avatar"
+                            src="https://images.pexels.com/photos/39303/mango-tropical-fruit-juicy-sweet-39303.jpeg?cs=srgb&dl=pexels-pixabay-39303.jpg&fm=jpg"
+                            onclick=function_Mango() />
+                        Mango
+                    </div>
+
+                    <div class="filterDiv Fruit">
+                        <input type="image" class="avatar"
+                            src="https://th.bing.com/th/id/OIP.tGNVqx8U_Yxb6FcUS7ox_AHaHa?w=178&h=180&c=7&r=0&o=5&dpr=2&pid=1.7"
+                            onclick=function_Melon() />
+                        Melon
+                    </div>
+
+                    <div class="filterDiv Fruit">
+                        <input type="image" class="avatar"
+                            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS0qsDYyQExhxCLNBBJ34M5AVB8FRJxG93CE6aNZjcIRlCFiUK1EIRxXzfHz2-M8yMTAYI&usqp=CAU"
+                            onclick=function_Papaya() />
+                        Papaya
+                    </div>
+
+                    <div class="filterDiv Fruit">
+                        <input type="image" class="avatar"
+                            src="https://images.pexels.com/photos/2253550/pexels-photo-2253550.jpeg?cs=srgb&dl=pexels-mark-stebnicki-2253550.jpg&fm=jpg"
+                            onclick=function_Peach() />
+                        Peach
+                    </div>
+
+                    <div class="filterDiv Fruit">
+                        <input type="image" class="avatar"
+                            src="https://images.pexels.com/photos/568471/pexels-photo-568471.jpeg?cs=srgb&dl=pexels-mali-maeder-568471.jpg&fm=jpg"
+                            onclick=function_Pear() />
+                        Pear
+                    </div>
+
+                    <div class="filterDiv Fruit">
+                        <input type="image" class="avatar"
+                            src="https://images.pexels.com/photos/947879/pexels-photo-947879.jpeg?cs=srgb&dl=pexels-alizee-marchand-947879.jpg&fm=jpg"
+                            onclick=function_Pineapple() />
+                        Pineapple
+                    </div>
+
+                    <div class="filterDiv Fruit">
+                        <input type="image" class="avatar"
+                            src="https://images.pexels.com/photos/5945668/pexels-photo-5945668.jpeg?cs=srgb&dl=pexels-any-lane-5945668.jpg&fm=jpg"
+                            onclick=function_Plum() />
+                        Plum
+                    </div>
+
+                    <div class="filterDiv Fruit">
+                        <input type="image" class="avatar"
+                            src="https://images.pexels.com/photos/1398655/pexels-photo-1398655.jpeg?cs=srgb&dl=pexels-lisa-fotios-1398655.jpg&fm=jpg"
+                            onclick=function_Watermelon() />
+                        Watermelon
+                    </div>
+
+
+
+
+
+
+                    <div class="filterDiv BAC">
+                        <input type="image" class="avatar"
+                            src="https://images.pexels.com/photos/131054/pexels-photo-131054.jpeg?cs=srgb&dl=pexels-brigitte-tohm-131054.jpg&fm=jpg"
+                            onclick=function_Blueberries() />
+                        Blueberry
+                    </div>
+
+                    <div class="filterDiv BAC">
+                        <input type="image" class="avatar"
+                            src="https://images.pexels.com/photos/306800/pexels-photo-306800.jpeg?cs=srgb&dl=pexels-irita-antonevica-306800.jpg&fm=jpg"
+                            onclick=function_Cranberries() />
+                        Cranberry
+                    </div>
+
+                    <div class="filterDiv BAC">
+                        <input type="image" class="avatar"
+                            src="https://images.pexels.com/photos/54332/currant-immature-bush-berry-54332.jpeg?cs=srgb&dl=pexels-pixabay-54332.jpg&fm=jpg"
+                            onclick=function_Gooseberries() />
+                        Gooseberry
+                    </div>
+
+                    <div class="filterDiv BAC">
+                        <input type="image" class="avatar"
+                            src="https://images.pexels.com/photos/209549/pexels-photo-209549.jpeg?cs=srgb&dl=pexels-pixabay-209549.jpg&fm=jpg"
+                            onclick=function_Grapefruit() />
+                        Grapefruit
+                    </div>
+
+                    <div class="filterDiv BAC">
+                        <input type="image" class="avatar"
+                            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQMdQqBduW7oJ_YzFBNc6Sd4Jz5vUek_cxiUA&usqp=CAU"
+                            onclick=function_Lemon() />
+                        Lemon
+                    </div>
+
+                    <div class="filterDiv BAC">
+                        <input type="image" class="avatar"
+                            src="https://images.pexels.com/photos/161559/background-bitter-breakfast-bright-161559.jpeg?cs=srgb&dl=pexels-pixabay-161559.jpg&fm=jpg"
+                            onclick=function_Orange() />
+                        Orange
+                    </div>
+
+                    <div class="filterDiv BAC">
+                        <input type="image" class="avatar"
+                            src="https://images.pexels.com/photos/701775/pexels-photo-701775.jpeg?cs=srgb&dl=pexels-kristina-paukshtite-701775.jpg&fm=jpg"
+                            onclick=function_Raspberries() />
+                        Raspberry
+                    </div>
+                    <div class="filterDiv BAC">
+                        <input type="image" class="avatar"
+                            src="https://images.pexels.com/photos/1435301/pexels-photo-1435301.jpeg?cs=srgb&dl=pexels-engin-akyurt-1435301.jpg&fm=jpg"
+                            onclick=function_Strawberries() />
+                        Strawberry
+                    </div>
+
+
+
+
+
+
+                    <div class="filterDiv Nut">
+                        <input type="image" class="avatar"
+                            src="https://th.bing.com/th/id/OIP.sLRVzV3zp9cCbsCw9tOboAHaHa?w=172&h=180&c=7&r=0&o=5&dpr=2&pid=1.7"
+                            onclick=function_Almond() />
+                        Almond
+                    </div>
+
+                    <div class="filterDiv Nut">
+                        <input type="image" class="avatar"
+                            src="https://th.bing.com/th/id/OIP.OxgJJA4eDg9V7w8xvQPJ_wHaE8?w=246&h=180&c=7&r=0&o=5&dpr=2&pid=1.7"
+                            onclick=function_Chestnut() />
+                        Chestnut
+                    </div>
+
+                    <div class="filterDiv Nut">
+                        <input type="image" class="avatar"
+                            src="https://th.bing.com/th/id/OIP.HfwXyubH2TZ62xUfKqvAxQHaE8?w=254&h=180&c=7&r=0&o=5&dpr=2&pid=1.7"
+                            onclick=function_Groundnut() />
+                        Groundnut
+                    </div>
+
+                    <div class="filterDiv Nut">
+                        <input type="image" class="avatar"
+                            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSCxin83_cDvznIls6ytff080McMcw7-xmmyw&usqp=CAU"
+                            onclick=function_Hazelnut() />
+                        Hazelnut
+                    </div>
+
+                    <div class="filterDiv Nut">
+                        <input type="image" class="avatar"
+                            src="https://images.pexels.com/photos/10060932/pexels-photo-10060932.jpeg?cs=srgb&dl=pexels-alexis-lozano-10060932.jpg&fm=jpg"
+                            onclick=function_Pistachio() />
+                        Pistachio
+                    </div>
+
+                    <div class="filterDiv Nut">
+                        <input type="image" class="avatar"
+                            src="https://images.pexels.com/photos/45211/walnuts-nuts-healthy-shell-45211.jpeg?cs=srgb&dl=pexels-pixabay-45211.jpg&fm=jpg"
+                            onclick=function_Walnut() />
+                        Walnut
+                    </div>
+
+
+
+
+
+                    <div class="filterDiv OCASC">
+                        <input type="image" class="avatar"
+                            src="https://images.pexels.com/photos/33783/olive-oil-salad-dressing-cooking-olive.jpg?cs=srgb&dl=pexels-pixabay-33783.jpg&fm=jpg"
+                            onclick=function_Olivers() />
+                        Olive oil
+                    </div>
+
+                    <div class="filterDiv OCASC">
+                        <input type="image" class="avatar"
+                            src="https://th.bing.com/th/id/OIP.Q8IGKTOhaFkkBi94BliquAHaE8?w=251&h=180&c=7&r=0&o=5&dpr=2&pid=1.7"
+                            onclick=function_Palm() />
+                        Palm oil
+                    </div>
+
+                    <div class="filterDiv OCASC">
+                        <input type="image" class="avatar"
+                            src="https://th.bing.com/th/id/OIP.rog9aGR4tegIy0xb4HXASQHaE8?w=281&h=188&c=7&r=0&o=5&dpr=2&pid=1.7"
+                            onclick=function_Sesame() />
+                        Sesame
+                    </div>
+
+                    <div class="filterDiv OCASC">
+                        <input type="image" class="avatar"
+                            src="https://th.bing.com/th/id/OIP.EDZ18GfznUbTkeQRvHs0XAHaE8?w=253&h=180&c=7&r=0&o=5&dpr=2&pid=1.7"
+                            onclick=function_Sugar_beet() />
+                        Sugarbeet
+                    </div>
+
+                    <div class="filterDiv OCASC">
+                        <input type="image" class="avatar"
+                            src="https://images.pexels.com/photos/1485645/pexels-photo-1485645.jpeg?cs=srgb&dl=pexels-renda-eko-riyadi-1485645.jpg&fm=jpg"
+                            onclick=function_Sunflower() />
+                        Sunflower
+                    </div>
+
+
+
+
+
+                    <div class="filterDiv BC">
+                        <input type="image" class="avatar"
+                            src="https://th.bing.com/th/id/OIP.7Dq35PvIWKGBlZoa_C4WVQHaF7?w=222&h=180&c=7&r=0&o=5&dpr=2&pid=1.7"
+                            onclick=function_Cocoa() />
+                        Cocoa bean
+                    </div>
+
+                    <div class="filterDiv BC">
+                        <input type="image" class="avatar"
+                            src="https://images.pexels.com/photos/1803516/pexels-photo-1803516.jpeg?cs=srgb&dl=pexels-thunyarat-klaiklang-1803516.jpg&fm=jpg"
+                            onclick=function_Coconut() />
+                        Coconut
+                    </div>
+
+                    <div class="filterDiv BC">
+                        <input type="image" class="avatar"
+                            src="https://images.pexels.com/photos/1695052/pexels-photo-1695052.jpeg?cs=srgb&dl=pexels-igor-haritanovich-1695052.jpg&fm=jpg"
+                            onclick=function_Coffee() />
+                        Coffee
+                    </div>
+
+                    <div class="filterDiv BC">
+                        <input type="image" class="avatar"
+                            src="https://th.bing.com/th/id/OIP.mK0V26wj12xMdPV1lXcH_AHaEK?w=303&h=180&c=7&r=0&o=5&dpr=2&pid=1.7"
+                            onclick=function_Hop() />
+                        Hop
+                    </div>
+
+                    <div class="filterDiv BC">
+                        <input type="image" class="avatar"
+                            src="https://images.pexels.com/photos/39347/tea-farmhouse-hand-fresh-39347.jpeg?cs=srgb&dl=pexels-pixabay-39347.jpg&fm=jpg"
+                            onclick=function_Tea() />
+                        Tea
+                    </div>
+
+                    <div class="filterDiv Fruit BC">
+                        <input type="image" class="avatar"
+                            src="https://images.pexels.com/photos/3987364/pexels-photo-3987364.jpeg?cs=srgb&dl=pexels-ready-made-3987364.jpg&fm=jpg"
+                            onclick=function_Grape() />
+                        Grape
+                    </div>
+
+                    <div class="filterDiv OCASC BC">
+                        <input type="image" class="avatar"
+                            src="https://th.bing.com/th/id/OIP.k2Uzr99ksb3MH4bRJn2fRQHaE7?w=278&h=185&c=7&r=0&o=5&dpr=2&pid=1.7"
+                            onclick=function_Sugarcane() />
+                        Sugarcane
+                    </div>
+
+
+
+
+                    <div class="filterDiv OCASC">
+                        <input type="image" class="avatar"
+                            src="https://th.bing.com/th/id/OIP.QJZL_6xFg9nt2yDSPc89mAHaE7?w=297&h=198&c=7&r=0&o=5&dpr=2&pid=1.7"
+                            onclick=function_Cottonseed() />
+                        Cottonseed oil
+                    </div>
+
+
+                    <div class="filterDiv OCASC">
+                        <input type="image" class="avatar"
+                            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQyrsD_fkDEJbO6WtmpRBWjh4PmjZlhemVq5A&usqp=CAU"
+                            onclick=function_Rape() />
+                        Mustard seed
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+        /// random color
+        function generateRandomCode() {
+            var myRandomColor = '#' + Math.floor(Math.random() * 16777215).toString(16);
+            return myRandomColor;
+        }
+
+        filterSelection("all")
+        function filterSelection(c) {
+            var x, i;
+            x = document.getElementsByClassName("filterDiv");
+            if (c == "all") c = "";
+            for (i = 0; i < x.length; i++) {
+                w3RemoveClass(x[i], "show");
+                if (x[i].className.indexOf(c) > -1) w3AddClass(x[i], "show");
+            }
+        }
+
+        function w3AddClass(element, name) {
+            var i, arr1, arr2;
+            arr1 = element.className.split(" ");
+            arr2 = name.split(" ");
+            for (i = 0; i < arr2.length; i++) {
+                if (arr1.indexOf(arr2[i]) == -1) { element.className += " " + arr2[i]; }
+            }
+        }
+
+        function w3RemoveClass(element, name) {
+            var i, arr1, arr2;
+            arr1 = element.className.split(" ");
+            arr2 = name.split(" ");
+            for (i = 0; i < arr2.length; i++) {
+                while (arr1.indexOf(arr2[i]) > -1) {
+                    arr1.splice(arr1.indexOf(arr2[i]), 1);
+                }
+            }
+            element.className = arr1.join(" ");
+        }
+
+        // Add active class to the current button (highlight it)
+        var btnContainer = document.getElementById("myBtnContainer");
+        var btns = btnContainer.getElementsByClassName("btn");
+        for (var i = 0; i < btns.length; i++) {
+            btns[i].addEventListener("click", function () {
+
+                var current = document.getElementsByClassName("active");
+                current[0].className = current[0].className.replace(" active", "");
+                this.className += " active";
+            });
+        }
+
+        //mapox
+        mapboxgl.accessToken = 'pk.eyJ1IjoianJtYSIsImEiOiJjazZsNjFpZGUwOG10M2RuMDNvaTYyNzY1In0.CzO_UMzMbsy38dSRbtHHmQ';
+        const map = new mapboxgl.Map({
+            container: 'map', // container id
+            style: 'mapbox://styles/mapbox/light-v10',
+            center: [-55.437, 49.872],
+            zoom: 1.1
+        });
+
+        window.map = map;
+
+
+        //load geojson subregion
+        map.on('load', function () {
+            map.addSource('subregion', {
+                'type': 'vector',
+                'url': 'mapbox://jrma.1kqoth59'
+            });
+            map.addLayer({
+                'id': 'subregion_l',
+                'type': 'line',
+                'source': 'subregion',
+                'source-layer': 'crop-7qjkqr',
+                'paint': {
+                    'line-color': ['match', ['get', 'World_SUB'],
+                        'Andean South America', '#562c2c',
+                        'Australia and New Zealand', '#14213d',
+                        'Caribbean', '#f2542d',
+                        'Central Africa', '#f5dfbb',
+                        'Central America and Mexico', '#0e9594',
+                        'Central Asia', '#127475',
+                        'East Africa', '#fcca46',
+                        'East Asia', '#a1c181',
+                        'Indian Ocean Islands', '#d0b8ac',
+                        'North America', '#c89f08',
+                        'North Eastern Europe', '#ef6351',
+                        'North Western Europe', '#be95c4',
+                        'Not Specified', '#edddd4',
+                        'Pacific Region', '#f4acb7',
+                        'South and East Mediterranean', '#abc4ff',
+                        'South Asia', '#718355',
+                        'South Eastern Europe', '#e8ac65',
+                        'South Western Europe', '#e8a598',
+                        'Southeast Asia', '#cd050f',
+                        'Southern Africa', '#ff7096',
+                        'Temperate South America', '#1a659e',
+                        'Tropical South America', '#9b2226',
+                        'West Africa', '#81b29a',
+                        'West Asia', '#81b29a',
+                        'red'],
+                    'line-width': 1.5,
+                    'line-opacity': 0.6
+                }
+            }, 'waterway-label');
+
+            map.addLayer({
+                'id': 'sub',
+                'source': 'subregion',
+                'source-layer': 'crop-7qjkqr',
+                'type': 'fill',
+                'paint': {
+                    'fill-color': ['match', ['get', 'World_SUB'],
+                        'Andean South America', '#562c2c',
+                        'Australia and New Zealand', '#14213d',
+                        'Caribbean', '#f2542d',
+                        'Central Africa', '#f5dfbb',
+                        'Central America and Mexico', '#0e9594',
+                        'Central Asia', '#127475',
+                        'East Africa', '#fcca46',
+                        'East Asia', '#a1c181',
+                        'Indian Ocean Islands', '#d0b8ac',
+                        'North America', '#f6f4d2',
+                        'North Eastern Europe', '#ef6351',
+                        'North Western Europe', '#be95c4',
+                        'Not Specified', '#edddd4',
+                        'Pacific Region', '#f4acb7',
+                        'South and East Mediterranean', '#abc4ff',
+                        'South Asia', '#718355',
+                        'South Eastern Europe', '#e8ac65',
+                        'South Western Europe', '#e8a598',
+                        'Southeast Asia', '#cd050f',
+                        'Southern Africa', '#ff7096',
+                        'Temperate South America', '#1a659e',
+                        'Tropical South America', '#9b2226',
+                        'West Africa', '#81b29a',
+                        'West Asia', '#81b29a',
+                        'white'],
+                    'fill-outline-color': 'white',
+                    'fill-opacity': 0
+                }
+            },
+                'waterway-label');
+
+            map.on('click', 'sub', (e) => {
+                new mapboxgl.Popup()
+                    .setLngLat(e.lngLat)
+                    .setHTML(e.features[0].properties.World_SUB)
+                    .addTo(map);
+            });
+
+            // Change the cursor to a pointer when
+            // the mouse is over the states layer.
+            map.on('mouseenter', 'states-layer', () => {
+                map.getCanvas().style.cursor = 'pointer';
+            });
+
+            // Change the cursor back to a pointer
+            // when it leaves the states layer.
+            map.on('mouseleave', 'sub', () => {
+                map.getCanvas().style.cursor = '';
+            });
+        });
+        subregion = 0;
+            function function_subregion() {
+                if (subregion == 0) {
+                    map.setPaintProperty('subregion_l', 'line-opacity', 0)
+                    subregion = 1;
+                } else {
+                    map.setPaintProperty('subregion_l', 'line-opacity', 0.6);
+                    subregion = 0;
+                }
+            };
+
+        // Cereal
+        //load geojson Barley
+        map.on('load', function () {
+            map.addSource('Barley', {
+                type: 'geojson',
+                data: 'https://raw.githubusercontent.com/JRMa2021/MG7/main/each_crop/cereal/Barley.geojson'
+            });
+        });
+        Barley = 0;
+        function function_Barley() {
+            if (Barley == 0) {
+                map.addLayer({
+                    'id': 'Barley',
+                    'type': 'fill',
+                    'source': 'Barley',
+                    'layout': {
+                        'visibility': 'visible'
+                    },
+                    'paint': {
+                        'fill-opacity': 0.4,
+                        'fill-color': generateRandomCode()
+                    }
+                });
+                Barley = 1;
+            } else {
+                map.removeLayer('Barley');
+                Barley = 0;
+            }
+        }
+        //load geojson Maize
+        map.on('load', function () {
+            map.addSource('Maize', {
+                type: 'geojson',
+                data: 'https://raw.githubusercontent.com/JRMa2021/MG7/main/each_crop/cereal/Maize.geojson'
+            });
+        });
+        Maize = 0;
+        function function_Maize() {
+            if (Maize == 0) {
+                map.addLayer({
+                    'id': 'Maize',
+                    'type': 'fill',
+                    'source': 'Maize',
+                    'layout': {
+                        'visibility': 'visible'
+                    },
+                    'paint': {
+                        'fill-opacity': 0.4,
+                        'fill-color': generateRandomCode()
+                    }
+                });
+                Maize = 1;
+            } else {
+                map.removeLayer('Maize');
+                Maize = 0;
+            }
+        }
+        //load geojson Millets
+        map.on('load', function () {
+            map.addSource('Millets', {
+                type: 'geojson',
+                data: 'https://raw.githubusercontent.com/JRMa2021/MG7/main/each_crop/cereal/Millets.geojson'
+            });
+        });
+        Millets = 0;
+        function function_Millets() {
+            if (Millets == 0) {
+                map.addLayer({
+                    'id': 'Millets',
+                    'type': 'fill',
+                    'source': 'Millets',
+                    'layout': {
+                        'visibility': 'visible'
+                    },
+                    'paint': {
+                        'fill-opacity': 0.4,
+                        'fill-color': generateRandomCode()
+                    }
+                });
+                Millets = 1;
+            } else {
+                map.removeLayer('Millets');
+                Millets = 0;
+            }
+        }
+        //load geojson Oats
+        map.on('load', function () {
+            map.addSource('Oats', {
+                type: 'geojson',
+                data: 'https://raw.githubusercontent.com/JRMa2021/MG7/main/each_crop/cereal/Oats.geojson'
+            });
+        });
+        Oats = 0;
+        function function_Oats() {
+            if (Oats == 0) {
+                map.addLayer({
+                    'id': 'Oats',
+                    'type': 'fill',
+                    'source': 'Oats',
+                    'layout': {
+                        'visibility': 'visible'
+                    },
+                    'paint': {
+                        'fill-opacity': 0.4,
+                        'fill-color': generateRandomCode()
+                    }
+                });
+                Oats = 1;
+            } else {
+                map.removeLayer('Oats');
+                Oats = 0;
+            }
+        }
+        //load geojson Rice
+        map.on('load', function () {
+            map.addSource('Rice', {
+                type: 'geojson',
+                data: 'https://raw.githubusercontent.com/JRMa2021/MG7/main/each_crop/cereal/Rice.geojson'
+            });
+        });
+        Rice = 0;
+        function function_Rice() {
+            if (Rice == 0) {
+                map.addLayer({
+                    'id': 'Rice',
+                    'type': 'fill',
+                    'source': 'Rice',
+                    'layout': {
+                        'visibility': 'visible'
+                    },
+                    'paint': {
+                        'fill-opacity': 0.4,
+                        'fill-color': generateRandomCode()
+                    }
+                });
+                Rice = 1;
+            } else {
+                map.removeLayer('Rice');
+                Rice = 0;
+            }
+        }
+        //load geojson Rye
+        map.on('load', function () {
+            map.addSource('Rye', {
+                type: 'geojson',
+                data: 'https://raw.githubusercontent.com/JRMa2021/MG7/main/each_crop/cereal/Rye.geojson'
+            });
+        });
+        Rye = 0;
+        function function_Rye() {
+            if (Rye == 0) {
+                map.addLayer({
+                    'id': 'Rye',
+                    'type': 'fill',
+                    'source': 'Rye',
+                    'layout': {
+                        'visibility': 'visible'
+                    },
+                    'paint': {
+                        'fill-opacity': 0.4,
+                        'fill-color': generateRandomCode()
+                    }
+                });
+                Rye = 1;
+            } else {
+                map.removeLayer('Rye');
+                Rye = 0;
+            }
+        }
+        //load geojson Sorghum
+        map.on('load', function () {
+            map.addSource('Sorghum', {
+                type: 'geojson',
+                data: 'https://raw.githubusercontent.com/JRMa2021/MG7/main/each_crop/cereal/Sorghum.geojson'
+            });
+        });
+        Sorghum = 0;
+        function function_Sorghum() {
+            if (Sorghum == 0) {
+                map.addLayer({
+                    'id': 'Sorghum',
+                    'type': 'fill',
+                    'source': 'Sorghum',
+                    'layout': {
+                        'visibility': 'visible'
+                    },
+                    'paint': {
+                        'fill-opacity': 0.4,
+                        'fill-color': generateRandomCode()
+                    }
+                });
+                Sorghum = 1;
+            } else {
+                map.removeLayer('Sorghum');
+                Sorghum = 0;
+            }
+        }
+        //load geojson Wheat
+        map.on('load', function () {
+            map.addSource('Wheat', {
+                type: 'geojson',
+                data: 'https://raw.githubusercontent.com/JRMa2021/MG7/main/each_crop/cereal/Wheat.geojson'
+            });
+        });
+        Wheat = 0;
+        function function_Wheat() {
+            if (Wheat == 0) {
+                map.addLayer({
+                    'id': 'Wheat',
+                    'type': 'fill',
+                    'source': 'Wheat',
+                    'layout': {
+                        'visibility': 'visible'
+                    },
+                    'paint': {
+                        'fill-opacity': 0.4,
+                        'fill-color': generateRandomCode()
+                    }
+                });
+                Wheat = 1;
+            } else {
+                map.removeLayer('Wheat');
+                Wheat = 0;
+            }
+        }
+
+        /////////////////////////////////////////////////////////////////////////////
+
+        //Roots
+        //load geojson Cassava
+        map.on('load', function () {
+            map.addSource('Cassava', {
+                type: 'geojson',
+                data: 'https://raw.githubusercontent.com/JRMa2021/MG7/main/each_crop/root/Cassava.geojson'
+            });
+        });
+        Cassava = 0;
+        function function_Cassava() {
+            if (Cassava == 0) {
+                map.addLayer({
+                    'id': 'Cassava',
+                    'type': 'fill',
+                    'source': 'Cassava',
+                    'layout': {
+                        'visibility': 'visible'
+                    },
+                    'paint': {
+                        'fill-opacity': 0.4,
+                        'fill-color': generateRandomCode()
+                    }
+                });
+                Cassava = 1;
+            } else {
+                map.removeLayer('Cassava');
+                Cassava = 0;
+            }
+        }
+        //load geojsons Carrots
+        map.on('load', function () {
+            map.addSource('Carrots', {
+                type: 'geojson',
+                data: 'https://raw.githubusercontent.com/JRMa2021/MG7/main/each_crop/root/Carrots.geojson'
+            });
+        });
+        Carrots = 0;
+        function function_Carrot() {
+            if (Carrots == 0) {
+                map.addLayer({
+                    'id': 'Carrots',
+                    'type': 'fill',
+                    'source': 'Carrots',
+                    'layout': {
+                        'visibility': 'visible'
+                    },
+                    'paint': {
+                        'fill-opacity': 0.4,
+                        'fill-color': generateRandomCode()
+                    }
+                });
+                Carrots = 1;
+            } else {
+                map.removeLayer('Carrots');
+                Carrots = 0;
+            }
+        }
+        //load geojsons Chickpeas
+        map.on('load', function () {
+            map.addSource('Chickpeas', {
+                type: 'geojson',
+                data: 'https://raw.githubusercontent.com/JRMa2021/MG7/main/each_crop/root/Chickpeas.geojson'
+            });
+        });
+        Chickpeas = 0;
+        function function_Chickpeas() {
+            if (Chickpeas == 0) {
+                map.addLayer({
+                    'id': 'Chickpeas',
+                    'type': 'fill',
+                    'source': 'Chickpeas',
+                    'layout': {
+                        'visibility': 'visible'
+                    },
+                    'paint': {
+                        'fill-opacity': 0.4,
+                        'fill-color': generateRandomCode()
+                    }
+                });
+                Chickpeas = 1;
+            } else {
+                map.removeLayer('Chickpeas');
+                Chickpeas = 0;
+            }
+        }
+        //load geojsons Cowpeas
+        map.on('load', function () {
+            map.addSource('Cowpeas', {
+                type: 'geojson',
+                data: 'https://raw.githubusercontent.com/JRMa2021/MG7/main/each_crop/root/Cowpeas.geojson'
+            });
+        });
+        Cowpeas = 0;
+        function function_Cowpeas() {
+            if (Cowpeas == 0) {
+                map.addLayer({
+                    'id': 'Cowpeas',
+                    'type': 'fill',
+                    'source': 'Cowpeas',
+                    'layout': {
+                        'visibility': 'visible'
+                    },
+                    'paint': {
+                        'fill-opacity': 0.4,
+                        'fill-color': generateRandomCode()
+                    }
+                });
+                Cowpeas = 1;
+            } else {
+                map.removeLayer('Cowpeas');
+                Cowpeas = 0;
+            }
+        }
+        //load geojsons Lentils
+        map.on('load', function () {
+            map.addSource('Lentils', {
+                type: 'geojson',
+                data: 'https://raw.githubusercontent.com/JRMa2021/MG7/main/each_crop/root/Lentils.geojson'
+            });
+        });
+        Lentils = 0;
+        function function_Lentils() {
+            if (Lentils == 0) {
+                map.addLayer({
+                    'id': 'Lentils',
+                    'type': 'fill',
+                    'source': 'Lentils',
+                    'layout': {
+                        'visibility': 'visible'
+                    },
+                    'paint': {
+                        'fill-opacity': 0.4,
+                        'fill-color': generateRandomCode()
+                    }
+                });
+                Lentils = 1;
+            } else {
+                map.removeLayer('Lentils');
+                Lentils = 0;
+            }
+        }
+        //load geojsons Peas
+        map.on('load', function () {
+            map.addSource('Peas', {
+                type: 'geojson',
+                data: 'https://raw.githubusercontent.com/JRMa2021/MG7/main/each_crop/root/Peas.geojson'
+            });
+        });
+        Peas = 0;
+        function function_Peas() {
+            if (Peas == 0) {
+                map.addLayer({
+                    'id': 'Peas',
+                    'type': 'fill',
+                    'source': 'Peas',
+                    'layout': {
+                        'visibility': 'visible'
+                    },
+                    'paint': {
+                        'fill-opacity': 0.4,
+                        'fill-color': generateRandomCode()
+                    }
+                });
+                Peas = 1;
+            } else {
+                map.removeLayer('Peas');
+                Peas = 0;
+            }
+        }
+        //load geojsons Potatoes
+        map.on('load', function () {
+            map.addSource('Potatoes', {
+                type: 'geojson',
+                data: 'https://raw.githubusercontent.com/JRMa2021/MG7/main/each_crop/root/Potatoes.geojson'
+            });
+        });
+        Potatoes = 0;
+        function function_Potatoes() {
+            if (Potatoes == 0) {
+                map.addLayer({
+                    'id': 'Potatoes',
+                    'type': 'fill',
+                    'source': 'Potatoes',
+                    'layout': {
+                        'visibility': 'visible'
+                    },
+                    'paint': {
+                        'fill-opacity': 0.4,
+                        'fill-color': generateRandomCode()
+                    }
+                });
+                Potatoes = 1;
+            } else {
+                map.removeLayer('Potatoes');
+                Potatoes = 0;
+            }
+        }
+        //load geojsons Soybean
+        map.on('load', function () {
+            map.addSource('Soybean', {
+                type: 'geojson',
+                data: 'https://raw.githubusercontent.com/JRMa2021/MG7/main/each_crop/root/Soybean.geojson'
+            });
+        });
+        Soybean = 0;
+        function function_Soybean() {
+            if (Soybean == 0) {
+                map.addLayer({
+                    'id': 'Soybean',
+                    'type': 'fill',
+                    'source': 'Soybean',
+                    'layout': {
+                        'visibility': 'visible'
+                    },
+                    'paint': {
+                        'fill-opacity': 0.4,
+                        'fill-color': generateRandomCode()
+                    }
+                });
+                Soybean = 1;
+            } else {
+                map.removeLayer('Soybean');
+                Soybean = 0;
+            }
+        }
+        //load geojsons Taro
+        map.on('load', function () {
+            map.addSource('Taro', {
+                type: 'geojson',
+                data: 'https://raw.githubusercontent.com/JRMa2021/MG7/main/each_crop/root/Taro.geojson'
+            });
+        });
+        Taro = 0;
+        function function_Taro() {
+            if (Taro == 0) {
+                map.addLayer({
+                    'id': 'Taro',
+                    'type': 'fill',
+                    'source': 'Taro',
+                    'layout': {
+                        'visibility': 'visible'
+                    },
+                    'paint': {
+                        'fill-opacity': 0.4,
+                        'fill-color': generateRandomCode()
+                    }
+                });
+                Taro = 1;
+            } else {
+                map.removeLayer('Taro');
+                Taro = 0;
+            }
+        }
+        //load geojson sweet_potatoes
+        map.on('load', function () {
+            map.addSource('Sweet_potatoes', {
+                type: 'geojson',
+                data: 'https://raw.githubusercontent.com/JRMa2021/MG7/main/each_crop/root/Sweet_potatoes.geojson'
+            });
+        });
+        Sweet_potatoes = 0;
+        function function_Sweet_potatoes() {
+            if (Sweet_potatoes == 0) {
+                map.addLayer({
+                    'id': 'Sweet_potatoes',
+                    'type': 'fill',
+                    'source': 'Sweet_potatoes',
+                    'layout': {
+                        'visibility': 'visible'
+                    },
+                    'paint': {
+                        'fill-opacity': 0.4,
+                        'fill-color': generateRandomCode()
+                    }
+                });
+                Sweet_potatoes = 1;
+            } else {
+                map.removeLayer('Sweet_potatoes');
+                Sweet_potatoes = 0;
+            }
+        }
+        //load geojson Yams
+        map.on('load', function () {
+            map.addSource('Yams', {
+                type: 'geojson',
+                data: 'https://raw.githubusercontent.com/JRMa2021/MG7/main/each_crop/root/Yams.geojson'
+            });
+        });
+        Yams = 0;
+        function function_Yams() {
+            if (Yams == 0) {
+                map.addLayer({
+                    'id': 'Yams',
+                    'type': 'fill',
+                    'source': 'Yams',
+                    'layout': {
+                        'visibility': 'visible'
+                    },
+                    'paint': {
+                        'fill-opacity': 0.4,
+                        'fill-color': generateRandomCode()
+                    }
+                });
+                Yams = 1;
+            } else {
+                map.removeLayer('Yams');
+                Yams = 0;
+            }
+        }
+
+
+        /////////////////////////////////////////////////////////////////////////////
+
+        //Berries
+        //load geojson Blueberries
+        map.on('load', function () {
+            map.addSource('Blueberries', {
+                type: 'geojson',
+                data: 'https://raw.githubusercontent.com/JRMa2021/MG7/main/each_crop/berries/Blueberries.geojson'
+            });
+        });
+        Blueberries = 0;
+        function function_Blueberries() {
+            if (Blueberries == 0) {
+                map.addLayer({
+                    'id': 'Blueberries',
+                    'type': 'fill',
+                    'source': 'Blueberries',
+                    'layout': {
+                        'visibility': 'visible'
+                    },
+                    'paint': {
+                        'fill-opacity': 0.4,
+                        'fill-color': generateRandomCode()
+                    }
+                });
+                Blueberries = 1;
+            } else {
+                map.removeLayer('Blueberries');
+                Blueberries = 0;
+            }
+        }
+        //load geojson Cranberries
+        map.on('load', function () {
+            map.addSource('Cranberries', {
+                type: 'geojson',
+                data: 'https://raw.githubusercontent.com/JRMa2021/MG7/main/each_crop/berries/Cranberries.geojson'
+            });
+        });
+        Cranberries = 0;
+        function function_Cranberries() {
+            if (Cranberries == 0) {
+                map.addLayer({
+                    'id': 'Cranberries',
+                    'type': 'fill',
+                    'source': 'Cranberries',
+                    'layout': {
+                        'visibility': 'visible'
+                    },
+                    'paint': {
+                        'fill-opacity': 0.4,
+                        'fill-color': generateRandomCode()
+                    }
+                });
+                Cranberries = 1;
+            } else {
+                map.removeLayer('Cranberries');
+                Cranberries = 0;
+            }
+        }
+        //load geojson Gooseberries
+        map.on('load', function () {
+            map.addSource('Gooseberries', {
+                type: 'geojson',
+                data: 'https://raw.githubusercontent.com/JRMa2021/MG7/main/each_crop/berries/Gooseberries.geojson'
+            });
+        });
+        Gooseberries = 0;
+        function function_Gooseberries() {
+            if (Gooseberries == 0) {
+                map.addLayer({
+                    'id': 'Gooseberries',
+                    'type': 'fill',
+                    'source': 'Gooseberries',
+                    'layout': {
+                        'visibility': 'visible'
+                    },
+                    'paint': {
+                        'fill-opacity': 0.4,
+                        'fill-color': generateRandomCode()
+                    }
+                });
+                Gooseberries = 1;
+            } else {
+                map.removeLayer('Gooseberries');
+                Gooseberries = 0;
+            }
+        }
+        //load geojson Grapefruits
+        map.on('load', function () {
+            map.addSource('Grapefruit', {
+                type: 'geojson',
+                data: 'https://raw.githubusercontent.com/JRMa2021/MG7/main/each_crop/berries/Grapefruits.geojson'
+            });
+        });
+        Grapefruit = 0;
+        function function_Grapefruit() {
+            if (Grapefruit == 0) {
+                map.addLayer({
+                    'id': 'Grapefruit',
+                    'type': 'fill',
+                    'source': 'Grapefruit',
+                    'layout': {
+                        'visibility': 'visible'
+                    },
+                    'paint': {
+                        'fill-opacity': 0.4,
+                        'fill-color': generateRandomCode()
+                    }
+                });
+                Grapefruit = 1;
+            } else {
+                map.removeLayer('Grapefruit');
+                Grapefruit = 0;
+            }
+        }
+        //load geojson Lemons
+        map.on('load', function () {
+            map.addSource('Lemon', {
+                type: 'geojson',
+                data: 'https://raw.githubusercontent.com/JRMa2021/MG7/main/each_crop/berries/Lemons.geojson'
+            });
+        });
+        Lemon = 0;
+        function function_Lemon() {
+            if (Lemon == 0) {
+                map.addLayer({
+                    'id': 'Lemon',
+                    'type': 'fill',
+                    'source': 'Lemon',
+                    'layout': {
+                        'visibility': 'visible'
+                    },
+                    'paint': {
+                        'fill-opacity': 0.4,
+                        'fill-color': generateRandomCode()
+                    }
+                });
+                Lemon = 1;
+            } else {
+                map.removeLayer('Lemon');
+                Lemon = 0;
+            }
+        }
+        //load geojson Oranges
+        map.on('load', function () {
+            map.addSource('Orange', {
+                type: 'geojson',
+                data: 'https://raw.githubusercontent.com/JRMa2021/MG7/main/each_crop/berries/Oranges.geojson'
+            });
+        });
+        Orange = 0;
+        function function_Orange() {
+            if (Orange == 0) {
+                map.addLayer({
+                    'id': 'Orange',
+                    'type': 'fill',
+                    'source': 'Orange',
+                    'layout': {
+                        'visibility': 'visible'
+                    },
+                    'paint': {
+                        'fill-opacity': 0.4,
+                        'fill-color': generateRandomCode()
+                    }
+                });
+                Orange = 1;
+            } else {
+                map.removeLayer('Orange');
+                Orange = 0;
+            }
+        }
+        //load geojson Raspberries
+        map.on('load', function () {
+            map.addSource('Raspberries', {
+                type: 'geojson',
+                data: 'https://raw.githubusercontent.com/JRMa2021/MG7/main/each_crop/berries/Raspberries.geojson'
+            });
+        });
+        Raspberries = 0;
+        function function_Raspberries() {
+            if (Raspberries == 0) {
+                map.addLayer({
+                    'id': 'Raspberries',
+                    'type': 'fill',
+                    'source': 'Raspberries',
+                    'layout': {
+                        'visibility': 'visible'
+                    },
+                    'paint': {
+                        'fill-opacity': 0.4,
+                        'fill-color': generateRandomCode()
+                    }
+                });
+                Raspberries = 1;
+            } else {
+                map.removeLayer('Raspberries');
+                Raspberries = 0;
+            }
+        }
+        //load geojson Strawberries
+        map.on('load', function () {
+            map.addSource('Strawberries', {
+                type: 'geojson',
+                data: 'https://raw.githubusercontent.com/JRMa2021/MG7/main/each_crop/berries/Strawberries.geojson'
+            });
+        });
+        Strawberries = 0;
+        function function_Strawberries() {
+            if (Strawberries == 0) {
+                map.addLayer({
+                    'id': 'Strawberries',
+                    'type': 'fill',
+                    'source': 'Strawberries',
+                    'layout': {
+                        'visibility': 'visible'
+                    },
+                    'paint': {
+                        'fill-opacity': 0.4,
+                        'fill-color': generateRandomCode()
+                    }
+                });
+                Strawberries = 1;
+            } else {
+                map.removeLayer('Strawberries');
+                Strawberries = 0;
+            }
+        }
+
+
+        /////////////////////////////////////////////////////////////////////////////
+
+        //Beverage
+        //load geojson Cocoa
+        map.on('load', function () {
+            map.addSource('Cocoa', {
+                type: 'geojson',
+                data: 'https://raw.githubusercontent.com/JRMa2021/MG7/main/each_crop/beverage/Cocoa.geojson'
+            });
+        });
+        Cocoa = 0;
+        function function_Cocoa() {
+            if (Cocoa == 0) {
+                map.addLayer({
+                    'id': 'Cocoa',
+                    'type': 'fill',
+                    'source': 'Cocoa',
+                    'layout': {
+                        'visibility': 'visible'
+                    },
+                    'paint': {
+                        'fill-opacity': 0.4,
+                        'fill-color': generateRandomCode()
+                    }
+                });
+                Cocoa = 1;
+            } else {
+                map.removeLayer('Cocoa');
+                Cocoa = 0;
+            }
+        }
+        //load geojson Coconuts
+        map.on('load', function () {
+            map.addSource('Coconuts', {
+                type: 'geojson',
+                data: 'https://raw.githubusercontent.com/JRMa2021/MG7/main/each_crop/beverage/Coconuts.geojson'
+            });
+        });
+        Coconuts = 0;
+        function function_Coconut() {
+            if (Coconuts == 0) {
+                map.addLayer({
+                    'id': 'Coconuts',
+                    'type': 'fill',
+                    'source': 'Coconuts',
+                    'layout': {
+                        'visibility': 'visible'
+                    },
+                    'paint': {
+                        'fill-opacity': 0.4,
+                        'fill-color': generateRandomCode()
+                    }
+                });
+                Coconuts = 1;
+            } else {
+                map.removeLayer('Coconuts');
+                Coconuts = 0;
+            }
+        }
+        //load geojson Coffee
+        map.on('load', function () {
+            map.addSource('Coffee', {
+                type: 'geojson',
+                data: 'https://raw.githubusercontent.com/JRMa2021/MG7/main/each_crop/beverage/Coffee.geojson'
+            });
+        });
+        Coffee = 0;
+        function function_Coffee() {
+            if (Coffee == 0) {
+                map.addLayer({
+                    'id': 'Coffee',
+                    'type': 'fill',
+                    'source': 'Coffee',
+                    'layout': {
+                        'visibility': 'visible'
+                    },
+                    'paint': {
+                        'fill-opacity': 0.4,
+                        'fill-color': generateRandomCode()
+                    }
+                });
+                Coffee = 1;
+            } else {
+                map.removeLayer('Coffee');
+                Coffee = 0;
+            }
+        }
+        //load geojson Grapes
+        map.on('load', function () {
+            map.addSource('Grape', {
+                type: 'geojson',
+                data: 'https://raw.githubusercontent.com/JRMa2021/MG7/main/each_crop/beverage/Grapes.geojson'
+            });
+        });
+        Grape = 0;
+        function function_Grape() {
+            if (Grape == 0) {
+                map.addLayer({
+                    'id': 'Grape',
+                    'type': 'fill',
+                    'source': 'Grape',
+                    'layout': {
+                        'visibility': 'visible'
+                    },
+                    'paint': {
+                        'fill-opacity': 0.4,
+                        'fill-color': generateRandomCode()
+                    }
+                });
+                Grape = 1;
+            } else {
+                map.removeLayer('Grape');
+                Grape = 0;
+            }
+        }
+        //load geojson Hops
+        map.on('load', function () {
+            map.addSource('Hops', {
+                type: 'geojson',
+                data: 'https://raw.githubusercontent.com/JRMa2021/MG7/main/each_crop/beverage/Hops.geojson'
+            });
+        });
+        Hops = 0;
+        function function_Hop() {
+            if (Hops == 0) {
+                map.addLayer({
+                    'id': 'Hops',
+                    'type': 'fill',
+                    'source': 'Hops',
+                    'layout': {
+                        'visibility': 'visible'
+                    },
+                    'paint': {
+                        'fill-opacity': 0.4,
+                        'fill-color': generateRandomCode()
+                    }
+                });
+                Hops = 1;
+            } else {
+                map.removeLayer('Hops');
+                Hops = 0;
+            }
+        }
+
+        //load geojson Tea
+        map.on('load', function () {
+            map.addSource('Tea', {
+                type: 'geojson',
+                data: 'https://raw.githubusercontent.com/JRMa2021/MG7/main/each_crop/beverage/Tea.geojson'
+            });
+        });
+        Tea = 0;
+        function function_Tea() {
+            if (Tea == 0) {
+                map.addLayer({
+                    'id': 'Tea',
+                    'type': 'fill',
+                    'source': 'Tea',
+                    'layout': {
+                        'visibility': 'visible'
+                    },
+                    'paint': {
+                        'fill-opacity': 0.4,
+                        'fill-color': generateRandomCode()
+                    }
+                });
+                Tea = 1;
+            } else {
+                map.removeLayer('Tea');
+                Tea = 0;
+            }
+        }
+
+        /////////////////////////////////////////////////////////////////////////////
+
+        //Furit
+        //load geojson Apples
+        map.on('load', function () {
+            map.addSource('Apple', {
+                type: 'geojson',
+                data: 'https://raw.githubusercontent.com/JRMa2021/MG7/main/each_crop/friut1/Apples.geojson'
+            });
+        });
+        Apple = 0;
+        function function_Apple() {
+            if (Apple == 0) {
+                map.addLayer({
+                    'id': 'Apple',
+                    'type': 'fill',
+                    'source': 'Apple',
+                    'layout': {
+                        'visibility': 'visible'
+                    },
+                    'paint': {
+                        'fill-opacity': 0.4,
+                        'fill-color': generateRandomCode()
+                    }
+                });
+                Apple = 1;
+            } else {
+                map.removeLayer('Apple');
+                Apple = 0;
+            }
+        }
+        //load geojson Apricots
+        map.on('load', function () {
+            map.addSource('Apricot', {
+                type: 'geojson',
+                data: 'https://raw.githubusercontent.com/JRMa2021/MG7/main/each_crop/friut1/Apricots.geojson'
+            });
+        });
+        Apricot = 0;
+        function function_Apricot() {
+            if (Apricot == 0) {
+                map.addLayer({
+                    'id': 'Apricot',
+                    'type': 'fill',
+                    'source': 'Apricot',
+                    'layout': {
+                        'visibility': 'visible'
+                    },
+                    'paint': {
+                        'fill-opacity': 0.4,
+                        'fill-color': generateRandomCode()
+                    }
+                });
+                Apricot = 1;
+            } else {
+                map.removeLayer('Apricot');
+                Apricot = 0;
+            }
+        }
+        //load geojson Avocados
+        map.on('load', function () {
+            map.addSource('Avocado', {
+                type: 'geojson',
+                data: 'https://raw.githubusercontent.com/JRMa2021/MG7/main/each_crop/friut1/Avocados.geojson'
+            });
+        });
+        Avocado = 0;
+        function function_Avocado() {
+            if (Avocado == 0) {
+                map.addLayer({
+                    'id': 'Avocado',
+                    'type': 'fill',
+                    'source': 'Avocado',
+                    'layout': {
+                        'visibility': 'visible'
+                    },
+                    'paint': {
+                        'fill-opacity': 0.4,
+                        'fill-color': generateRandomCode()
+                    }
+                });
+                Avocado = 1;
+            } else {
+                map.removeLayer('Avocado');
+                Avocado = 0;
+            }
+        }
+        //load geojson Cherries
+        map.on('load', function () {
+            map.addSource('Cherry', {
+                type: 'geojson',
+                data: 'https://raw.githubusercontent.com/JRMa2021/MG7/main/each_crop/friut1/Cherries.geojson'
+            });
+        });
+        Cherry = 0;
+        function function_Cherry() {
+            if (Cherry == 0) {
+                map.addLayer({
+                    'id': 'Cherry',
+                    'type': 'fill',
+                    'source': 'Cherry',
+                    'layout': {
+                        'visibility': 'visible'
+                    },
+                    'paint': {
+                        'fill-opacity': 0.4,
+                        'fill-color': generateRandomCode()
+                    }
+                });
+                Cherry = 1;
+            } else {
+                map.removeLayer('Cherry');
+                Cherry = 0;
+            }
+        }
+        //load geojson Dates
+        map.on('load', function () {
+            map.addSource('Dates', {
+                type: 'geojson',
+                data: 'https://raw.githubusercontent.com/JRMa2021/MG7/main/each_crop/friut1/Dates.geojson'
+            });
+        });
+        Dates = 0;
+        function function_Dates() {
+            if (Dates == 0) {
+                map.addLayer({
+                    'id': 'Dates',
+                    'type': 'fill',
+                    'source': 'Dates',
+                    'layout': {
+                        'visibility': 'visible'
+                    },
+                    'paint': {
+                        'fill-opacity': 0.4,
+                        'fill-color': generateRandomCode()
+                    }
+                });
+                Dates = 1;
+            } else {
+                map.removeLayer('Dates');
+                Dates = 0;
+            }
+        }
+        //load geojson Figs
+        map.on('load', function () {
+            map.addSource('Fig', {
+                type: 'geojson',
+                data: 'https://raw.githubusercontent.com/JRMa2021/MG7/main/each_crop/friut1/Figs.geojson'
+            });
+        });
+        Fig = 0;
+        function function_Fig() {
+            if (Fig == 0) {
+                map.addLayer({
+                    'id': 'Fig',
+                    'type': 'fill',
+                    'source': 'Fig',
+                    'layout': {
+                        'visibility': 'visible'
+                    },
+                    'paint': {
+                        'fill-opacity': 0.4,
+                        'fill-color': generateRandomCode()
+                    }
+                });
+                Fig = 1;
+            } else {
+                map.removeLayer('Fig');
+                Fig = 0;
+            }
+        }
+        //load geojson Kiwi
+        map.on('load', function () {
+            map.addSource('Kiwi', {
+                type: 'geojson',
+                data: 'https://raw.githubusercontent.com/JRMa2021/MG7/main/each_crop/friut1/Kiwi.geojson'
+            });
+        });
+        Kiwi = 0;
+        function function_Kiwi() {
+            if (Kiwi == 0) {
+                map.addLayer({
+                    'id': 'Kiwi',
+                    'type': 'fill',
+                    'source': 'Kiwi',
+                    'layout': {
+                        'visibility': 'visible'
+                    },
+                    'paint': {
+                        'fill-opacity': 0.4,
+                        'fill-color': generateRandomCode()
+                    }
+                });
+                Kiwi = 1;
+            } else {
+                map.removeLayer('Kiwi');
+                Kiwi = 0;
+            }
+        }
+        //load geojson Mangoes
+        map.on('load', function () {
+            map.addSource('Mango', {
+                type: 'geojson',
+                data: 'https://raw.githubusercontent.com/JRMa2021/MG7/main/each_crop/friut1/Mangoes.geojson'
+            });
+        });
+        Mango = 0;
+        function function_Mango() {
+            if (Mango == 0) {
+                map.addLayer({
+                    'id': 'Mango',
+                    'type': 'fill',
+                    'source': 'Mango',
+                    'layout': {
+                        'visibility': 'visible'
+                    },
+                    'paint': {
+                        'fill-opacity': 0.4,
+                        'fill-color': generateRandomCode()
+                    }
+                });
+                Mango = 1;
+            } else {
+                map.removeLayer('Mango');
+                Mango = 0;
+            }
+        }
+        //load geojson Melons
+        map.on('load', function () {
+            map.addSource('Melon', {
+                type: 'geojson',
+                data: 'https://raw.githubusercontent.com/JRMa2021/MG7/main/each_crop/friut1/Melons.geojson'
+            });
+        });
+        Melon = 0;
+        function function_Melon() {
+            if (Melon == 0) {
+                map.addLayer({
+                    'id': 'Melon',
+                    'type': 'fill',
+                    'source': 'Melon',
+                    'layout': {
+                        'visibility': 'visible'
+                    },
+                    'paint': {
+                        'fill-opacity': 0.4,
+                        'fill-color': generateRandomCode()
+                    }
+                });
+                Melon = 1;
+            } else {
+                map.removeLayer('Melon');
+                Melon = 0;
+            }
+        }
+        //load geojson Papayas
+        map.on('load', function () {
+            map.addSource('Papaya', {
+                type: 'geojson',
+                data: 'https://raw.githubusercontent.com/JRMa2021/MG7/main/each_crop/friut1/Papayas.geojson'
+            });
+        });
+        Papaya = 0;
+        function function_Papaya() {
+            if (Papaya == 0) {
+                map.addLayer({
+                    'id': 'Papaya',
+                    'type': 'fill',
+                    'source': 'Papaya',
+                    'layout': {
+                        'visibility': 'visible'
+                    },
+                    'paint': {
+                        'fill-opacity': 0.4,
+                        'fill-color': generateRandomCode()
+                    }
+                });
+                Papaya = 1;
+            } else {
+                map.removeLayer('Papaya');
+                Papaya = 0;
+            }
+        }
+        //load geojson Peaches
+        map.on('load', function () {
+            map.addSource('Peach', {
+                type: 'geojson',
+                data: 'https://raw.githubusercontent.com/JRMa2021/MG7/main/each_crop/friut1/Peaches.geojson'
+            });
+        });
+        Peach = 0;
+        function function_Peach() {
+            if (Peach == 0) {
+                map.addLayer({
+                    'id': 'Peach',
+                    'type': 'fill',
+                    'source': 'Peach',
+                    'layout': {
+                        'visibility': 'visible'
+                    },
+                    'paint': {
+                        'fill-opacity': 0.4,
+                        'fill-color': generateRandomCode()
+                    }
+                });
+                Peach = 1;
+            } else {
+                map.removeLayer('Peach');
+                Peach = 0;
+            }
+        }
+        //load geojson Pears
+        map.on('load', function () {
+            map.addSource('Pear', {
+                type: 'geojson',
+                data: 'https://raw.githubusercontent.com/JRMa2021/MG7/main/each_crop/friut1/Pears.geojson'
+            });
+        });
+        Pear = 0;
+        function function_Pear() {
+            if (Pear == 0) {
+                map.addLayer({
+                    'id': 'Pear',
+                    'type': 'fill',
+                    'source': 'Pear',
+                    'layout': {
+                        'visibility': 'visible'
+                    },
+                    'paint': {
+                        'fill-opacity': 0.4,
+                        'fill-color': generateRandomCode()
+                    }
+                });
+                Pear = 1;
+            } else {
+                map.removeLayer('Pear');
+                Pear = 0;
+            }
+        }
+        //load geojson Pineapples
+        map.on('load', function () {
+            map.addSource('Pineapples', {
+                type: 'geojson',
+                data: 'https://raw.githubusercontent.com/JRMa2021/MG7/main/each_crop/friut1/Pineapples.geojson'
+            });
+        });
+        Pineapples = 0;
+        function function_Pineapple() {
+            if (Pineapples == 0) {
+                map.addLayer({
+                    'id': 'Pineapples',
+                    'type': 'fill',
+                    'source': 'Pineapples',
+                    'layout': {
+                        'visibility': 'visible'
+                    },
+                    'paint': {
+                        'fill-opacity': 0.4,
+                        'fill-color': generateRandomCode()
+                    }
+                });
+                Pineapples = 1;
+            } else {
+                map.removeLayer('Pineapples');
+                Pineapples = 0;
+            }
+        }
+        //load geojson Plums
+        map.on('load', function () {
+            map.addSource('Plums', {
+                type: 'geojson',
+                data: 'https://raw.githubusercontent.com/JRMa2021/MG7/main/each_crop/friut1/Plums.geojson'
+            });
+        });
+        Plums = 0;
+        function function_Plum() {
+            if (Plums == 0) {
+                map.addLayer({
+                    'id': 'Plums',
+                    'type': 'fill',
+                    'source': 'Plums',
+                    'layout': {
+                        'visibility': 'visible'
+                    },
+                    'paint': {
+                        'fill-opacity': 0.4,
+                        'fill-color': generateRandomCode()
+                    }
+                });
+                Plums = 1;
+            } else {
+                map.removeLayer('Plums');
+                Plums = 0;
+            }
+        }
+        //load geojson Watermelons
+        map.on('load', function () {
+            map.addSource('Watermelons', {
+                type: 'geojson',
+                data: 'https://raw.githubusercontent.com/JRMa2021/MG7/main/each_crop/friut1/Watermelons.geojson'
+            });
+        });
+        Watermelons = 0;
+        function function_Watermelon() {
+            if (Watermelons == 0) {
+                map.addLayer({
+                    'id': 'Watermelons',
+                    'type': 'fill',
+                    'source': 'Watermelons',
+                    'layout': {
+                        'visibility': 'visible'
+                    },
+                    'paint': {
+                        'fill-opacity': 0.4,
+                        'fill-color': generateRandomCode()
+                    }
+                });
+                Watermelons = 1;
+            } else {
+                map.removeLayer('Watermelons');
+                Watermelons = 0;
+            }
+        }
+        //load geojson bananas
+        map.on('load', function () {
+            map.addSource('bananas', {
+                type: 'geojson',
+                data: 'https://raw.githubusercontent.com/JRMa2021/MG7/main/each_crop/friut1/bananas.geojson'
+            });
+        });
+        bananas = 0;
+        function function_Banana() {
+            if (bananas == 0) {
+                map.addLayer({
+                    'id': 'bananas',
+                    'type': 'fill',
+                    'source': 'bananas',
+                    'layout': {
+                        'visibility': 'visible'
+                    },
+                    'paint': {
+                        'fill-opacity': 0.4,
+                        'fill-color': generateRandomCode()
+                    }
+                });
+                bananas = 1;
+            } else {
+                map.removeLayer('bananas');
+                bananas = 0;
+            }
+        }
+
+        /////////////////////////////////////////////////////////////////////////////
+
+        //Nuts
+        //load geojson Almonds
+        map.on('load', function () {
+            map.addSource('Almonds', {
+                type: 'geojson',
+                data: 'https://raw.githubusercontent.com/JRMa2021/MG7/main/each_crop/nut/Almonds.geojson'
+            });
+        });
+        Almonds = 0;
+        function function_Almond() {
+            if (Almonds == 0) {
+                map.addLayer({
+                    'id': 'Almonds',
+                    'type': 'fill',
+                    'source': 'Almonds',
+                    'layout': {
+                        'visibility': 'visible'
+                    },
+                    'paint': {
+                        'fill-opacity': 0.4,
+                        'fill-color': generateRandomCode()
+                    }
+                });
+                Almonds = 1;
+            } else {
+                map.removeLayer('Almonds');
+                Almonds = 0;
+            }
+        }
+        //load geojson Chestnuts
+        map.on('load', function () {
+            map.addSource('Chestnuts', {
+                type: 'geojson',
+                data: 'https://raw.githubusercontent.com/JRMa2021/MG7/main/each_crop/nut/Chestnuts.geojson'
+            });
+        });
+        Chestnuts = 0;
+        function function_Chestnut() {
+            if (Chestnuts == 0) {
+                map.addLayer({
+                    'id': 'Chestnuts',
+                    'type': 'fill',
+                    'source': 'Chestnuts',
+                    'layout': {
+                        'visibility': 'visible'
+                    },
+                    'paint': {
+                        'fill-opacity': 0.4,
+                        'fill-color': generateRandomCode()
+                    }
+                });
+                Chestnuts = 1;
+            } else {
+                map.removeLayer('Chestnuts');
+                Chestnuts = 0;
+            }
+        }
+        //load geojson Groundnuts
+        map.on('load', function () {
+            map.addSource('Groundnuts', {
+                type: 'geojson',
+                data: 'https://raw.githubusercontent.com/JRMa2021/MG7/main/each_crop/nut/Groundnuts.geojson'
+            });
+        });
+        Groundnuts = 0;
+        function function_Groundnut() {
+            if (Groundnuts == 0) {
+                map.addLayer({
+                    'id': 'Groundnuts',
+                    'type': 'fill',
+                    'source': 'Groundnuts',
+                    'layout': {
+                        'visibility': 'visible'
+                    },
+                    'paint': {
+                        'fill-opacity': 0.4,
+                        'fill-color': generateRandomCode()
+                    }
+                });
+                Groundnuts = 1;
+            } else {
+                map.removeLayer('Groundnuts');
+                Groundnuts = 0;
+            }
+        }
+        //load geojson Hazelnuts
+        map.on('load', function () {
+            map.addSource('Hazelnuts', {
+                type: 'geojson',
+                data: 'https://raw.githubusercontent.com/JRMa2021/MG7/main/each_crop/nut/Hazelnuts.geojson'
+            });
+        });
+        Hazelnuts = 0;
+        function function_Hazelnut() {
+            if (Hazelnuts == 0) {
+                map.addLayer({
+                    'id': 'Hazelnuts',
+                    'type': 'fill',
+                    'source': 'Hazelnuts',
+                    'layout': {
+                        'visibility': 'visible'
+                    },
+                    'paint': {
+                        'fill-opacity': 0.4,
+                        'fill-color': generateRandomCode()
+                    }
+                });
+                Hazelnuts = 1;
+            } else {
+                map.removeLayer('Hazelnuts');
+                Hazelnuts = 0;
+            }
+        }
+        //load geojson Pistachios
+        map.on('load', function () {
+            map.addSource('Pistachios', {
+                type: 'geojson',
+                data: 'https://raw.githubusercontent.com/JRMa2021/MG7/main/each_crop/nut/Pistachios.geojson'
+            });
+        });
+        Pistachios = 0;
+        function function_Pistachio() {
+            if (Pistachios == 0) {
+                map.addLayer({
+                    'id': 'Pistachios',
+                    'type': 'fill',
+                    'source': 'Pistachios',
+                    'layout': {
+                        'visibility': 'visible'
+                    },
+                    'paint': {
+                        'fill-opacity': 0.4,
+                        'fill-color': generateRandomCode()
+                    }
+                });
+                Pistachios = 1;
+            } else {
+                map.removeLayer('Pistachios');
+                Pistachios = 0;
+            }
+        }
+        //load geojson Walnuts
+        map.on('load', function () {
+            map.addSource('Walnuts', {
+                type: 'geojson',
+                data: 'https://raw.githubusercontent.com/JRMa2021/MG7/main/each_crop/nut/Walnuts.geojson'
+            });
+        });
+        Walnuts = 0;
+        function function_Walnut() {
+            if (Walnuts == 0) {
+                map.addLayer({
+                    'id': 'Walnuts',
+                    'type': 'fill',
+                    'source': 'Walnuts',
+                    'layout': {
+                        'visibility': 'visible'
+                    },
+                    'paint': {
+                        'fill-opacity': 0.4,
+                        'fill-color': generateRandomCode()
+                    }
+                });
+                Walnuts = 1;
+            } else {
+                map.removeLayer('Walnuts');
+                Walnuts = 0;
+            }
+        }
+
+        //////////////////////////////////////////////////////////////////////
+
+        //Oil
+        //load geojson Cottonseed
+        map.on('load', function () {
+            map.addSource('Cottonseed', {
+                type: 'geojson',
+                data: 'https://raw.githubusercontent.com/JRMa2021/MG7/main/each_crop/oil/Cottonseed.geojson'
+            });
+        });
+        Cottonseed = 0;
+        function function_Cottonseed() {
+            if (Cottonseed == 0) {
+                map.addLayer({
+                    'id': 'Cottonseed',
+                    'type': 'fill',
+                    'source': 'Cottonseed',
+                    'layout': {
+                        'visibility': 'visible'
+                    },
+                    'paint': {
+                        'fill-opacity': 0.4,
+                        'fill-color': generateRandomCode()
+                    }
+                });
+                Cottonseed = 1;
+            } else {
+                map.removeLayer('Cottonseed');
+                Cottonseed = 0;
+            }
+        }
+        //load geojson Olivers
+        map.on('load', function () {
+            map.addSource('Olivers', {
+                type: 'geojson',
+                data: 'https://raw.githubusercontent.com/JRMa2021/MG7/main/each_crop/oil/Olivers.geojson'
+            });
+        }); Olivers = 0;
+        function function_Olivers() {
+            if (Olivers == 0) {
+                map.addLayer({
+                    'id': 'Olivers',
+                    'type': 'fill',
+                    'source': 'Olivers',
+                    'layout': {
+                        'visibility': 'visible'
+                    },
+                    'paint': {
+                        'fill-opacity': 0.4,
+                        'fill-color': generateRandomCode()
+                    }
+                });
+                Olivers = 1;
+            } else {
+                map.removeLayer('Olivers');
+                Olivers = 0;
+            }
+        }
+        //load geojson Palm
+        map.on('load', function () {
+            map.addSource('Palm', {
+                type: 'geojson',
+                data: 'https://raw.githubusercontent.com/JRMa2021/MG7/main/each_crop/oil/Palm.geojson'
+            });
+        });
+        Palm = 0;
+        function function_Palm() {
+            if (Palm == 0) {
+                map.addLayer({
+                    'id': 'Palm',
+                    'type': 'fill',
+                    'source': 'Palm',
+                    'layout': {
+                        'visibility': 'visible'
+                    },
+                    'paint': {
+                        'fill-opacity': 0.4,
+                        'fill-color': generateRandomCode()
+                    }
+                });
+                Palm = 1;
+            } else {
+                map.removeLayer('Palm');
+                Palm = 0;
+            }
+        }
+        //load geojson Rape
+        map.on('load', function () {
+            map.addSource('Rape', {
+                type: 'geojson',
+                data: 'https://raw.githubusercontent.com/JRMa2021/MG7/main/each_crop/oil/Rape.geojson'
+            });
+        });
+        Rape = 0;
+        function function_Rape() {
+            if (Rape == 0) {
+                map.addLayer({
+                    'id': 'Rape',
+                    'type': 'fill',
+                    'source': 'Rape',
+                    'layout': {
+                        'visibility': 'visible'
+                    },
+                    'paint': {
+                        'fill-opacity': 0.4,
+                        'fill-color': generateRandomCode()
+                    }
+                });
+                Rape = 1;
+            } else {
+                map.removeLayer('Rape');
+                Rape = 0;
+            }
+        }
+        //load geojson Sesame
+        map.on('load', function () {
+            map.addSource('Sesame', {
+                type: 'geojson',
+                data: 'https://raw.githubusercontent.com/JRMa2021/MG7/main/each_crop/oil/Sesame.geojson'
+            });
+        });
+        Sesame = 0;
+        function function_Sesame() {
+            if (Sesame == 0) {
+                map.addLayer({
+                    'id': 'Sesame',
+                    'type': 'fill',
+                    'source': 'Sesame',
+                    'layout': {
+                        'visibility': 'visible'
+                    },
+                    'paint': {
+                        'fill-opacity': 0.4,
+                        'fill-color': generateRandomCode()
+                    }
+                });
+                Sesame = 1;
+            } else {
+                map.removeLayer('Sesame');
+                Sesame = 0;
+            }
+        }
+        //load geojson Sugar_beet
+        map.on('load', function () {
+            map.addSource('Sugar_beet', {
+                type: 'geojson',
+                data: 'https://raw.githubusercontent.com/JRMa2021/MG7/main/each_crop/oil/Sugar_beet.geojson'
+            });
+        });
+        Sugar_beet = 0;
+        function function_Sugar_beet() {
+            if (Sugar_beet == 0) {
+                map.addLayer({
+                    'id': 'Sugar_beet',
+                    'type': 'fill',
+                    'source': 'Sugar_beet',
+                    'layout': {
+                        'visibility': 'visible'
+                    },
+                    'paint': {
+                        'fill-opacity': 0.4,
+                        'fill-color': generateRandomCode()
+                    }
+                });
+                Sugar_beet = 1;
+            } else {
+                map.removeLayer('Sugar_beet');
+                Sugar_beet = 0;
+            }
+        }
+        //load geojson Sunflower
+        map.on('load', function () {
+            map.addSource('Sunflower', {
+                type: 'geojson',
+                data: 'https://raw.githubusercontent.com/JRMa2021/MG7/main/each_crop/oil/Sunflower.geojson'
+            });
+        });
+        Sunflower = 0;
+        function function_Sunflower() {
+            if (Sunflower == 0) {
+                map.addLayer({
+                    'id': 'Sunflower',
+                    'type': 'fill',
+                    'source': 'Sunflower',
+                    'layout': {
+                        'visibility': 'visible'
+                    },
+                    'paint': {
+                        'fill-opacity': 0.4,
+                        'fill-color': generateRandomCode()
+                    }
+                });
+                Sunflower = 1;
+            } else {
+                map.removeLayer('Sunflower');
+                Sunflower = 0;
+            }
+        }
+        //load geojson Sugarcane
+        map.on('load', function () {
+            map.addSource('Sugarcane', {
+                type: 'geojson',
+                data: 'https://raw.githubusercontent.com/JRMa2021/MG7/main/each_crop/oil/Sugarcane.geojson'
+            });
+        });
+        Sugarcane = 0;
+        function function_Sugarcane() {
+            if (Sugarcane == 0) {
+                map.addLayer({
+                    'id': 'Sugarcane',
+                    'type': 'fill',
+                    'source': 'Sugarcane',
+                    'layout': {
+                        'visibility': 'visible'
+                    },
+                    'paint': {
+                        'fill-opacity': 0.4,
+                        'fill-color': generateRandomCode()
+                    }
+                });
+                Sugarcane = 1;
+            } else {
+                map.removeLayer('Sugarcane');
+                Sugarcane = 0;
+            }
+        }
+
+        /////////////////////////////////////////////////////////////
+
+        //spice
+        //load geojson Anise_badian
+        map.on('load', function () {
+            map.addSource('Anise_badian', {
+                type: 'geojson',
+                data: 'https://raw.githubusercontent.com/JRMa2021/MG7/main/each_crop/spice/Anise_badian.geojson'
+            });
+        });
+        Anise_badian = 0;
+        function function_Anise_badian() {
+            if (Anise_badian == 0) {
+                map.addLayer({
+                    'id': 'Anise_badian',
+                    'type': 'fill',
+                    'source': 'Anise_badian',
+                    'layout': {
+                        'visibility': 'visible'
+                    },
+                    'paint': {
+                        'fill-opacity': 0.4,
+                        'fill-color': generateRandomCode()
+                    }
+                });
+                Anise_badian = 1;
+            } else {
+                map.removeLayer('Anise_badian');
+                Anise_badian = 0;
+            }
+        }
+        //load geojson Cinnamon
+        map.on('load', function () {
+            map.addSource('Cinnamon', {
+                type: 'geojson',
+                data: 'https://raw.githubusercontent.com/JRMa2021/MG7/main/each_crop/spice/Cinnamon.geojson'
+            });
+        }); Cinnamon = 0;
+        function function_Cinnamon() {
+            if (Cinnamon == 0) {
+                map.addLayer({
+                    'id': 'Cinnamon',
+                    'type': 'fill',
+                    'source': 'Cinnamon',
+                    'layout': {
+                        'visibility': 'visible'
+                    },
+                    'paint': {
+                        'fill-opacity': 0.4,
+                        'fill-color': generateRandomCode()
+                    }
+                });
+                Cinnamon = 1;
+            } else {
+                map.removeLayer('Cinnamon');
+                Cinnamon = 0;
+            }
+        }
+        //load geojson Garlic
+        map.on('load', function () {
+            map.addSource('Garlic', {
+                type: 'geojson',
+                data: 'https://raw.githubusercontent.com/JRMa2021/MG7/main/each_crop/spice/Garlic.geojson'
+            });
+        });
+        Garlic = 0;
+        function function_Garlic() {
+            if (Garlic == 0) {
+                map.addLayer({
+                    'id': 'Garlic',
+                    'type': 'fill',
+                    'source': 'Garlic',
+                    'layout': {
+                        'visibility': 'visible'
+                    },
+                    'paint': {
+                        'fill-opacity': 0.4,
+                        'fill-color': generateRandomCode()
+                    }
+                });
+                Garlic = 1;
+            } else {
+                map.removeLayer('Garlic');
+                Garlic = 0;
+            }
+        }
+        //load geojson Ginger
+        map.on('load', function () {
+            map.addSource('Ginger', {
+                type: 'geojson',
+                data: 'https://raw.githubusercontent.com/JRMa2021/MG7/main/each_crop/spice/Ginger.geojson'
+            });
+        });
+        Ginger = 0;
+        function function_Ginger() {
+            if (Ginger == 0) {
+                map.addLayer({
+                    'id': 'Ginger',
+                    'type': 'fill',
+                    'source': 'Ginger',
+                    'layout': {
+                        'visibility': 'visible'
+                    },
+                    'paint': {
+                        'fill-opacity': 0.4,
+                        'fill-color': generateRandomCode()
+                    }
+                });
+                Ginger = 1;
+            } else {
+                map.removeLayer('Ginger');
+                Ginger = 0;
+            }
+        }
+        //load geojson Vanilla
+        map.on('load', function () {
+            map.addSource('Vanilla', {
+                type: 'geojson',
+                data: 'https://raw.githubusercontent.com/JRMa2021/MG7/main/each_crop/spice/Vanilla.geojson'
+            });
+        });
+        Vanilla = 0;
+        function function_Vanilla() {
+            if (Vanilla == 0) {
+                map.addLayer({
+                    'id': 'Vanilla',
+                    'type': 'fill',
+                    'source': 'Vanilla',
+                    'layout': {
+                        'visibility': 'visible'
+                    },
+                    'paint': {
+                        'fill-opacity': 0.4,
+                        'fill-color': generateRandomCode()
+                    }
+                });
+                Vanilla = 1;
+            } else {
+                map.removeLayer('Vanilla');
+                Vanilla = 0;
+            }
+        }
+
+
+        ////////////////////////////////////////////////////////////
+        //VEGE
+        //load geojson Artichokes
+        map.on('load', function () {
+            map.addSource('Artichokes', {
+                type: 'geojson',
+                data: 'https://raw.githubusercontent.com/JRMa2021/MG7/main/each_crop/vege/Artichokes.geojson'
+            });
+        });
+        Artichokes = 0;
+        function function_Artichokes() {
+            if (Artichokes == 0) {
+                map.addLayer({
+                    'id': 'Artichokes',
+                    'type': 'fill',
+                    'source': 'Artichokes',
+                    'layout': {
+                        'visibility': 'visible'
+                    },
+                    'paint': {
+                        'fill-opacity': 0.4,
+                        'fill-color': generateRandomCode()
+                    }
+                });
+                Artichokes = 1;
+            } else {
+                map.removeLayer('Artichokes');
+                Artichokes = 0;
+            }
+        }
+        //load geojson Asparagus
+        map.on('load', function () {
+            map.addSource('Asparagus', {
+                type: 'geojson',
+                data: 'https://raw.githubusercontent.com/JRMa2021/MG7/main/each_crop/vege/Asparagus.geojson'
+            });
+        });
+        Asparagus = 0;
+        function function_Asparagus() {
+            if (Asparagus == 0) {
+                map.addLayer({
+                    'id': 'Asparagus',
+                    'type': 'fill',
+                    'source': 'Asparagus',
+                    'layout': {
+                        'visibility': 'visible'
+                    },
+                    'paint': {
+                        'fill-opacity': 0.4,
+                        'fill-color': generateRandomCode()
+                    }
+                });
+                Asparagus = 1;
+            } else {
+                map.removeLayer('Asparagus');
+                Asparagus = 0;
+            }
+        }//load geojson Cabbages
+        map.on('load', function () {
+            map.addSource('Cabbages', {
+                type: 'geojson',
+                data: 'https://raw.githubusercontent.com/JRMa2021/MG7/main/each_crop/vege/Cabbages.geojson'
+            });
+        });
+        Cabbages = 0;
+        function function_Cabbages() {
+            if (Cabbages == 0) {
+                map.addLayer({
+                    'id': 'Cabbages',
+                    'type': 'fill',
+                    'source': 'Cabbages',
+                    'layout': {
+                        'visibility': 'visible'
+                    },
+                    'paint': {
+                        'fill-opacity': 0.4,
+                        'fill-color': generateRandomCode()
+                    }
+                });
+                Cabbages = 1;
+            } else {
+                map.removeLayer('Cabbages');
+                Cabbages = 0;
+            }
+        }//load geojson Chillies
+        map.on('load', function () {
+            map.addSource('Chillies', {
+                type: 'geojson',
+                data: 'https://raw.githubusercontent.com/JRMa2021/MG7/main/each_crop/vege/Chillies.geojson'
+            });
+        });
+        Chillies = 0;
+        function function_Chillies() {
+            if (Chillies == 0) {
+                map.addLayer({
+                    'id': 'Chillies',
+                    'type': 'fill',
+                    'source': 'Chillies',
+                    'layout': {
+                        'visibility': 'visible'
+                    },
+                    'paint': {
+                        'fill-opacity': 0.4,
+                        'fill-color': generateRandomCode()
+                    }
+                });
+                Chillies = 1;
+            } else {
+                map.removeLayer('Chillies');
+                Chillies = 0;
+            }
+        }//load geojson Cucumbers
+        map.on('load', function () {
+            map.addSource('Cucumbers', {
+                type: 'geojson',
+                data: 'https://raw.githubusercontent.com/JRMa2021/MG7/main/each_crop/vege/Cucumbers.geojson'
+            });
+        });
+        Cucumbers = 0;
+        function function_Cucumbers() {
+            if (Cucumbers == 0) {
+                map.addLayer({
+                    'id': 'Cucumbers',
+                    'type': 'fill',
+                    'source': 'Cucumbers',
+                    'layout': {
+                        'visibility': 'visible'
+                    },
+                    'paint': {
+                        'fill-opacity': 0.4,
+                        'fill-color': generateRandomCode()
+                    }
+                });
+                Cucumbers = 1;
+            } else {
+                map.removeLayer('Cucumbers');
+                Cucumbers = 0;
+            }
+        }//load geojson Eggplants
+        map.on('load', function () {
+            map.addSource('Eggplants', {
+                type: 'geojson',
+                data: 'https://raw.githubusercontent.com/JRMa2021/MG7/main/each_crop/vege/Eggplants.geojson'
+            });
+        });
+        Eggplants = 0;
+        function function_Eggplants() {
+            if (Eggplants == 0) {
+                map.addLayer({
+                    'id': 'Eggplants',
+                    'type': 'fill',
+                    'source': 'Eggplants',
+                    'layout': {
+                        'visibility': 'visible'
+                    },
+                    'paint': {
+                        'fill-opacity': 0.4,
+                        'fill-color': generateRandomCode()
+                    }
+                });
+                Eggplants = 1;
+            } else {
+                map.removeLayer('Eggplants');
+                Eggplants = 0;
+            }
+        }//load geojson Leeks
+        map.on('load', function () {
+            map.addSource('Leeks', {
+                type: 'geojson',
+                data: 'https://raw.githubusercontent.com/JRMa2021/MG7/main/each_crop/vege/Leeks.geojson'
+            });
+        });
+        Leeks = 0;
+        function function_Leeks() {
+            if (Leeks == 0) {
+                map.addLayer({
+                    'id': 'Leeks',
+                    'type': 'fill',
+                    'source': 'Leeks',
+                    'layout': {
+                        'visibility': 'visible'
+                    },
+                    'paint': {
+                        'fill-opacity': 0.4,
+                        'fill-color': generateRandomCode()
+                    }
+                });
+                Leeks = 1;
+            } else {
+                map.removeLayer('Leeks');
+                Leeks = 0;
+            }
+        }//load geojson Lettuce
+        map.on('load', function () {
+            map.addSource('Lettuce', {
+                type: 'geojson',
+                data: 'https://raw.githubusercontent.com/JRMa2021/MG7/main/each_crop/vege/Lettuce.geojson'
+            });
+        });
+        Lettuce = 0;
+        function function_Lettuce() {
+            if (Lettuce == 0) {
+                map.addLayer({
+                    'id': 'Lettuce',
+                    'type': 'fill',
+                    'source': 'Lettuce',
+                    'layout': {
+                        'visibility': 'visible'
+                    },
+                    'paint': {
+                        'fill-opacity': 0.4,
+                        'fill-color': generateRandomCode()
+                    }
+                });
+                Lettuce = 1;
+            } else {
+                map.removeLayer('Lettuce');
+                Lettuce = 0;
+            }
+        }//load geojson Onions
+        map.on('load', function () {
+            map.addSource('Onions', {
+                type: 'geojson',
+                data: 'https://raw.githubusercontent.com/JRMa2021/MG7/main/each_crop/vege/Onions.geojson'
+            });
+        });
+        Onions = 0;
+        function function_Onions() {
+            if (Onions == 0) {
+                map.addLayer({
+                    'id': 'Onions',
+                    'type': 'fill',
+                    'source': 'Onions',
+                    'layout': {
+                        'visibility': 'visible'
+                    },
+                    'paint': {
+                        'fill-opacity': 0.4,
+                        'fill-color': generateRandomCode()
+                    }
+                });
+                Onions = 1;
+            } else {
+                map.removeLayer('Onions');
+                Onions = 0;
+            }
+        }//load geojson Peppermint
+        map.on('load', function () {
+            map.addSource('Peppermint', {
+                type: 'geojson',
+                data: 'https://raw.githubusercontent.com/JRMa2021/MG7/main/each_crop/vege/Peppermint.geojson'
+            });
+        });
+        Peppermint = 0;
+        function function_Peppermint() {
+            if (Peppermint == 0) {
+                map.addLayer({
+                    'id': 'Peppermint',
+                    'type': 'fill',
+                    'source': 'Peppermint',
+                    'layout': {
+                        'visibility': 'visible'
+                    },
+                    'paint': {
+                        'fill-opacity': 0.4,
+                        'fill-color': generateRandomCode()
+                    }
+                });
+                Peppermint = 1;
+            } else {
+                map.removeLayer('Peppermint');
+                Peppermint = 0;
+            }
+        }//load geojson Pumpkins
+        map.on('load', function () {
+            map.addSource('Pumpkins', {
+                type: 'geojson',
+                data: 'https://raw.githubusercontent.com/JRMa2021/MG7/main/each_crop/vege/Pumpkins.geojson'
+            });
+        });
+        Pumpkins = 0;
+        function function_Pumpkins() {
+            if (Pumpkins == 0) {
+                map.addLayer({
+                    'id': 'Pumpkins',
+                    'type': 'fill',
+                    'source': 'Pumpkins',
+                    'layout': {
+                        'visibility': 'visible'
+                    },
+                    'paint': {
+                        'fill-opacity': 0.4,
+                        'fill-color': generateRandomCode()
+                    }
+                });
+                Pumpkins = 1;
+            } else {
+                map.removeLayer('Pumpkins');
+                Pumpkins = 0;
+            }
+        }//load geojson Spinach
+        map.on('load', function () {
+            map.addSource('Spinach', {
+                type: 'geojson',
+                data: 'https://raw.githubusercontent.com/JRMa2021/MG7/main/each_crop/vege/Spinach.geojson'
+            });
+        });
+        Spinach = 0;
+        function function_Spinach() {
+            if (Spinach == 0) {
+                map.addLayer({
+                    'id': 'Spinach',
+                    'type': 'fill',
+                    'source': 'Spinach',
+                    'layout': {
+                        'visibility': 'visible'
+                    },
+                    'paint': {
+                        'fill-opacity': 0.4,
+                        'fill-color': generateRandomCode()
+                    }
+                });
+                Spinach = 1;
+            } else {
+                map.removeLayer('Spinach');
+                Spinach = 0;
+            }
+        }//load geojson Tomatoes
+        map.on('load', function () {
+            map.addSource('Tomatoes', {
+                type: 'geojson',
+                data: 'https://raw.githubusercontent.com/JRMa2021/MG7/main/each_crop/vege/Tomatoes.geojson'
+            });
+        });
+        Tomatoes = 0;
+        function function_Tomatoes() {
+            if (Tomatoes == 0) {
+                map.addLayer({
+                    'id': 'Tomatoes',
+                    'type': 'fill',
+                    'source': 'Tomatoes',
+                    'layout': {
+                        'visibility': 'visible'
+                    },
+                    'paint': {
+                        'fill-opacity': 0.4,
+                        'fill-color': generateRandomCode()
+                    }
+                });
+                Tomatoes = 1;
+            } else {
+                map.removeLayer('Tomatoes');
+                Tomatoes = 0;
+            }
+        }
+
+        ///////////////////////////////////////////
+
+        function removeall() {
+
+
+            map.removeLayer('Barley');
+            Barley = 0;
+            map.removeLayer('Maize');
+            Maize = 0;
+            map.removeLayer('Millets');
+            Millets = 0;
+            map.removeLayer('Oats');
+            Oats = 0;
+            map.removeLayer('Rice');
+            Rice = 0;
+            map.removeLayer('Rye');
+            Rye = 0;
+            map.removeLayer('Sorghum');
+            Sorghum = 0;
+            map.removeLayer('Wheat');
+            Wheat = 0;
+            map.removeLayer('Cassava');
+            Cassava = 0;
+            map.removeLayer('Carrots');
+            Carrots = 0;
+            map.removeLayer('Chickpeas');
+            Chickpeas = 0;
+            map.removeLayer('Cowpeas');
+            Cowpeas = 0;
+            map.removeLayer('Lentils');
+            Lentils = 0;
+            map.removeLayer('Peas');
+            Peas = 0;
+            map.removeLayer('Potatoes');
+            Potatoes = 0;
+            map.removeLayer('Soybean');
+            Soybean = 0;
+            map.removeLayer('Taro');
+            Taro = 0;
+            map.removeLayer('Sweet_potatoes');
+            Sweet_potatoes = 0;
+            map.removeLayer('Yams');
+            Yams = 0;
+            map.removeLayer('Blueberries');
+            Blueberries = 0;
+            map.removeLayer('Cranberries');
+            Cranberries = 0;
+            map.removeLayer('Gooseberries');
+            Gooseberries = 0;
+            map.removeLayer('Grapefruit');
+            Grapefruit = 0;
+            map.removeLayer('Lemon');
+            Lemon = 0;
+            map.removeLayer('Orange');
+            Orange = 0;
+            map.removeLayer('Raspberries');
+            Raspberries = 0;
+            map.removeLayer('Strawberries');
+            Strawberries = 0;
+            map.removeLayer('Cocoa');
+            Cocoa = 0;
+            map.removeLayer('Coconuts');
+            Coconuts = 0;
+            map.removeLayer('Coffee');
+            Coffee = 0;
+            map.removeLayer('Grape');
+            Grape = 0;
+            map.removeLayer('Hops');
+            Hops = 0;
+            map.removeLayer('Tea');
+            Tea = 0;
+            map.removeLayer('Apple');
+            Apple = 0;
+            map.removeLayer('Apricot');
+            Apricot = 0;
+            map.removeLayer('Avocado');
+            Avocado = 0;
+            map.removeLayer('Cherry');
+            Cherry = 0;
+            map.removeLayer('Dates');
+            Dates = 0;
+            map.removeLayer('Fig');
+            Fig = 0;
+            map.removeLayer('Kiwi');
+            Kiwi = 0;
+            map.removeLayer('Mango');
+            Mango = 0;
+            map.removeLayer('Melon');
+            Melon = 0;
+            map.removeLayer('Papaya');
+            Papaya = 0;
+            map.removeLayer('Peach');
+            Peach = 0;
+            map.removeLayer('Pear');
+            Pear = 0;
+            map.removeLayer('Pineapples');
+            Pineapples = 0;
+            map.removeLayer('Plums');
+            Plums = 0;
+            map.removeLayer('Watermelons');
+            Watermelons = 0;
+            map.removeLayer('bananas');
+            bananas = 0;
+            map.removeLayer('Almonds');
+            Almonds = 0;
+            map.removeLayer('Chestnuts');
+            Chestnuts = 0;
+            map.removeLayer('Groundnuts');
+            Groundnuts = 0;
+            map.removeLayer('Hazelnuts');
+            Hazelnuts = 0;
+            map.removeLayer('Pistachios');
+            Pistachios = 0;
+            map.removeLayer('Walnuts');
+            Walnuts = 0;
+            map.removeLayer('Cottonseed');
+            Cottonseed = 0;
+            map.removeLayer('Olivers');
+            Olivers = 0;
+            map.removeLayer('Palm');
+            Palm = 0;
+            map.removeLayer('Rape');
+            Rape = 0;
+            map.removeLayer('Sesame');
+            Sesame = 0;
+            map.removeLayer('Sugar_beet');
+            Sugar_beet = 0;
+            map.removeLayer('Sunflower');
+            Sunflower = 0;
+            map.removeLayer('Sugarcane');
+            Sugarcane = 0;
+
+            map.removeLayer('Anise_badian');
+            Anise_badian = 0;
+            map.removeLayer('Cinnamon');
+            Cinnamon = 0;
+            map.removeLayer('Garlic');
+            Garlic = 0;
+            map.removeLayer('Ginger');
+            Ginger = 0;
+            map.removeLayer('Vanilla');
+            Vanilla = 0;
+            map.removeLayer('Artichokes');
+            Artichokes = 0;
+            map.removeLayer('Asparagus');
+            Asparagus = 0;
+            map.removeLayer('Cabbages');
+            Cabbages = 0;
+            map.removeLayer('Chillies');
+            Chillies = 0;
+            map.removeLayer('Cucumbers');
+            Cucumbers = 0;
+            map.removeLayer('Eggplants');
+            Eggplants = 0;
+            map.removeLayer('Leeks');
+            Leeks = 0;
+            map.removeLayer('Lettuce');
+            Lettuce = 0;
+            map.removeLayer('Onions');
+            Onions = 0;
+            map.removeLayer('Peppermint');
+            Peppermint = 0;
+            map.removeLayer('Pumpkins');
+            Pumpkins = 0;
+            map.removeLayer('Spinach');
+            Spinach = 0;
+            map.removeLayer('Tomatoes');
+            Tomatoes = 0;
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </script>
+
+</body>
+
+</html>
