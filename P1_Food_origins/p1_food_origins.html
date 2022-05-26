@@ -307,8 +307,8 @@
                 <button class="btn" onclick="filterSelection('Vegetable')"> Vegetable</button>
             </div>
             <h5>1. By clicking the button above, you can select the crop category.</h5>
-            <h5>2. Multiple crops can be selected and their origins can be displayed on the</h5>
-            <h5> map at the same time.</h5>
+            <h5>2. Multiple crops can be selected by clicking the image icon below,and their</h5>
+            <h5> origins can be displayed on the map at the same time.</h5>
             <h5>3. By clicking the “Clear All” icon, all existing layers will be removed.</h5>
             <h5>4. "Subregion" can be removed after clicking.</h5>
         </div>
@@ -1115,15 +1115,15 @@
             });
         });
         subregion = 0;
-            function function_subregion() {
-                if (subregion == 0) {
-                    map.setPaintProperty('subregion_l', 'line-opacity', 0)
-                    subregion = 1;
-                } else {
-                    map.setPaintProperty('subregion_l', 'line-opacity', 0.6);
-                    subregion = 0;
-                }
-            };
+        function function_subregion() {
+            if (subregion == 0) {
+                map.setPaintProperty('subregion_l', 'line-opacity', 0)
+                subregion = 1;
+            } else {
+                map.setPaintProperty('subregion_l', 'line-opacity', 0.6);
+                subregion = 0;
+            }
+        };
 
         // Cereal
         //load geojson Barley
