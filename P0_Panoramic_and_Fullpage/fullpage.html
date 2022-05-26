@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+    <!-- To use fullpage, a basic css file is needed, then add our selfdefiend css (to be uploaded to github) -->
+    <link rel="stylesheet" href="fullpage.css"
+        integrity="sha512-g+xyrYTXR0jF5EZGiQUMisX9Rv9RfTnbaOKe9AJsjBVBMG9bk6aYXqYujStYTKPTDEcVo+6eLziI7Hr4GV1C1w=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" type="text/css" href="selfdefine.css" />
+    <style>
+        .my-arrow {
+            font-size: 2.2em;
+            top: 59.5%;
+        }
+
+        #fp-nav {
+            top: 20%;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Order of the fullpage component: div first, then the script  -->
+
+    <div id="fullpage">
+        <div class="section active" id="section_cover_page">
+            <iframe id="cover_page" src="cover_page.html" height="100%" width="100%" frameborder="0" scrolling="no" ></iframe>
+        </div>
+
+        <div class="section" id="section0">
+            <div class="slide active">
+                <iframe id="introduction" src="" height="100%" width="100%" frameborder="0" scrolling="no"></iframe>
+            </div>
+
+            <div class="slide">
+                <iframe id="Kitchen_Scene" src="index.html" height="100%" width="100%" frameborder="0"
+                    scrolling="no"></iframe>
+            </div>
+        </div>
+
+        <div class="section" id="section1">
+            <iframe id="Food_Oringin_Map"
+                src="https://world2kitchen.github.io//The_World_in_your_Kitchen/P1_Food_origins/p1_food_origins.html"
+                height="100%" width="100%" frameborder="0" scrolling="no"></iframe>
+        </div>
+
+        <div class="section" id="section2">
+            <div class="slide active">
+                <iframe id="Cuisine_Map"
+                    src="https://world2kitchen.github.io/The_World_in_your_Kitchen/P2_World_cuisines/Interactive_Map/Cuisine_html.html"
+                    height="100%" width="100%" frameborder="0" scrolling="no"></iframe>
+            </div>
+
+            <div class="slide">
+                <iframe id="Cury_Storytelling"
+                    src="https://world2kitchen.github.io/The_World_in_your_Kitchen/P2_World_cuisines/Story_map/curry_storymap.html"
+                    height="100%" width="100%" frameborder="0" scrolling="yes"></iframe>
+            </div>
+        </div>
+
+        <div class="section" id="section3">
+            <iframe id="Economic_Cost_Map"
+                src="https://world2kitchen.github.io/The_World_in_your_Kitchen/P3_Food_price_and_inflation/food_price_and_inflation.html"
+                height="100%" width="100%" frameborder="0" scrolling="no"></iframe>
+        </div>
+
+        <div class="section" id="section4">
+
+            <div class="slide active">
+                <iframe id="Environmental_Cost_Map"
+                    src="https://world2kitchen.github.io/The_World_in_your_Kitchen/P4_Food_environmental_costs/storymap_final.html"
+                    height="100%" width="100%" frameborder="0" scrolling="yes"></iframe>
+            </div>
+
+            <div class="slide">
+                <iframe id="Environmental_Cost_Storytelling"
+                    src="https://world2kitchen.github.io/The_World_in_your_Kitchen/P4_Food_environmental_costs/Avocado/avo_storymap.html"
+                    height="100%" width="100%" frameborder="0" scrolling="yes"></iframe>
+            </div>
+
+
+        </div>
+
+        <div class="section" id="section5"> <iframe id="Food_Security_Map"
+                src="https://world2kitchen.github.io/The_World_in_your_Kitchen/P5_Food_safety_and_resilience/food_trade.html"
+                height="100%" width="100%" frameborder="0" scrolling="yes"></iframe>
+        </div>
+
+        <div class="section" id="section_ending_page">
+            <iframe id="ending_page"
+                src=""
+                height="100%" width="100%" frameborder="0" scrolling="no"></iframe>
+        </div>
+
+        <div class="section" id="section_reference">
+            <iframe id="reference"
+                src=""
+                height="100%" width="100%" frameborder="0" scrolling="no"></iframe>
+        </div>
+
+    </div>
+
+    <script src="https://use.fontawesome.com/releases/v5.15.4/js/all.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/4.0.7/fullpage.min.js"
+        integrity="sha512-MLy5YE5Hiyow/qhqZAsO91PjjWUBngedTSWTdvSbEPjFienlVY6SJ8Uy7eLHkudkv3kTJ7NFHZ9s0JD/UwpHdA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script type="text/javascript">
+        var myFullpage = new fullpage('#fullpage', {
+            sectionsColor: ['#FFFFFF', '#FFFFFF', '#FFFFFF', '#FFFFFF', '#FFFFFF', '#FFFFFF'],
+            controlArrows: true,
+            controlArrowsHTML: [
+                '<div class="my-arrow"><i class="fas fa-arrow-alt-circle-left"></i></div>',
+                '<div class="my-arrow"><i class="fas fa-arrow-alt-circle-right"></i></div>',
+            ],
+            navigation: true,
+            slidesNavigation: true,
+            lazyLoad: true,
+            credits: { enabled: false }
+        });
+
+    </script>
+
+</body>
+
+</html>

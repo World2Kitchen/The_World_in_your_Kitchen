@@ -1,0 +1,561 @@
+<html>
+
+<head>
+    <title>My kitchen</title>
+    <script src="https://aframe.io/releases/0.6.1/aframe.min.js"></script>
+    <script src="https://unpkg.com/aframe-event-set-component@5/dist/aframe-event-set-component.min.js"></script>
+    <script src="https://unpkg.com/aframe-layout-component@5.3.0/dist/aframe-layout-component.min.js"></script>
+    <script src="https://unpkg.com/aframe-template-component@3.2.1/dist/aframe-template-component.min.js"></script>
+    <script
+        src="https://unpkg.com/aframe-proxy-event-component@2.1.0/dist/aframe-proxy-event-component.min.js"></script>
+    <script src="https://unpkg.com/aframe-spritesheet-component/dist/aframe-spritesheet-component.min.js"></script>
+    <script
+        src=" https://rawgit.com/mayognaise/aframe-mouse-cursor-component/master/dist/aframe-mouse-cursor-component.min.js "> </script>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+
+    <script>
+        // Button A
+        AFRAME.registerComponent('button-interaction-handler_a', {
+            init: function () {
+                var skyEl_A = this.el.sceneEl.querySelector('#background');
+                this.el.addEventListener('click', function () {
+                    skyEl_A.setAttribute('src', '#kitchenA');
+                    skyEl_A.setAttribute('rotation', "-1 -65 0");
+                    B_text.setAttribute("visible", false);
+                    welcome_text.setAttribute("visible", true);
+                    console.log('ckick')
+                    box1.setAttribute("visible", false);
+                    box2.setAttribute("visible", false);
+                    box3.setAttribute("visible", false);
+                    plane_B.setAttribute("visible", true)
+                    plane_A1.setAttribute("visible", true)
+                    plane_A.setAttribute("visible", true)
+                    plane_A.setAttribute("position", "-1.5 -2.5 -9")
+                    ring_A1_cury.setAttribute("visible", false);
+                    ring_A1_ingredients.setAttribute("visible", false);
+                    ring_B1.setAttribute("visible", false);
+                    ring_B2.setAttribute("visible", false);
+                    arrow_1.setAttribute("visible", false);
+                    box4.setAttribute("visible", true);
+                    arrow_2.setAttribute("visible", false)
+
+                });
+            }
+        });
+
+        // Button B
+        AFRAME.registerComponent('button-interaction-handler_b', {
+            init: function () {
+                var skyEl_B = this.el.sceneEl.querySelector('#background');
+                this.el.addEventListener('click', function () {
+                    skyEl_B.setAttribute('src', '#kitchenB');
+                    skyEl_B.setAttribute('rotation', "0 -100 0");
+                    console.log('ckick');
+                    welcome_text.setAttribute("visible", false);
+                    B_text.setAttribute("visible", true);
+                    camera.setAttribute("fov", 90)
+                    box1.setAttribute("visible", false);
+                    box2.setAttribute("visible", false);
+                    box3.setAttribute("visible", false);
+                    plane_B.setAttribute("visible", true);
+                    plane_B.setAttribute("position", "1.5 -2.5 -9");
+                    plane_A1.setAttribute("visible", false)
+                    plane_A.setAttribute("visible", true)
+                    plane_A.setAttribute("position", "-1.5 -2.5 -9");
+                    ring_B1.setAttribute("visible", true);
+                    ring_B2.setAttribute("visible", true);
+                    ring_B1_burger.setAttribute("visible", false);
+                    ring_B1_avocado.setAttribute("visible", false);
+                    ring_B2_ipad.setAttribute("visible", false);
+                    box4.setAttribute("visible", false);
+                    arrow_2.setAttribute("visible", false)
+                    arrow_1.setAttribute("visible", false)
+
+                });
+            }
+        });
+
+        // Button A1
+        AFRAME.registerComponent('button-interaction-handler_a1', {
+            init: function () {
+                var skyEl_A1 = this.el.sceneEl.querySelector('#background');
+                this.el.addEventListener('click', function () {
+                    skyEl_A1.setAttribute('src', '#kitchenA1');
+                    skyEl_A1.setAttribute('rotation', "2 -90 -20");
+                    console.log('ckick');
+                    welcome_text.setAttribute("visible", false);
+                    B_text.setAttribute("visible", false);
+                    camera.setAttribute("fov", 90)
+                    box1.setAttribute("visible", true);
+                    box2.setAttribute("visible", false);
+                    box3.setAttribute("visible", false);
+                    plane_A.setAttribute("position", "0 -3.5 -9")
+                    plane_B.setAttribute("visible", false)
+                    plane_A1.setAttribute("visible", false)
+                    ring_A1_cury.setAttribute("visible", true);
+                    ring_A1_ingredients.setAttribute("visible", true);
+                    arrow_1.setAttribute("visible", true);
+                    box1.setAttribute("position", "5 1 -5");
+                    box4.setAttribute("visible", false);
+                    ring_B2_ipad.setAttribute("visible", false);
+                });
+            }
+        });
+
+        // Button A1-cury
+        AFRAME.registerComponent('button-interaction-handler_a1_cury', {
+            init: function () {
+                var skyEl_A1_cury = this.el.sceneEl.querySelector('#background');
+                this.el.addEventListener('mouseenter', function () {
+                    skyEl_A1_cury.setAttribute('src', '#kitchenA1_cury');
+                    plane_text_Cury.setAttribute("visible", true);
+
+                });
+                this.el.addEventListener('mouseleave', function () {
+                    skyEl_A1_cury.setAttribute('src', '#kitchenA1');
+                    plane_text_Cury.setAttribute("visible", false);
+                });
+            }
+        });
+
+        AFRAME.registerComponent('button-interaction-handler_a1_ingredients', {
+            init: function () {
+                var skyEl_A1_ingredients = this.el.sceneEl.querySelector('#background');
+                this.el.addEventListener('mouseenter', function () {
+                    skyEl_A1_ingredients.setAttribute('src', '#kitchenA1_ingredient');
+                    plane_text_ingredient.setAttribute("visible", true);
+                });
+                this.el.addEventListener('mouseleave', function () {
+                    skyEl_A1_ingredients.setAttribute('src', '#kitchenA1');
+                    plane_text_ingredient.setAttribute("visible", false);
+                });
+            }
+        });
+
+
+
+        AFRAME.registerComponent('button-interaction-handler_a1_arrow', {
+            init: function () {
+                var skyEl_A1_Arrow = this.el.sceneEl.querySelector('#background');
+                this.el.addEventListener('click', function () {
+                    skyEl_A1_Arrow.setAttribute('src', '#kitchenB1');
+                    arrow_1.setAttribute("visible", false);
+                    arrow_2.setAttribute("visible", true);
+                    ring_A1_cury.setAttribute("visible", false);
+                    ring_A1_ingredients.setAttribute("visible", false);
+                    ring_B1_burger.setAttribute("visible", true);
+                    ring_B1_avocado.setAttribute("visible", true);
+                    plane_B.setAttribute("visible", true)
+                    plane_B.setAttribute("position", "0 -3.5 -9")
+                    plane_A.setAttribute("visible", false)
+                    box1.setAttribute("visible", false);
+                    box2.setAttribute("visible", true);
+                    box3.setAttribute("visible", false);
+                    box2.setAttribute("position", "5 1 -5");
+                    box4.setAttribute("visible", false);
+                    ring_B2_ipad.setAttribute("visible", false);
+
+                });
+
+            }
+        });
+
+        AFRAME.registerComponent('button-interaction-handler_b1_arrow', {
+            init: function () {
+                var skyEl_B1_Arrow = this.el.sceneEl.querySelector('#background');
+                this.el.addEventListener('click', function () {
+                    skyEl_B1_Arrow.setAttribute('src', '#kitchenB2');
+                    arrow_2.setAttribute("visible", false);
+                    ring_B1_burger.setAttribute("visible", false);
+                    ring_B1_avocado.setAttribute("visible", false);
+                    plane_B.setAttribute("visible", true)
+                    plane_B.setAttribute("position", "0 -3.5 -9")
+                    plane_A.setAttribute("visible", false)
+                    ring_B2_ipad.setAttribute("visible", true);
+                    box1.setAttribute("visible", false);
+                    box2.setAttribute("visible", false);
+                    box3.setAttribute("visible", false);
+                    box3.setAttribute("position", "5 1 -5");
+                    box4.setAttribute("visible", false);
+                });
+
+            }
+        });
+
+
+        AFRAME.registerComponent('button-interaction-handler_ring_b1', {
+            init: function () {
+                var skyEl_ring_b = this.el.sceneEl.querySelector('#background');
+                this.el.addEventListener('click', function () {
+                    skyEl_ring_b.setAttribute('src', '#kitchenB1');
+                    skyEl_ring_b.setAttribute('rotation', "-5 -90 -25");
+                    B_text.setAttribute("visible", false);
+                    plane_B.setAttribute("position", "0 -3.5 -9")
+                    arrow_2.setAttribute("visible", true);
+                    plane_B.setAttribute("visible", true);
+                    plane_A.setAttribute("visible", false);
+                    ring_B1.setAttribute("visible", false);
+                    ring_B2.setAttribute("visible", false);
+                    ring_B1_burger.setAttribute("visible", true);
+                    ring_B1_avocado.setAttribute("visible", true);
+                    box1.setAttribute("visible", false);
+                    box2.setAttribute("visible", true);
+                    box3.setAttribute("visible", false);
+                    box2.setAttribute("position", "5 1 -5");
+                    box4.setAttribute("visible", false);
+                });
+                this.el.addEventListener('mouseenter', function () {
+                });
+            }
+        });
+
+        AFRAME.registerComponent('button-interaction-handler_ring_b1_burger', {
+            init: function () {
+                var skyEl_B1_burger = this.el.sceneEl.querySelector('#background');
+                this.el.addEventListener('mouseenter', function () {
+                    skyEl_B1_burger.setAttribute('src', '#kitchenB1_burger');
+                    plane_text_Burger.setAttribute("visible", true);
+                });
+                this.el.addEventListener('mouseleave', function () {
+                    skyEl_B1_burger.setAttribute('src', '#kitchenB1');
+                    plane_text_Burger.setAttribute("visible", false);
+                });
+            }
+        });
+        AFRAME.registerComponent('button-interaction-handler_ring_b1_avocado', {
+            init: function () {
+                var skyEl_B1_Avocado = this.el.sceneEl.querySelector('#background');
+                this.el.addEventListener('mouseenter', function () {
+                    skyEl_B1_Avocado.setAttribute('src', '#kitchenB1_avocado');
+                    plane_text_Avocado.setAttribute("visible", true);
+                });
+                this.el.addEventListener('mouseleave', function () {
+                    skyEl_B1_Avocado.setAttribute('src', '#kitchenB1');
+                    plane_text_Avocado.setAttribute("visible", false);
+                });
+            }
+        });
+
+        AFRAME.registerComponent('button-interaction-handler_ring_b2', {
+            init: function () {
+                var skyEl_ring_c = this.el.sceneEl.querySelector('#background');
+                this.el.addEventListener('click', function () {
+                    skyEl_ring_c.setAttribute('src', '#kitchenB2');
+                    skyEl_ring_c.setAttribute('rotation', "-5 -90 -25");
+                    B_text.setAttribute("visible", false);
+                    plane_B.setAttribute("position", "0 -3.5 -9");
+                    plane_B.setAttribute("visible", true);
+                    plane_A.setAttribute("visible", false);
+                    ring_B1.setAttribute("visible", false);
+                    ring_B2.setAttribute("visible", false);
+                    ring_B2_ipad.setAttribute("visible", true);
+                    box1.setAttribute("visible", false);
+                    box2.setAttribute("visible", false);
+                    box3.setAttribute("visible", false);
+                    box3.setAttribute("position", "5 1 -5");
+                    box4.setAttribute("visible", false);
+                });
+                this.el.addEventListener('mouseenter', function () {
+                });
+            }
+        });
+
+        AFRAME.registerComponent('button-interaction-handler_ring_b2_ipad', {
+            init: function () {
+                var skyEl_B2_Ipad = this.el.sceneEl.querySelector('#background');
+                this.el.addEventListener('mouseenter', function () {
+                    skyEl_B2_Ipad.setAttribute('src', '#kitchenB2_Ipad');
+                    plane_text_Ukraine.setAttribute("visible", true);
+                });
+                this.el.addEventListener('mouseleave', function () {
+                    skyEl_B2_Ipad.setAttribute('src', '#kitchenB2');
+                    plane_text_Ukraine.setAttribute("visible", false);
+                });
+            }
+        });
+
+
+        AFRAME.registerComponent("mylink", {
+            // define a url in the schema
+            schema: {
+                href: {},
+
+            },
+            init: function () {
+                // when clicked - change the location:
+                this.el.addEventListener("click", (e) => {
+                    window.open(this.data.href, '_blank');
+
+                })
+            }
+        })
+
+        AFRAME.registerComponent('rotato', {
+
+            tick: function () {
+                this.el.object3D.rotation.y -= 0.01;
+            }
+
+        });
+    </script>
+
+</head>
+
+<body>
+
+    <a-scene>
+        <a-assets>
+            <audio id="click-sound" crossorigin="anonymous"
+                src="https://cdn.aframe.io/360-image-gallery-boilerplate/audio/click.ogg"></audio>
+            <img id="kitchenA" crossorigin="anonymous" src="panorama_images/A.png">
+            <img id="kitchenB" crossorigin="anonymous" src="panorama_images/B.png">
+            <img id="kitchenA1" crossorigin="anonymous" src="panorama_images/A1.png">
+
+            <img id="kitchenA1_cury" crossorigin="anonymous" src="panorama_images/A1_cury.png">
+            <img id="kitchenA1_ingredient" crossorigin="anonymous" src="panorama_images/A1_ingredient.png">
+
+
+            <img id="kitchenB1" crossorigin="anonymous" src="panorama_images/B1.png">
+
+            <img id="kitchenB1_avocado" crossorigin="anonymous" src="panorama_images/B1_avocado.png">
+            <img id="kitchenB1_burger" crossorigin="anonymous" src="panorama_images/B1_burger.png">
+
+            <img id="kitchenB2" crossorigin="anonymous" src="panorama_images/B2.png">
+
+            <img id="kitchenB2_Ipad" crossorigin="anonymous" src="panorama_images/B2_Uk_Ru.png">
+
+           
+            <img id="welcomeTexture" src="icon_images/welcome.png">
+            <img id="avocado_ring" src="icon_images/avocado.png">
+            <img id="burger_ring" src="icon_images/burger.png">
+            <img id="curry_ring" src="icon_images/curry.png">
+            <img id="maize_ring" src="icon_images/maize.png">
+            <img id="pepper_ring" src="icon_images/chili.png">
+            <img id="story_box" src="icon_images/ancient-scroll.png">
+
+
+        </a-assets>
+
+        <a-sky id="background" src="#kitchenA" rotation="-1 -65 0"
+            animation__fade="property: components.material.material.color; type: color; from: #FFF; to: #000; dur: 300; startEvents: fade"
+            animation__fadeback="property: components.material.material.color; type: color; from: #000; to: #FFF; dur: 300; startEvents: animationcomplete__fade">
+            ></a-sky>
+
+        <!--
+        Since this is inside the plane, the text position is relative to the plane's position
+        If we use the property align wisely, we don't need to experiment with position.
+      -->
+
+
+
+        <!--
+       panel
+      -->
+
+        <a-plane id='plane_A' button-interaction-handler_a position="-1.5 -2.5 -9" height="0.8" width="2"
+            color="#E21D2D" event-set__mouseenter="scale: 1.2 1.2 1" event-set__mouseleave="scale: 1 1 1"
+            proxy-event="event: click; to: #background; as: fade" sound="on: click; src: #click-sound">
+            <a-text value="Angle A" scale="2 2 2" align="center"></a-text>
+        </a-plane>
+
+        <a-plane id='plane_B' button-interaction-handler_b position="1.5 -2.5 -9" height="0.8" width="2" color="#E21D2D"
+            event-set__mouseenter="scale: 1.2 1.2 1" event-set__mouseleave="scale: 1 1 1"
+            proxy-event="event: click; to: #background; as: fade" sound="on: click; src: #click-sound">
+
+            <a-text value="Angle B" scale="2 2 2" align="center"></a-text>
+        </a-plane>
+
+        <a-plane id='plane_A1' button-interaction-handler_a1 position="0 -3.5 -9" height="0.8" width="4" color="#E21D2D"
+            event-set__mouseenter="scale: 1.2 1.2 1" event-set__mouseleave="scale: 1 1 1"
+            proxy-event="event: click; to: #background; as: fade" sound="on: click; src: #click-sound">
+
+            <a-text value="Let's start!" scale="2 2 2" align="center"></a-text>
+        </a-plane>
+
+
+        <a-text id='plane_text_ingredient' position="2 5 -9"
+            value="
+            Section 1.1 
+            Research on the origins of edible plants has led to the recognition that specific geographic regions worldwide are particularly crucial for crop development. This website presents a visual representation of the origins (primary regions of diversity) of the crops that make up the food supply and agricultural production of the countries of the world."
+            scale="2 2 2" align="left" visible="false" sound="on: click; src: #click-sound" vi></a-text>
+
+
+        <a-text id='plane_text_Ukraine' position="2 5 -9"
+            value=" Section 3 
+            Takes the impact of Russia - Ukraine conflict on global food markets as a core question. The project explore the position of two countries in the global food market.Then there is an attempt to map the dependence of different countries on Russia and Ukraine for basic crops of wheat and maize."
+            scale="2 2 2" align="left" visible="false" sound="on: click; src: #click-sound" vi></a-text>
+
+        <a-text id='plane_text_Avocado' position="-9 4 -9"
+            value="
+            Section 2.2 
+            Environmental cost of food is usually unrecognized by consumers when they buy meals. Your meals might cause climate changes, deforestation, land use changes, biodiversity losses, pollution, and water scarcity. Considering food related GHG emissions account for a third of global total GHG emissions, adopting a vegan diet, for example, could help mitigate the problem. Avocado would be introduced as an example of vegan ingredient. Start to explore!"
+            scale="2 2 2" align="left" visible="false" sound="on: click; src: #click-sound" vi></a-text>
+
+        <a-text id='plane_text_Cury' position="-9 4 -9"
+            value="
+            Section 1.2 
+            Local food resource availability and diversity shape cultures’ unique diets and cuisines, but in modern globalized world many of them are spread to other part of the world and interact with local people and cuisines. This section introduces the current development of exotic cuisines in London and links them to their origins. In addition, a story map tells the story behind curry – where is it originated? How did it evolve through history? And where it becomes popular around the world?"
+            scale="2 2 2" align="left" visible="false" sound="on: click; src: #click-sound" vi></a-text>
+
+        <a-text id='plane_text_Burger' position="2 5 -9"
+            value="Section 2.1 
+            In this part, the project will mainly focus on the food price situation and will explore from three subparts. Observe the McDonald's global prices in each country, the European Union food price inflation index, and the inflation index and rate of each kind of food category in the UK to discover the food price inflation from global to local."
+            scale="2 2 2" align="left" visible="false" sound="on: click; src: #click-sound" vi></a-text>
+
+
+        <!--
+        triangle
+      -->
+
+        <a-triangle id='arrow_1' button-interaction-handler_a1_arrow color='#E21D2D' rotation="0 0 0"
+            vertex-a="4 -3.5 -9" vertex-b='3 -3 -9' vertex-c='3 -4 -9' event-set__mouseenter="scale: 1.05 1.05 1"
+            event-set__mouseleave="scale: 1 1 1" proxy-event="event: click; to: #background; as: fade"
+            sound="on: click; src: #click-sound" visible=false>
+
+
+        </a-triangle>
+
+        <a-triangle id='arrow_2' button-interaction-handler_b1_arrow color='#E21D2D' rotation="0 0 0"
+            vertex-a="4 -3.5 -9" vertex-b='3 -3 -9' vertex-c='3 -4 -9' event-set__mouseenter="scale: 1.05 1.05 1"
+            event-set__mouseleave="scale: 1 1 1" proxy-event="event: click; to: #background; as: fade"
+            sound="on: click; src: #click-sound" visible=false>
+
+
+        </a-triangle>
+
+
+
+        <!--
+        Ring
+      -->
+
+
+      <a-cylinder id='ring_A1_cury' src='#curry_ring' button-interaction-handler_a1_cury position="5 0 -9" position="-5 0 -9" rotation="0 90 90"
+            mylink="href: https://world2kitchen.github.io/The_World_in_your_Kitchen/P2_World_cuisines/Interactive_Map/Cuisine_html.html"
+            radius="0.8" height="0.2" color="#FFFFFF" event-set__mouseenter="scale: 1.2 1.2 1.2" event-set__mouseleave="scale: 1 1 1"
+            proxy-event="event: click; to: #background; as: fade" sound="on: click; src: #click-sound" visible='false'>
+            <a-animation attribute='rotation' dur='10000' to='360 90 90' repeat='indefinite'></a-animation>
+
+
+        </a-cylinder>
+
+        <a-cylinder id='ring_A1_ingredients' src='#pepper_ring' button-interaction-handler_a1_ingredients
+            position="-5 0 -9" rotation="0 90 90"
+            mylink="href: https://world2kitchen.github.io//The_World_in_your_Kitchen/P1_Food_origins/p1_food_origins.html;"
+            radius="0.8" height="0.2"  color="#FFFFFF" event-set__mouseenter="scale: 1.2 1.2 1.2" event-set__mouseleave="scale: 1 1 1"
+            proxy-event="event: click; to: #background; as: fade" sound="on: click; src: #click-sound" visible='false'>
+            <a-animation attribute='rotation' dur='10000' to='360 90 90' repeat='indefinite'></a-animation>
+
+        </a-cylinder>
+
+
+        <a-ring id='ring_B1' button-interaction-handler_ring_b1 position="-6 -1 -9" radius-inner="0.35"
+            radius-outer="0.5" color="#FFFFFF" event-set__mouseenter="scale: 1.2 1.2 1.2"
+            event-set__mouseleave="scale: 1 1 1" proxy-event="event: click; to: #background; as: fade"
+            sound="on: click; src: #click-sound" visible='false'>
+
+            <a-text value="+" scale="3 3 3" align="center"></a-text>
+        </a-ring>
+
+        <a-cylinder id='ring_B1_burger' src="#burger_ring" button-interaction-handler_ring_b1_burger position="-5 0 -9"
+            rotation="0 90 90"
+            mylink="href: https://world2kitchen.github.io/The_World_in_your_Kitchen/P3_Food_price_and_inflation/food_price_and_inflation.html;"
+            radius="0.8" height="0.2" color="#FFFFFF" event-set__mouseenter="scale: 1.2 1.2 1.2"
+            event-set__mouseleave="scale: 1 1 1" proxy-event="event: click; to: #background; as: fade"
+            sound="on: click; src: #click-sound" visible='false'>
+            <a-animation attribute='rotation' dur='10000' to='360 90 90' repeat='indefinite'></a-animation>
+        </a-cylinder>
+
+
+        <a-cylinder id='ring_B1_avocado' src="#avocado_ring" button-interaction-handler_ring_b1_avocado
+            position="5 0 -9" rotation="0 90 90"
+            mylink="href: https://world2kitchen.github.io/The_World_in_your_Kitchen/P4_Food_environmental_costs/storymap_final.html;"
+            radius="0.8" height="0.2" color="#FFFFFF" event-set__mouseenter="scale: 1.2 1.2 1.2"
+            event-set__mouseleave="scale: 1 1 1" proxy-event="event: click; to: #background; as: fade"
+            sound="on: click; src: #click-sound" visible='false'>
+            <a-animation attribute='rotation' dur='10000' to='360 90 90' repeat='indefinite'></a-animation>
+        </a-cylinder>
+
+
+        <a-ring id='ring_B2' button-interaction-handler_ring_b2 position="7 -1 -9" radius-inner="0.35"
+            radius-outer="0.5" color="#FFFFFF" event-set__mouseenter="scale: 1.2 1.2 1.2"
+            event-set__mouseleave="scale: 1 1 1" proxy-event="event: click; to: #background; as: fade"
+            sound="on: click; src: #click-sound" visible='false'>
+
+            <a-text value="+" scale="3 3 3" align="center"></a-text>
+
+        </a-ring>
+
+
+        <a-cylinder id='ring_B2_ipad' src="#maize_ring" button-interaction-handler_ring_b2_ipad position="2 0 -9"
+            rotation="0 90 90"
+            mylink="href:https://world2kitchen.github.io/The_World_in_your_Kitchen/P5_Food_safety_and_resilience/food_trade.html;"
+            radius="0.8" height="0.2" color="#FFFFFF" event-set__mouseenter="scale: 1.2 1.2 1.2"
+            event-set__mouseleave="scale: 1 1 1" proxy-event="event: click; to: #background; as: fade"
+            sound="on: click; src: #click-sound" visible='false'>
+            <a-animation attribute='rotation' dur='10000' to='360 90 90' repeat='indefinite'></a-animation>
+        </a-cylinder>
+
+
+        <!--
+        text
+      -->
+
+
+
+
+        <a-text id='welcome_text' font="kelsonsans" value="Welcome 
+        to our kitchen
+         (*^_^*)" width="3" position="-1.8 1 -2" rotation="0 0 0"
+            spritesheet-animation="rows: 2; columns: 8; frameDuration: 0.1; loop: true;" look-controls></a-text>
+
+        <a-text id='B_text' font="kelsonsans" value="Try finding something new 
+         (*O_O*)?" width="3" position="-0.8 0.5 -2" rotation="0 0 0" visible='false' look-controls></a-text>
+
+
+        <!--
+        box
+      -->
+
+
+
+
+        <a-box id='box1' src="#story_box" position="3 2.5 -5" rotation="0 45 45"
+            mylink="href: https://world2kitchen.github.io/The_World_in_your_Kitchen/P2_World_cuisines/Story_map/curry_storymap.html;"
+            visible="false" spritesheet-animation="rows: 2; columns: 8; frameDuration: 1; loop: true;" rotato
+            scale="0.6 0.6 0.6" event-set__mouseenter="scale: 0.8 0.8 0.8 " event-set__mouseleave="scale: 0.6 0.6 0.6">
+        </a-box>
+
+        <a-box id='box2' src="#story_box" position="3 1 -5" rotation="0 45 45"
+            mylink="href: https://world2kitchen.github.io/The_World_in_your_Kitchen/P4_Food_environmental_costs/Avocado/avo_storymap.html;"
+            visible="false" spritesheet-animation="rows: 2; columns: 8; frameDuration: 0.1; loop: true;" rotato
+            scale="0.6 0.6 0.6" event-set__mouseenter="scale: 0.8 0.8 0.8" event-set__mouseleave="scale: 0.6 0.6 0.6">
+        </a-box>
+
+        <a-box id='box3' src="#story_box" position="3 -0.5 -5" rotation="0 45 45"
+            mylink="href:https://world2kitchen.github.io/The_World_in_your_Kitchen/P5_Food_safety_and_resilience/food_trade.html;"
+            visible="false" spritesheet-animation="rows: 2; columns: 8; frameDuration: 0.1; loop: true;" rotato
+            scale="0.6 0.6 0.6" event-set__mouseenter="scale: 0.8 0.8 0.8" event-set__mouseleave="scale: 0.6 0.6 0.6">
+        </a-box>
+
+        <a-box id='box4' src="#welcomeTexture" position="-1.5 0.4 -2" rotation="0 0 0" depth="0.02" height="0.8"
+            width="0.8"
+            mylink="href:https://world2kitchen.github.io/The_World_in_your_Kitchen/P5_Food_safety_and_resilience/food_trade.html;"
+            visible="true" spritesheet-animation="rows: 2; columns: 8; frameDuration: 0.1; loop: true;" rotato
+            scale="0.6 0.6 0.6" event-set__mouseenter="scale: 0.8 0.8 0.8" event-set__mouseleave="scale: 0.6 0.6 0.6"
+            text="value: Hello World;">
+        </a-box>
+
+
+
+        <a-entity id="camera" camera look-controls mouse-cursor fov='80'></a-entity>
+        <!-- Camera and Cursor. -->
+
+
+        <!-- Controllers. -->
+        <a-entity laser-controls="hand: right"></a-entity>
+    </a-scene>
+
+</body>
+
+</html>
