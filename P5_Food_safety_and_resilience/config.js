@@ -32,7 +32,8 @@ let divChapter1 =
 let divChapter1_1 =
   "<h3 style='max-width:100%; text-align:center'>Roles and Connections for Different Countries in Global grain Marktet</h3>" +
   "<p style='max-width:85%; text-align:center; margin-left:auto; margin-right:auto'>In the first analysis, a directed weighted graph is created based on the trade matrix to analyse the centrality of countries in the global grain market and reveal potential country groups closely tied in grain trade. Import proportion, the quantity of specific grain exported by country A to country B,  accounting for the proportion of the total imports of this grain in country B, is used as a weight to characterize the strength of the relationship between country A and country B in the network. For wheat trade, Russia occupy a prominent position in the global market. While for maize there are relatively more countries relying on the export from Ukraine. Besides, the US in North America, Argentina and Brazil in south America and France and German in Europe are also important players in the food market. These centered countries and the corresponding trade groups are highly geographically related. </p>" +
-  '<div style="max-width:100%; margin-left:auto; margin-right:auto"><iframe title="network_svg" src="insert_html/trade_network.html" width="1800" height="850" frameborder="0" allowfullscreen></iframe></div>';
+  '<div style="max-width:100%; margin-left:-5%; margin-right:auto; align=left"><iframe title="network_svg" src="insert_html/trade_network.html" width="100%" height="900" margin-left:1% frameborder="0" allowfullscreen></iframe></div>';
+
 
 let divChapter2 =
   "<h3>Global Dependence on Wheat Supply from Russia</h3>" +
@@ -62,12 +63,12 @@ let divChapter3_1 =
 let divChapter3_2 =
   "<h3 style='max-width:100%; text-align:center'>Ukraine-Russia Comparison and the Detailed Data</h3>" +
   "<p style='max-width:85%; text-align:center; margin-left:auto; margin-right:auto'>Below is a detailed map to compare Russia and Ukraine's positon in wheat and maize export. Both import quantity and import proportion are provided for comparision. <br>According to the map, some typical countries are found to have both high dependence on Ukrain and Russia, such as Somalia, Egypt, Pakistan for wheat and Lithuania, Belarus and Libya for maize. For Somalia, Egypt and most other countries in Africa, they also face a high risk of food shortages and undernutrition.</p>" +
-  '<div style="max-width:100%; margin-left:auto; margin-right:auto; align=center "><iframe title="compare_map" src="Compare_map_Zicheng.html" width="1800" height="850" frameborder="0" allowfullscreen></iframe></div>';
+  '<div style="max-width:100%; margin-left:-5%; margin-right:-10%; align=left "><iframe title="compare_map" src="Compare_map_Zicheng.html" width="100%" height="950" margin-left:1% frameborder="0" allowfullscreen></iframe></div>';
 
 let divChapter4 =
   "<h3 style='max-width:100%; text-align:center'>Proportion of Population Suffering Undernourishment</h3>" +
   "<p style='max-width:85%; text-align:center; margin-left:auto; margin-right:auto'>The dynamic chart below ranks top 10 countries with highest proportion of population suffering undernourishment from 2002 to 2020. Countries' continents are labelled with different colors. According to the chart, in many African countries frequently there were more than 30% of the population suffering undernourished. For Haiti and Somalia, the indicators were once as high as 60%.  </p>" +
-  '<div style="max-width:100%; margin-left:auto; margin-right:auto"><iframe title="race_bar" src="insert_html/bar-race-country_true.html" width="1800" height="800" frameborder="0" allowfullscreen></iframe></div>'
+  '<div style="max-width:150%; margin-left:auto; margin-right:auto"><iframe title="race_bar" src="insert_html/bar-race-country_true.html" width="100%" height="800" frameborder="0" allowfullscreen></iframe></div>'
 
 let divChapter5 =
   "<h3>Hunger Map in Africa and Asia</h3>" +

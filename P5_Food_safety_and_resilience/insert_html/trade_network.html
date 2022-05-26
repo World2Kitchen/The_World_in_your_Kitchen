@@ -43,12 +43,12 @@
     .legend {
       background-color: #fff;
       border-radius: 3px;
-      bottom: 30px;
+      bottom: 1%;
+      right: 1%;
       box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
       font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
       padding: 10px;
-      position: absolute;
-      right: 10px;
+      position: fixed;
       z-index: 1;
     }
 
@@ -60,7 +60,9 @@
       border-radius: 50%;
       display: inline-block;
       height: 10px;
-      margin-right: 5px;
+      margin-right: 1%;
+      margin-bottom: 1%;
+      padding-bottom: 1%;
       width: 10px;
     }
 
@@ -80,23 +82,23 @@
     #svg_test_1 {position:absolute}
     
     #console {
-      position: absolute;
+      position: fixed;
       margin: 0px;
-      width: 15%;
+      width: 18%;
       height: 100%;
       opacity: 0.8;
       background-color: white;
       padding-top: 20px;
-      padding-right: 40px;
-      padding-bottom: 40px;
-      padding-left: 40px;
+      padding-right: 1%;
+      padding-bottom: 5%;
+      padding-left: 1%;
       top: 0;
       left: 0;
       z-index: 10;
     }
 
     #chartContainer p {
-      margin-left: 0px;
+      margin-left: 1%;
       margin-bottom: 5px;
       margin-top: 0;
       padding: 0;
@@ -107,7 +109,7 @@
     }
 
     #chartContainer2 p {
-      margin-left: 0px;
+      margin-left: 1%;
       margin-bottom: 5px;
       margin-top: 0;
       padding: 0;
@@ -154,7 +156,7 @@
 <div id="console">
   <h1> Roles and Connections for Different Countries in Global Crop Marktet </h1>
   <div id="row0">
-    <h2>--------------------------------------------------</h2>
+    <h2>------------------------------------------</h2>
   </div>
   <button onClick="window.location.reload();">Replay</button>
   <div class="session">
@@ -172,7 +174,7 @@
     </table>
   </div>
   <div id="row1">
-    <h2>--------------------------------------------------</h2>
+    <h2>------------------------------------------</h2>
     <div id="chartContainer">
       <p id="charttitle">Countries with Highest Wheat/Maize Export 2020</p>
     </div>

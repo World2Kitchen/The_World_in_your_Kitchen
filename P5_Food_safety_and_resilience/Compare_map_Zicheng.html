@@ -9,7 +9,9 @@
   <script src="https://api.mapbox.com/mapbox-gl-js/v2.8.2/mapbox-gl.js"></script>
   <script src="https://d3js.org/d3.v4.min.js"></script>
   <script src="https://unpkg.com/papaparse@latest/papaparse.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/dimple/2.3.0/dimple.latest.min.js" integrity="sha512-/+Gf60CMtm7N35a1mC8jywl4HPp+i8Nr8GIHyJ3JXBshk656EZafMA+5pk/SRf/DGUwg998aKcv7D1okG8LfPA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/dimple/2.3.0/dimple.latest.min.js"
+    integrity="sha512-/+Gf60CMtm7N35a1mC8jywl4HPp+i8Nr8GIHyJ3JXBshk656EZafMA+5pk/SRf/DGUwg998aKcv7D1okG8LfPA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-compare/v0.4.0/mapbox-gl-compare.js"></script>
 
   <link rel="stylesheet"
@@ -80,27 +82,32 @@
     }
 
     #console {
-      position: absolute;
+      position: fixed;
       margin: 0px;
-      width: 15%;
+      width: 20%;
       height: 100%;
       opacity: 0.8;
       background-color: white;
       padding-top: 20px;
-      padding-right: 20px;
+      padding-right: 1%;
       padding-bottom: 40px;
-      padding-left: 40px;
+      padding-left: 1%;
       top: 0;
       left: 0;
       z-index: 10;
+      overflow: auto;
     }
 
     #barchart {
-      position: absolute;
-      margin-left: 0px;
+      position: flex;
+      margin-left: 1%;
+      margin-right: 1%;
+      width: 90%;
       margin-bottom: 5px;
       margin-top: 0;
       padding: 0;
+      overflow: auto;
+
     }
 
     #charttitle2 {
@@ -162,8 +169,10 @@
   <div id="console">
     <h1> Wheat and Maize Import from Russia and Ukraine in 2020 </h1>
     <div id="row0">
-      <h2>--------------------------------------------------</h2>
-      <h2>Move the Scroller to Explore Maps</h2>
+      <h3>----------------------------------------------</h3>
+      <h3>The map shows the quantity and proportion of wheat and maize imported from Russia and Ukraine respectively,by
+        countries around the world in 2020. The data comes from the Trade Matrix of the Food and AgricultureOrganization
+        of the United Nations(FAO). Swip to Explore Maps.</h3>
       <div> <span style='font-size:20px;'>&#128072;</span>Russia -------- Ukraine <span
           style='font-size:20px;'>&#128073;</span></div>
       <h3>--------------------------------------------------</h3>
@@ -206,10 +215,18 @@
     </div>
 
     <div id="barchart">
-      <p id="charttitle2">Typical Countries with High Dependency
-        on Both Ukraine and Russia</p>
-      <button id="btn1">Wheat</button>
-      <button id="btn2">Maize</button>
+      <table>
+        <tr>
+          <td>
+            <p id="charttitle2">Typical Countries with High Dependency
+              on Both Ukraine and Russia</p>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <button id="btn1">Wheat</button> <button id="btn2">Maize </button>
+          </td>
+        </tr>
     </div>
   </div>
 
@@ -246,7 +263,7 @@
     map1.on('load', () => {
 
       map1.loadImage(
-        'russia.png',
+        'images/russia.png',
         (error, image) => {
           if (error) throw error;
 
@@ -284,15 +301,15 @@
       );
 
 
-      
+
       map1.addSource('population', {
         'type': 'geojson',
         'data': 'large_data/countries_crop_longer.geojson'
       });
 
-    
+
       map1.addControl(new mapboxgl.NavigationControl());
-      
+
 
       map1.addLayer(
         {
@@ -335,7 +352,7 @@
         'country-label'
       );
 
-     
+
       map1.addLayer(
         {
           'id': 'Ru_quantity_Maize',
@@ -473,7 +490,7 @@
       map2.addControl(new mapboxgl.NavigationControl());
 
       map2.loadImage(
-        'ukraine.png',
+        'images/ukraine.png',
         (error, image) => {
           if (error) throw error;
 
@@ -1062,9 +1079,9 @@
       { import_country: "Turkey", export_country: "Ukraine", value: 43.75, sum: 62.98 }
     ];
 
-    var svg1 = dimple.newSvg("#barchart", 280, 280);
+    var svg1 = dimple.newSvg("#barchart", "100%", 280);
     var myChart = new dimple.chart(svg1, data3);
-    myChart.setBounds(50, 30, 220, 210)
+    myChart.setBounds(50, 30, "85%", 210)
     var x = myChart.addMeasureAxis("x", "value");
     var y = myChart.addCategoryAxis("y", ["import_country", "sum"]);
     y.addOrderRule("sum");
@@ -1075,7 +1092,7 @@
     myChart.addSeries("export_country", dimple.plot.bar);
     myChart.addLegend(20, 10, 220, 50, "right");
     myChart.draw();
-   
+
     myChart.svg
       .selectAll(".dimple-bar")
       .attr('y', function (d) {
