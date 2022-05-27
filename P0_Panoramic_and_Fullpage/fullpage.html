@@ -4,39 +4,27 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
     <!-- To use fullpage, a basic css file is needed, then add our selfdefiend css (to be uploaded to github) -->
-    <link rel="stylesheet" href="fullpage.css"
-        integrity="sha512-g+xyrYTXR0jF5EZGiQUMisX9Rv9RfTnbaOKe9AJsjBVBMG9bk6aYXqYujStYTKPTDEcVo+6eLziI7Hr4GV1C1w=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="fullpage.css" />
     <link rel="stylesheet" type="text/css" href="selfdefine.css" />
-    <style>
-        .my-arrow {
-            font-size: 2.2em;
-            top: 59.5%;
-        }
 
-        #fp-nav {
-            top: 20%;
-        }
-    </style>
 </head>
 
 <body>
 
-    <!-- Order of the fullpage component: div first, then the script  -->
-
     <div id="fullpage">
+
         <div class="section active" id="section_cover_page">
-            <iframe id="cover_page" src="cover_page.html" height="100%" width="100%" frameborder="0" scrolling="no" ></iframe>
+            <iframe id="cover_page" src="fullpage_images/cover_page.html" height="100%" width="100%" frameborder="0"
+                scrolling="no"></iframe>
         </div>
 
         <div class="section" id="section0">
             <div class="slide active">
-                <iframe id="introduction" src="" height="100%" width="100%" frameborder="0" scrolling="no"></iframe>
-            </div>
 
-            <div class="slide">
                 <iframe id="Kitchen_Scene" src="index.html" height="100%" width="100%" frameborder="0"
                     scrolling="no"></iframe>
+
             </div>
         </div>
 
@@ -60,6 +48,7 @@
             </div>
         </div>
 
+
         <div class="section" id="section3">
             <iframe id="Economic_Cost_Map"
                 src="https://world2kitchen.github.io/The_World_in_your_Kitchen/P3_Food_price_and_inflation/food_price_and_inflation.html"
@@ -79,8 +68,6 @@
                     src="https://world2kitchen.github.io/The_World_in_your_Kitchen/P4_Food_environmental_costs/Avocado/avo_storymap.html"
                     height="100%" width="100%" frameborder="0" scrolling="yes"></iframe>
             </div>
-
-
         </div>
 
         <div class="section" id="section5"> <iframe id="Food_Security_Map"
@@ -89,36 +76,61 @@
         </div>
 
         <div class="section" id="section_ending_page">
-            <iframe id="ending_page"
-                src=""
-                height="100%" width="100%" frameborder="0" scrolling="no"></iframe>
+            <iframe id="ending_page" src="fullpage_images/end_page.html" height="100%" width="100%" frameborder="0" scrolling="no"></iframe>
         </div>
-
-        <div class="section" id="section_reference">
-            <iframe id="reference"
-                src=""
-                height="100%" width="100%" frameborder="0" scrolling="no"></iframe>
-        </div>
-
     </div>
+
+
+    <ul id="my-nav">
+        <li  class="active"><a  href="#section_cover_page" title="Scroll the bar to view"><img src="icon_images/dish.png"></a></li>
+        <li ><a href="#section0" title="Kitchen"><img src="icon_images/welcome.png"></a></li>
+        <li><a href="#section1" title="Origin"><img src="icon_images/chili.png"></a></li>
+        <li><a href="#section2" title="Cuisine"><img src="icon_images/curry.png"></a></li>
+        <li><a href="#section3" title="Economy"><img src="icon_images/burger.png"></a></li>
+        <li><a href="#section4" title="Environment"><img src="icon_images/avocado.png"></a></li>
+        <li><a href="#section5" title="Trade"><img src="icon_images/maize.png"></a></li>
+        <li><a href="#section_ending_page" title="End"><img src="icon_images/plate.png"></a>
+        </li>
+    </ul>
+
+
 
     <script src="https://use.fontawesome.com/releases/v5.15.4/js/all.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/4.0.7/fullpage.min.js"
         integrity="sha512-MLy5YE5Hiyow/qhqZAsO91PjjWUBngedTSWTdvSbEPjFienlVY6SJ8Uy7eLHkudkv3kTJ7NFHZ9s0JD/UwpHdA=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
     <script type="text/javascript">
         var myFullpage = new fullpage('#fullpage', {
-            sectionsColor: ['#FFFFFF', '#FFFFFF', '#FFFFFF', '#FFFFFF', '#FFFFFF', '#FFFFFF'],
+            licenseKey: 'YOUR KEY HERE',
+            navigation: false,
+            slidesNavigation: true,
+            sectionsColor: ['#FFFFFF', '#FFFFFF', '#FFFFFF', '#FFFFFF', '#FFFFFF', '#FFFFFF','#FFFFFF', '#FFFFFF'],
             controlArrows: true,
             controlArrowsHTML: [
                 '<div class="my-arrow"><i class="fas fa-arrow-alt-circle-left"></i></div>',
                 '<div class="my-arrow"><i class="fas fa-arrow-alt-circle-right"></i></div>',
             ],
-            navigation: true,
-            slidesNavigation: true,
             lazyLoad: true,
-            credits: { enabled: false }
+            menu: '#my-nav',
+            credits: { enabled: false },
+            onLeave: function (origin, destination, direction) {
+                activateNavItem($('#my-nav').find('li').eq(destination.index));
+            },
+            afterRender: function () {
+                activateNavItem($('#my-nav').find('li').eq($('.section.active').index()))
+            }
         });
+
+        $('.fa-bell').click(function () {
+            var destination = $(this).closest('li');
+            fullpage_api.moveTo(destination.index() + 1);
+        });
+
+        function activateNavItem(item) {
+            item.addClass('active').siblings().removeClass('active');
+        }
+
 
     </script>
 

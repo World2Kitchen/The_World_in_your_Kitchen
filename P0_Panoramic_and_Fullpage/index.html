@@ -74,7 +74,20 @@
                 });
             }
         });
-
+        // Button welcome
+        AFRAME.registerComponent('button-interaction-handler_box_welcome', {
+            init: function () {
+                var skyEl_B1_burger = this.el.sceneEl.querySelector('#background');
+                this.el.addEventListener('mouseenter', function () {
+                    skyEl_B1_burger.setAttribute('src', '#kitchenA_welcome');
+                    plane_text_welcome.setAttribute("visible", true);
+                });
+                this.el.addEventListener('mouseleave', function () {
+                    skyEl_B1_burger.setAttribute('src', '#kitchenA');
+                    plane_text_welcome.setAttribute("visible", false);
+                });
+            }
+        });
         // Button A1
         AFRAME.registerComponent('button-interaction-handler_a1', {
             init: function () {
@@ -309,6 +322,7 @@
                 src="https://cdn.aframe.io/360-image-gallery-boilerplate/audio/click.ogg"></audio>
             <img id="kitchenA" crossorigin="anonymous" src="panorama_images/A.png">
             <img id="kitchenB" crossorigin="anonymous" src="panorama_images/B.png">
+            <img id="kitchenA_welcome" crossorigin="anonymous" src="panorama_images/A_welcome.png">
             <img id="kitchenA1" crossorigin="anonymous" src="panorama_images/A1.png">
 
             <img id="kitchenA1_cury" crossorigin="anonymous" src="panorama_images/A1_cury.png">
@@ -324,7 +338,7 @@
 
             <img id="kitchenB2_Ipad" crossorigin="anonymous" src="panorama_images/B2_Uk_Ru.png">
 
-           
+
             <img id="welcomeTexture" src="icon_images/welcome.png">
             <img id="avocado_ring" src="icon_images/avocado.png">
             <img id="burger_ring" src="icon_images/burger.png">
@@ -372,6 +386,23 @@
             <a-text value="Let's start!" scale="2 2 2" align="center"></a-text>
         </a-plane>
 
+     
+
+
+        <a-text id='plane_text_welcome' position="2 2.5 -9"
+            value="
+            Hi, welcome to our kitchen!
+            This is a composite visualization project, which explores the global process involved in daily food, with kitchen as a window.
+
+            >>  You can try our panoramic scenes first, turn the camera around and trigger some buttons to view stories and maps we have created.
+
+            >>  Alternatively, you can click or scroll the icon buttons on the right, which will take you directly to our map results.
+
+            p.s. It is recommended to set the zoom ratio of your browser to 80% for the best experience. 
+            (Ctrl + scrolling the mouse wheel)
+            Have a good trip!
+            "
+            scale="2 2 2" align="left" visible="false" sound="on: click; src: #click-sound" vi></a-text>
 
         <a-text id='plane_text_ingredient' position="2 5 -9"
             value="
@@ -382,7 +413,7 @@
 
         <a-text id='plane_text_Ukraine' position="2 5 -9"
             value=" Section 3 
-            Takes the impact of Russia - Ukraine conflict on global food markets as a core question. The project explore the position of two countries in the global food market.Then there is an attempt to map the dependence of different countries on Russia and Ukraine for basic crops of wheat and maize."
+            Takes the impact of Russia - Ukraine conflict on global food markets as a core question. The part explores the position of two countries in the global food market.Then there is an attempt to map the dependence of different countries on Russia and Ukraine for basic crops of wheat and maize."
             scale="2 2 2" align="left" visible="false" sound="on: click; src: #click-sound" vi></a-text>
 
         <a-text id='plane_text_Avocado' position="-9 4 -9"
@@ -430,20 +461,22 @@
       -->
 
 
-      <a-cylinder id='ring_A1_cury' src='#curry_ring' button-interaction-handler_a1_cury position="5 0 -9" position="-5 0 -9" rotation="0 90 90"
+        <a-cylinder id='ring_A1_cury' src='#curry_ring' button-interaction-handler_a1_cury position="5 0 -9"
+            position="-5 0 -9" rotation="0 90 90"
             mylink="href: https://world2kitchen.github.io/The_World_in_your_Kitchen/P2_World_cuisines/Interactive_Map/Cuisine_html.html"
-            radius="0.8" height="0.2" color="#FFFFFF" event-set__mouseenter="scale: 1.2 1.2 1.2" event-set__mouseleave="scale: 1 1 1"
-            proxy-event="event: click; to: #background; as: fade" sound="on: click; src: #click-sound" visible='false'>
+            radius="0.8" height="0.2" color="#FFFFFF" event-set__mouseenter="scale: 1.2 1.2 1.2"
+            event-set__mouseleave="scale: 1 1 1" proxy-event="event: click; to: #background; as: fade"
+            sound="on: click; src: #click-sound" visible='false'>
             <a-animation attribute='rotation' dur='10000' to='360 90 90' repeat='indefinite'></a-animation>
-
 
         </a-cylinder>
 
         <a-cylinder id='ring_A1_ingredients' src='#pepper_ring' button-interaction-handler_a1_ingredients
             position="-5 0 -9" rotation="0 90 90"
             mylink="href: https://world2kitchen.github.io//The_World_in_your_Kitchen/P1_Food_origins/p1_food_origins.html;"
-            radius="0.8" height="0.2"  color="#FFFFFF" event-set__mouseenter="scale: 1.2 1.2 1.2" event-set__mouseleave="scale: 1 1 1"
-            proxy-event="event: click; to: #background; as: fade" sound="on: click; src: #click-sound" visible='false'>
+            radius="0.8" height="0.2" color="#FFFFFF" event-set__mouseenter="scale: 1.2 1.2 1.2"
+            event-set__mouseleave="scale: 1 1 1" proxy-event="event: click; to: #background; as: fade"
+            sound="on: click; src: #click-sound" visible='false'>
             <a-animation attribute='rotation' dur='10000' to='360 90 90' repeat='indefinite'></a-animation>
 
         </a-cylinder>
@@ -538,9 +571,9 @@
             scale="0.6 0.6 0.6" event-set__mouseenter="scale: 0.8 0.8 0.8" event-set__mouseleave="scale: 0.6 0.6 0.6">
         </a-box>
 
-        <a-box id='box4' src="#welcomeTexture" position="-1.5 0.4 -2" rotation="0 0 0" depth="0.02" height="0.8"
-            width="0.8"
-            mylink="href:https://world2kitchen.github.io/The_World_in_your_Kitchen/P5_Food_safety_and_resilience/food_trade.html;"
+        <a-box id='box4' src="#welcomeTexture" position="-1.5 0.4 -2" rotation="0 0 0" depth="0.04" height="0.8"
+            width="0.8" button-interaction-handler_box_welcome
+
             visible="true" spritesheet-animation="rows: 2; columns: 8; frameDuration: 0.1; loop: true;" rotato
             scale="0.6 0.6 0.6" event-set__mouseenter="scale: 0.8 0.8 0.8" event-set__mouseleave="scale: 0.6 0.6 0.6"
             text="value: Hello World;">
