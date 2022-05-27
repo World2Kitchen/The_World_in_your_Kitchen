@@ -29,7 +29,7 @@
                     box3.setAttribute("visible", false);
                     plane_B.setAttribute("visible", true)
                     plane_A1.setAttribute("visible", true)
-                    plane_A.setAttribute("visible", true)
+                    plane_A.setAttribute("visible", false)
                     plane_A.setAttribute("position", "-1.5 -2.5 -9")
                     ring_A1_cury.setAttribute("visible", false);
                     ring_A1_ingredients.setAttribute("visible", false);
@@ -111,6 +111,7 @@
                     box1.setAttribute("position", "5 1 -5");
                     box4.setAttribute("visible", false);
                     ring_B2_ipad.setAttribute("visible", false);
+                    plane_A.setAttribute("visible", true)
                 });
             }
         });
@@ -346,6 +347,7 @@
             <img id="maize_ring" src="icon_images/maize.png">
             <img id="pepper_ring" src="icon_images/chili.png">
             <img id="story_box" src="icon_images/ancient-scroll.png">
+            <img id="shift_ring" src="icon_images/story.png">
 
 
         </a-assets>
@@ -368,8 +370,8 @@
 
         <a-plane id='plane_A' button-interaction-handler_a position="-1.5 -2.5 -9" height="0.8" width="2"
             color="#E21D2D" event-set__mouseenter="scale: 1.2 1.2 1" event-set__mouseleave="scale: 1 1 1"
-            proxy-event="event: click; to: #background; as: fade" sound="on: click; src: #click-sound">
-            <a-text value="Angle A" scale="2 2 2" align="center"></a-text>
+            proxy-event="event: click; to: #background; as: fade" visible="false" sound="on: click; src: #click-sound">
+            <a-text value="Back" scale="2 2 2"    align="center"></a-text>
         </a-plane>
 
         <a-plane id='plane_B' button-interaction-handler_b position="1.5 -2.5 -9" height="0.8" width="2" color="#E21D2D"
@@ -379,7 +381,7 @@
             <a-text value="Angle B" scale="2 2 2" align="center"></a-text>
         </a-plane>
 
-        <a-plane id='plane_A1' button-interaction-handler_a1 position="0 -3.5 -9" height="0.8" width="4" color="#E21D2D"
+        <a-plane id='plane_A1' button-interaction-handler_a1 position="-1.5 -2.5 -9" height="0.8" width="3" color="#E21D2D"
             event-set__mouseenter="scale: 1.2 1.2 1" event-set__mouseleave="scale: 1 1 1"
             proxy-event="event: click; to: #background; as: fade" sound="on: click; src: #click-sound">
 
@@ -482,13 +484,12 @@
         </a-cylinder>
 
 
-        <a-ring id='ring_B1' button-interaction-handler_ring_b1 position="-6 -1 -9" radius-inner="0.35"
-            radius-outer="0.5" color="#FFFFFF" event-set__mouseenter="scale: 1.2 1.2 1.2"
+        <a-cylinder id='ring_B1' src="#shift_ring" button-interaction-handler_ring_b1 position="-6 -1 -9"  rotation="0 90 90"
+            radius="0.5" height="0.1" color="#FFFFFF" event-set__mouseenter="scale: 1.2 1.2 1.2"
             event-set__mouseleave="scale: 1 1 1" proxy-event="event: click; to: #background; as: fade"
             sound="on: click; src: #click-sound" visible='false'>
-
-            <a-text value="+" scale="3 3 3" align="center"></a-text>
-        </a-ring>
+            
+        </a-cylinder>
 
         <a-cylinder id='ring_B1_burger' src="#burger_ring" button-interaction-handler_ring_b1_burger position="-5 0 -9"
             rotation="0 90 90"
@@ -510,14 +511,13 @@
         </a-cylinder>
 
 
-        <a-ring id='ring_B2' button-interaction-handler_ring_b2 position="7 -1 -9" radius-inner="0.35"
-            radius-outer="0.5" color="#FFFFFF" event-set__mouseenter="scale: 1.2 1.2 1.2"
+        <a-cylinder id='ring_B2' src="#shift_ring" button-interaction-handler_ring_b2 position="7 -1 -9" rotation="0 90 90"
+            radius="0.5" height="0.1" color="#FFFFFF" event-set__mouseenter="scale: 1.2 1.2 1.2"
             event-set__mouseleave="scale: 1 1 1" proxy-event="event: click; to: #background; as: fade"
             sound="on: click; src: #click-sound" visible='false'>
 
-            <a-text value="+" scale="3 3 3" align="center"></a-text>
 
-        </a-ring>
+        </a-cylinder>
 
 
         <a-cylinder id='ring_B2_ipad' src="#maize_ring" button-interaction-handler_ring_b2_ipad position="2 0 -9"
